@@ -1,5 +1,4 @@
-import { Size } from './';
-import { Colour } from './';
+import { Size, Colour, Brand } from './';
 export class Product {
   $key: string;
   productId: number;
@@ -24,4 +23,5 @@ export class Product {
   size: Size;
   modelDetails: string;
   isProductAvailable: boolean;
+  brand: Brand;
 }

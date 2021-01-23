@@ -45,5 +45,20 @@ export class AddProductComponent implements OnInit {
         "Product Creation"
       );
     });
+
+    // const brand: Brand = {
+    //    $key: null,
+    //    id: shortId.generate(),
+    //    name: 'Emerald',
+    //    description: 'Emerald Cloths'
+    //  };
+
+    //  this.productService.createBrand(brand, () => {
+    //   $("#exampleModalLong").modal("hide");
+    //   toastr.success(
+    //     "brand " + brand.name + "is added successfully",
+    //     "Brand Creation"
+    //   );
+    //  });
   }
 }

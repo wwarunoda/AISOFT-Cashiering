@@ -25,7 +25,7 @@
           [(ngModel)]="selectedBrand"
         >
           <option *ngFor="let brand of brands" [ngValue]="brand">{{
-            brand
+            brand.name
           }}</option>
         </select>
       </div>
