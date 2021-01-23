@@ -1,10 +1,11 @@
 export const FireBaseConfig = {
-  apiKey: "AIzaSyBT00FBj2VLqJD3RUbcbM8lpEEo0UJ1uEo",
-    authDomain: "osishoppingcart.firebaseapp.com",
-    databaseURL: "https://osishoppingcart-default-rtdb.firebaseio.com",
-    projectId: "osishoppingcart",
-    storageBucket: "osishoppingcart.appspot.com",
-    messagingSenderId: "918971880023",
-    appId: "1:918971880023:web:8c27d50e05765d692a0912",
-    measurementId: "G-L9BH1XB4X2"
+  apiKey: "AIzaSyBvR3NnDczeRDtpIK0gf1m6ICWuArmzgWU",
+  authDomain: "uclobbers-smart-shopping-de515.firebaseapp.com",
+  databaseURL:
+    "https://uclobbers-smart-shopping-de515-default-rtdb.firebaseio.com",
+  projectId: "uclobbers-smart-shopping-de515",
+  storageBucket: "uclobbers-smart-shopping-de515.appspot.com",
+  messagingSenderId: "887868938730",
+  appId: "1:887868938730:web:6f223320c21e3e5aedfa93",
+  measurementId: "G-SSDB2G4D0V",
 };
