@@ -1,8 +1,7 @@
 export const FireBaseConfig = {
   apiKey: "AIzaSyBvR3NnDczeRDtpIK0gf1m6ICWuArmzgWU",
   authDomain: "uclobbers-smart-shopping-de515.firebaseapp.com",
-  databaseURL:
-    "https://uclobbers-smart-shopping-de515-default-rtdb.firebaseio.com",
+  databaseURL: "https://uclobbers-smart-shopping-de515-default-rtdb.firebaseio.com",
   projectId: "uclobbers-smart-shopping-de515",
   storageBucket: "uclobbers-smart-shopping-de515.appspot.com",
   messagingSenderId: "887868938730",
