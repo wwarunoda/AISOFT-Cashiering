@@ -3,6 +3,7 @@ import { AngularFireDatabase, AngularFireList } from "@angular/fire/database";
 
 import * as moment from "moment";
 import { User } from "../models/user";
+import { ClientsEnum } from '../enum';
 
 @Injectable()
 export class UserService {
@@ -19,7 +20,7 @@ export class UserService {
   }
 
   getUsers() {
-    this.users = this.db.list("clients");
+    this.users = this.db.list(ClientsEnum.TableName);
     return this.users;
   }
 
@@ -36,8 +37,8 @@ export class UserService {
   }
 
   isAdmin(emailId: string) {
-    return this.db.list("clients", (ref) =>
-      ref.orderByChild("email").equalTo(emailId)
+    return this.db.list(ClientsEnum.TableName, (ref) =>
+      ref.orderByChild(ClientsEnum.email).equalTo(emailId)
     );
   }
 

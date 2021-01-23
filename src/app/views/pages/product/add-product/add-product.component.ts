@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { NgForm } from "@angular/forms";
-import { ProductService } from "src/app/shared/services/product.service";
-import { Product } from "src/app/shared/models/product";
+import { ProductService } from "../../../../shared/services/product.service";
+import { Product, Brand } from "../../../../shared/models";
 
 declare var $: any;
 declare var require: any;
@@ -16,9 +16,12 @@ const moment = require("moment");
 })
 export class AddProductComponent implements OnInit {
   product: Product = new Product();
+
   constructor(private productService: ProductService) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+
+  }
 
   createProduct(productForm: NgForm) {
     const payload: Product = {
