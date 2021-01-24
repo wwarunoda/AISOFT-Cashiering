@@ -23,5 +23,5 @@ export class Product {
   size: Size;
   modelDetails: string;
   isProductAvailable: boolean;
-  brand: Brand;
+  productBrand: string;
 }

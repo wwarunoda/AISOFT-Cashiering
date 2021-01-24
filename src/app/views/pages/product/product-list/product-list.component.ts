@@ -51,7 +51,12 @@ export class ProductListComponent implements OnInit {
     x.snapshotChanges().subscribe(
       (product) => {
         this.loading = false;
-        this.brands = [];
+        this.brands = [{
+          $key: '',
+          id: 0,
+          name: 'All',
+          description: ''
+        }];
         product.forEach((element) => {
           const y = { ...element.payload.toJSON(), $key: element.key };
           this.brands.push(y as Brand);

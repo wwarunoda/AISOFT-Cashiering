@@ -1,7 +1,9 @@
+import { ToastService } from './../../../../shared/services/toast.service';
 import { Component, OnInit } from "@angular/core";
 import { NgForm } from "@angular/forms";
 import { ProductService } from "../../../../shared/services/product.service";
 import { Product, Brand } from "../../../../shared/models";
+import { select } from '@ngrx/store';
 
 declare var $: any;
 declare var require: any;
@@ -16,13 +18,25 @@ const moment = require("moment");
 })
 export class AddProductComponent implements OnInit {
   product: Product = new Product();
-  brand: Brand = new Brand();
-
-  constructor(private productService: ProductService) {}
+  brandsList: Brand[];
+  seletedBrand: "All";
+  constructor(private productService: ProductService,
+              private toastService: ToastService) {}
 
   ngOnInit() {
       const allBrands = this.productService.getBrands();
-      allBrands.snapshotChanges().subscribe()
+      allBrands.snapshotChanges().subscribe(
+        (brand) => {
+          this.brandsList = [];
+          brand.forEach((element) => {
+            const y = { ...element.payload.toJSON(), $key: element.key };
+            this.brandsList.push(y as Brand);
+          });
+        },
+        (err) => {
+          this.toastService.error("Error while fetching Products", err);
+        }
+      );
   }
 
   createProduct(productForm: NgForm) {

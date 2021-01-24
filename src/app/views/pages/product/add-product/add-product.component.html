@@ -111,20 +111,17 @@
             </div>
           </div>
           <div class="mb-3">
-            <label for="productCategory">Brand</label>
-              <input
-                type="text"
-                class="form-control"
-                id="brand"
-                name="brand"
-                [(ngModel)]="product.brand.name"
-                placeholder="Product Brand"
-                value=""
-                required
-              />
-              <div class="invalid-feedback">
-                Valid product Brand is required.
-              </div>
+            <label for="productBrand">Brand</label>
+            <select
+            class="form-control"
+            name="productBrand"
+            id="brand_select"
+            [(ngModel)]="brandsList"
+          >
+            <option *ngFor="let brand of brandsList" [ngValue]="brand.$key">{{
+              brand.name
+            }}</option>
+          </select>
           </div>
           <div class="mb-3">
             <label for="productSeller">Product Seller</label>

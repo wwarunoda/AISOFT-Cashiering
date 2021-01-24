@@ -5,10 +5,10 @@ import { Pipe, PipeTransform } from "@angular/core";
 })
 export class FilterByBrandPipe implements PipeTransform {
   transform(items: any, select?: any): any {
-    if (select !== "All") {
+    if (select != null && select.name !== "All") {
       return select
         ? items.filter(
-            (item: { productSeller: any }) => item.productSeller === select
+            (item: { productBrand: any }) => item.productBrand === select.$key
           )
         : items;
     } else {
