@@ -2,6 +2,8 @@ import { Component, OnInit } from "@angular/core";
 import { Product } from "../../../../shared/models/product";
 import { AuthService } from "../../../../shared/services/auth.service";
 import { ProductService } from "../../../../shared/services/product.service";
+import { ToastrService } from "src/app/shared/services/toastr.service";
+import { Brand } from "../../../../shared/models";
 import { ToastService } from "src/app/shared/services/toast.service";
 @Component({
   selector: "app-product-list",
@@ -11,7 +13,7 @@ import { ToastService } from "src/app/shared/services/toast.service";
 export class ProductListComponent implements OnInit {
   productList: Product[];
   loading = false;
-  brands = ["All", "Apple", "Realme", "Nokia", "Motorolla"];
+  brands: Brand[];
 
   selectedBrand: "All";
 
@@ -24,6 +26,7 @@ export class ProductListComponent implements OnInit {
 
   ngOnInit() {
     this.getAllProducts();
+    this.getAllBrands();
   }
 
   getAllProducts() {
@@ -40,6 +43,23 @@ export class ProductListComponent implements OnInit {
       },
       (err) => {
         this.ToastService.error("Error while fetching Products", err);
+      }
+    );
+  }
+
+  getAllBrands() {
+    const x = this.productService.getBrands();
+    x.snapshotChanges().subscribe(
+      (product) => {
+        this.loading = false;
+        this.brands = [];
+        product.forEach((element) => {
+          const y = { ...element.payload.toJSON(), $key: element.key };
+          this.brands.push(y as Brand);
+        });
+      },
+      (err) => {
+        this.toastrService.error("Error while fetching Products", err);
       }
     );
   }

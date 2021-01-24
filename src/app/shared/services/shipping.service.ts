@@ -5,6 +5,7 @@ import {
 } from "@angular/fire/database";
 import { Billing } from "./../models/billing";
 import { Injectable } from "@angular/core";
+import { ShippingsProductsEnum, ProductsEnum } from "../enum";
 
 @Injectable({
   providedIn: "root",
@@ -21,12 +22,12 @@ export class ShippingService {
   }
 
   getshippings() {
-    this.shippings = this.db.list("shippings");
+    this.shippings = this.db.list(ShippingsProductsEnum.TableName);
     return this.shippings;
   }
 
   getshippingById(key: string) {
-    this.shipping = this.db.object("products/" + key);
+    this.shipping = this.db.object(ProductsEnum.TableName + "/" + key);
     return this.shipping;
   }
 
