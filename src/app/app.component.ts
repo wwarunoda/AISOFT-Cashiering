@@ -13,7 +13,6 @@ declare var $: any;
         <router-outlet #o="outlet"></router-outlet>
       </main>
 
-      <!-- <app-footer></app-footer> -->
       <app-loader-spinner></app-loader-spinner>
     </div>
   `,

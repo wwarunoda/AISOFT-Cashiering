@@ -1,4 +1,4 @@
-import { ToastrService } from "../../../../shared/services/toastr.service";
+import { ToastService } from "../../../../shared/services/toast.service";
 import { NgForm, EmailValidator } from "@angular/forms";
 import { Component, OnInit } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
@@ -25,7 +25,7 @@ export class LoginComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private userService: UserService,
-    private toastService: ToastrService,
+    private toastService: ToastService,
     private router: Router,
     private route: ActivatedRoute
   ) {

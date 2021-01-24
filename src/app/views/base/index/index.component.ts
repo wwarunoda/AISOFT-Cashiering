@@ -1,4 +1,8 @@
 import { Component, OnInit } from "@angular/core";
+import { FirebaseApp } from "@angular/fire";
+import { AngularFireStorage } from "@angular/fire/storage";
+import { Observable } from "rxjs";
+import { FileService } from "src/app/shared/services/file.service";
 
 @Component({
   selector: "app-index",
@@ -25,7 +29,26 @@ export class IndexComponent implements OnInit {
     },
   ];
 
-  constructor() {}
+  file: any;
+  images: any[] = [];
 
-  ngOnInit() {}
+  constructor(private fileService: FileService, private storage: FirebaseApp) {}
+
+  ngOnInit() {
+    this.getSlideShowImages();
+  }
+
+  // get slide show all images
+  private getSlideShowImages(): void {
+    const fileList = this.storage.storage().ref().child("slideShow");
+
+    fileList.listAll().then((res) => {
+      res.items.forEach((item) => {
+        const fileName = item.fullPath;
+        this.fileService.getFileByName(fileName).then((url) => {
+          this.images = [...this.images, url];
+        });
+      });
+    });
+  }
 }

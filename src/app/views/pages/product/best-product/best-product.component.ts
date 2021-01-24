@@ -2,7 +2,7 @@ import { TranslateService } from "src/app/shared/services/translate.service";
 import { Component, OnInit } from "@angular/core";
 import { Product } from "src/app/shared/models/product";
 import { ProductService } from "src/app/shared/services/product.service";
-import { ToastrService } from "src/app/shared/services/toastr.service";
+import { ToastService } from "src/app/shared/services/toast.service";
 import { map } from "rxjs/operators";
 
 @Component({
@@ -16,7 +16,7 @@ export class BestProductComponent implements OnInit {
   loading = false;
   constructor(
     private productService: ProductService,
-    private toasterService: ToastrService,
+    private toasterService: ToastService,
     public translate: TranslateService
   ) {}
 

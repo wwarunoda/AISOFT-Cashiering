@@ -2,7 +2,7 @@ import { Product } from "../../../../shared/models/product";
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { ProductService } from "../../../../shared/services/product.service";
-import { ToastrService } from "src/app/shared/services/toastr.service";
+import { ToastService } from "src/app/shared/services/toast.service";
 @Component({
   selector: "app-product-detail",
   templateUrl: "./product-detail.component.html",
@@ -15,7 +15,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private productService: ProductService,
-    private toastrService: ToastrService
+    private ToastService: ToastService
   ) {
     this.product = new Product();
   }
@@ -35,7 +35,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         this.product = y;
       },
       (error) => {
-        this.toastrService.error("Error while fetching Product Detail", error);
+        this.ToastService.error("Error while fetching Product Detail", error);
       }
     );
   }

@@ -27,7 +27,8 @@ import { ScrollingModule } from "@angular/cdk/scrolling";
 import { CdkTableModule } from "@angular/cdk/table";
 import { CdkTreeModule } from "@angular/cdk/tree";
 import { FireBaseConfig } from "./../../environments/firebase.config";
-
+import { FileService } from "./services/file.service";
+import { AngularFireStorageModule } from "@angular/fire/storage";
 @NgModule({
   imports: [
     CommonModule,
@@ -35,6 +36,7 @@ import { FireBaseConfig } from "./../../environments/firebase.config";
     AngularFireModule.initializeApp(FireBaseConfig),
     AngularFireDatabaseModule,
     AngularFireAuthModule,
+    AngularFireStorageModule,
     FormsModule,
     HttpClientModule,
     RouterModule,
@@ -76,6 +78,7 @@ import { FireBaseConfig } from "./../../environments/firebase.config";
   ],
   providers: [
     AuthService,
+    FileService,
     AuthGuard,
     AdminGaurd,
     ProductService,

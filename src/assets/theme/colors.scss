@@ -1,27 +1,27 @@
 .purple-theme {
-    --navBackground: #9c27b0;
-    --productTitle: #9c27b0;
+  --navBackground: #9c27b0;
+  --productTitle: #9c27b0;
 }
 
 .blue-theme {
-
-    --navBackground: #3f51b5;
-    --productTitle: #3f51b5;
+  --navBackground: #3f51b5;
+  --productTitle: #3f51b5;
 }
 
 .red-theme {
-    --navBackground: #e91e63;
-    --productTitle: #e91e63;
+  --navBackground: #0f0f0f;
+  --productTitle: #0f0f0f;
+  .btn-theme {
+    color: #ffffff;
+  }
 }
 
 .violet-theme {
-    --navBackground: #673ab7;
-    --productTitle: #673ab7;
+  --navBackground: #673ab7;
+  --productTitle: #673ab7;
 }
 
-
-
 $variables: (
-    --navBackground: var(--navBackground),
-    --productTitle: var(--productTitle)
+  --navBackground: var(--navBackground),
+  --productTitle: var(--productTitle),
 );

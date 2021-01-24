@@ -1,9 +1,11 @@
 export const FireBaseConfig = {
-  apiKey: "AIzaSyBrn-ZaQZj3MEz8gUtIM_tNwOMwUE3L3yI",
-  authDomain: "uclobbers-smart-shopping.firebaseapp.com",
-  projectId: "uclobbers-smart-shopping",
-  storageBucket: "uclobbers-smart-shopping.appspot.com",
-  messagingSenderId: "247679180305",
-  appId: "1:247679180305:web:a26b455600c193e3025bb0",
-  measurementId: "G-RVNNDYYF7M"
+  apiKey: "AIzaSyBvR3NnDczeRDtpIK0gf1m6ICWuArmzgWU",
+  authDomain: "uclobbers-smart-shopping-de515.firebaseapp.com",
+  databaseURL:
+    "https://uclobbers-smart-shopping-de515-default-rtdb.firebaseio.com",
+  projectId: "uclobbers-smart-shopping-de515",
+  storageBucket: "gs://uclobbers-smart-shopping-de515.appspot.com",
+  messagingSenderId: "887868938730",
+  appId: "1:887868938730:web:6f223320c21e3e5aedfa93",
+  measurementId: "G-SSDB2G4D0V",
 };

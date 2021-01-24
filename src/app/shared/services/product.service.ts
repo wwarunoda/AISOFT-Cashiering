@@ -6,7 +6,7 @@ import {
 } from "@angular/fire/database";
 import { Product } from "../models/product";
 import { AuthService } from "./auth.service";
-import { ToastrService } from "./toastr.service";
+import { ToastService } from "./toast.service";
 
 @Injectable()
 export class ProductService {
@@ -20,7 +20,7 @@ export class ProductService {
   constructor(
     private db: AngularFireDatabase,
     private authService: AuthService,
-    private toastrService: ToastrService
+    private ToastService: ToastService
   ) {}
 
   getProducts() {
@@ -63,7 +63,7 @@ export class ProductService {
   addFavouriteProduct(data: Product): void {
     const a: Product[] = JSON.parse(localStorage.getItem("avf_item")) || [];
     a.push(data);
-    this.toastrService.wait("Adding Product", "Adding Product as Favourite");
+    this.ToastService.wait("Adding Product", "Adding Product as Favourite");
     setTimeout(() => {
       localStorage.setItem("avf_item", JSON.stringify(a));
     }, 1500);
@@ -105,7 +105,7 @@ export class ProductService {
     const a: Product[] = JSON.parse(localStorage.getItem("avct_item")) || [];
     a.push(data);
 
-    this.toastrService.wait(
+    this.ToastService.wait(
       "Adding Product to Cart",
       "Product Adding to the cart"
     );
