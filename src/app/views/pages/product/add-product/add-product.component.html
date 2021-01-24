@@ -40,7 +40,7 @@
                 required
               />
               <div class="invalid-feedback">
-                Valid first name is required.
+                Valid product name is required.
               </div>
             </div>
             <div class="col-md-6 mb-3">
@@ -56,7 +56,7 @@
                 required
               />
               <div class="invalid-feedback">
-                Valid last name is required.
+                Valid product category is required.
               </div>
             </div>
           </div>
@@ -90,7 +90,7 @@
                 required
               />
               <div class="invalid-feedback">
-                Valid first name is required.
+                Valid product price is required.
               </div>
             </div>
             <div class="col-md-6 mb-3">
@@ -106,11 +106,26 @@
                 required
               />
               <div class="invalid-feedback">
-                Valid last name is required.
+                Valid product quantity is required.
               </div>
             </div>
           </div>
-
+          <div class="mb-3">
+            <label for="productCategory">Brand</label>
+              <input
+                type="text"
+                class="form-control"
+                id="brand"
+                name="brand"
+                [(ngModel)]="product.brand.name"
+                placeholder="Product Brand"
+                value=""
+                required
+              />
+              <div class="invalid-feedback">
+                Valid product Brand is required.
+              </div>
+          </div>
           <div class="mb-3">
             <label for="productSeller">Product Seller</label>
             <input
