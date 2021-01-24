@@ -16,10 +16,14 @@ const moment = require("moment");
 })
 export class AddProductComponent implements OnInit {
   product: Product = new Product();
+  brand: Brand = new Brand();
 
   constructor(private productService: ProductService) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+      const allBrands = this.productService.getBrands();
+      allBrands.snapshotChanges().subscribe()
+  }
 
   createProduct(productForm: NgForm) {
     const payload: Product = {
