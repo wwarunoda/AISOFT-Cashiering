@@ -1,4 +1,4 @@
-export class Brand {
+export class Gender {
   $key: string;
   id: number;
   name: string;

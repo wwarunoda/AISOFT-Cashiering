@@ -22,17 +22,14 @@
           class="form-control"
           name=""
           id="brand_select"
-          [(ngModel)]="selectedBrand"
-        >
+          [(ngModel)]="selectedBrand">
           <option *ngFor="let brand of brands" [ngValue]="brand">{{
             brand.name
           }}</option>
         </select>
       </div>
       <ul class="list-group">
-        <li class="list-group-item">Cras justo odio</li>
-        <li class="list-group-item">Dapibus ac facilisis in</li>
-        <li class="list-group-item">Morbi leo risus</li>
+        <li class="list-group-item" *ngFor="let category of categoryList" (click)="selectCategory(category)">{{category.name}}</li>
       </ul>
     </div>
     <div class="col-md-9">
@@ -49,6 +46,7 @@
             *ngFor="
               let product of productList
                 | filterByBrand: selectedBrand
+                | filterByCategory: selectedCategory
                 | paginate: { itemsPerPage: 6, currentPage: page }
             "
           >
@@ -141,5 +139,4 @@
       <!--/.Card-->
     </div>
   </div>
-</div>
 <app-add-product></app-add-product>

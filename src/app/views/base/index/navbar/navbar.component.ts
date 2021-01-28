@@ -1,12 +1,10 @@
-import { TranslateService } from "./../../../../shared/services/translate.service";
 import { Component, OnInit, VERSION } from "@angular/core";
 import { Router } from "@angular/router";
-import { AuthService } from "./../../../../shared/services/auth.service";
-import { ProductService } from "./../../../../shared/services/product.service";
 
-import { ThemeService } from "src/app/shared/services/theme.service";
+import { Gender } from '../../../../shared/models';
+import { TranslateService, ThemeService, ToastService, ProductService, AuthService } from "./../../../../shared/services";
+
 declare var $: any;
-
 @Component({
   selector: "app-navbar",
   templateUrl: "./navbar.component.html",
@@ -14,7 +12,7 @@ declare var $: any;
 })
 export class NavbarComponent implements OnInit {
   angularVersion = VERSION;
-
+  genderList: Gender[];
   colorPallet1 = [
     {
       title: "Purple Theme",
@@ -53,12 +51,15 @@ export class NavbarComponent implements OnInit {
     private router: Router,
     public productService: ProductService,
     public translate: TranslateService,
-    private themeService: ThemeService
+    private themeService: ThemeService,
+    private toastService: ToastService
   ) {
-    // console.log(translate.data);
+    console.log(translate.data);
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.getMasterData();
+  }
   logout() {
     this.authService.logout();
     this.router.navigate(["/"]);
@@ -71,5 +72,22 @@ export class NavbarComponent implements OnInit {
 
   updateTheme(theme: string) {
     this.themeService.updateThemeUrl(theme);
+  }
+
+  private getMasterData(): void {
+    const allGenders = this.productService.getGenders();
+    allGenders.snapshotChanges().subscribe(
+      (product) => {
+        this.genderList = [];
+        product.forEach((element) => {
+          const y = { ...element.payload.toJSON(), $key: element.key };
+          this.genderList.push(y as Gender);
+        });
+        this.genderList.sort((a,b) => a.index > b.index? 1 : -1);
+      },
+      (err) => {
+        this.toastService.error("Error while fetching Genders", err);
+      }
+    );
   }
 }

@@ -5,3 +5,5 @@ export * from "./user";
 export * from "./brand";
 export * from "./colour";
 export * from "./size";
+export * from "./gender";
+export * from "./category";

@@ -45,19 +45,16 @@
             </div>
             <div class="col-md-6 mb-3">
               <label for="productCategory">Product Category</label>
-              <input
-                type="text"
-                class="form-control"
-                id="productCategory"
-                name="productCategory"
-                [(ngModel)]="product.productCategory"
-                placeholder="Product Category"
-                value=""
-                required
-              />
-              <div class="invalid-feedback">
-                Valid product category is required.
-              </div>
+              <select
+              class="form-control"
+              name="productCategory"
+              id="category_select"
+              [(ngModel)]="categoryList"
+            >
+              <option *ngFor="let category of categoryList" [ngValue]="category.$key">{{
+                category.name
+              }}</option>
+            </select>
             </div>
           </div>
 

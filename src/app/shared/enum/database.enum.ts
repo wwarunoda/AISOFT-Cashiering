@@ -26,3 +26,18 @@ export enum BrandEnum {
   Name = "name",
   Description = "description",
 }
+
+export enum GenderEnum {
+  TableName = "gender",
+  Id = "id",
+  Name = "name",
+  Description = "description",
+}
+
+export enum CategoriesEnum {
+  TableName = "categories",
+  Id = "id",
+  Name = "name",
+  Description = "description",
+  index = "index"
+}

@@ -6,7 +6,7 @@ export class Product {
   productCategoryId: number;
   productCategory: string;
   productDescription: string;
-  genderType: number;
+  genderKey: string;
   gender: string;
   productPrice: number;
   productImageUrl: string;

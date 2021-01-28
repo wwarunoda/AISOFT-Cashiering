@@ -14,6 +14,7 @@ import { HttpClientModule } from "@angular/common/http";
 import { NoAccessComponent } from "./components/no-access/no-access.component";
 import { PageNotFoundComponent } from "./components/page-not-found/page-not-found.component";
 import { FilterByBrandPipe } from "./pipes/filterByBrand.pipe";
+import { FilterByCategoryPipe } from "./pipes/filterByCategory.pipe";
 import { ProductService } from "./services/product.service";
 import { AdminGaurd } from "./guards/admin-gaurd";
 import { AuthGuard } from "./guards/auth_gaurd";
@@ -49,6 +50,7 @@ import { AngularFireStorageModule } from "@angular/fire/storage";
   declarations: [
     NoProductsFoundComponent,
     FilterByBrandPipe,
+    FilterByCategoryPipe,
     NoAccessComponent,
     PageNotFoundComponent,
     TranslatePipe,
@@ -68,6 +70,7 @@ import { AngularFireStorageModule } from "@angular/fire/storage";
     OwlModule,
     NgxPaginationModule,
     FilterByBrandPipe,
+    FilterByCategoryPipe,
     NoAccessComponent,
     PageNotFoundComponent,
     TranslatePipe,

@@ -17,7 +17,7 @@ const routes: Routes = [
         loadChildren: () =>
           import("./views/pages/product/product.module").then(
             (m) => m.ProductModule
-          ),
+          )
       },
       {
         path: "users",

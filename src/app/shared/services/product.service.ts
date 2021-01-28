@@ -6,15 +6,17 @@ import {
 } from "@angular/fire/database";
 import { AuthService } from "./auth.service";
 import { ToastService } from "./toast.service";
-import { FavouriteProductsEnum, ProductsEnum, BrandEnum } from "../enum";
-import { FavouriteProduct, Product, Brand } from "../models";
+import { FavouriteProductsEnum, ProductsEnum, BrandEnum, GenderEnum, CategoriesEnum } from "../enum";
+import { FavouriteProduct, Product, Brand, Gender, Category } from "../models";
 
 @Injectable()
 export class ProductService {
   products: AngularFireList<Product>;
   product: AngularFireObject<Product>;
   brands: AngularFireList<any>;
-
+  genders: AngularFireList<Gender>;
+  categories: AngularFireList<Category>;
+  activeGend: Gender;
   // favouriteProducts
   favouriteProducts: AngularFireList<FavouriteProduct>;
   cartProducts: AngularFireList<FavouriteProduct>;
@@ -26,6 +28,14 @@ export class ProductService {
   ) {}
 
   //#region old services
+  setActiveGender(gend: Gender) {
+    this.activeGend = gend;
+  }
+
+  getActiveGender(): Gender {
+    return this.activeGend;
+  }
+
   getProducts() {
     this.products = this.db.list(ProductsEnum.TableName);
     return this.products;
@@ -141,7 +151,7 @@ export class ProductService {
   }
   //#endregion
 
-  //#region new services
+  //#region brand services
   getBrands() {
     this.brands = this.db.list(BrandEnum.TableName);
     return this.brands;
@@ -152,7 +162,7 @@ export class ProductService {
     this.brands.push({
       id: data.id,
       name: data.name,
-      description: data.description,
+      description: data.description
     });
     callback();
   }
@@ -163,6 +173,37 @@ export class ProductService {
 
   deleteBrand(key: string) {
     this.brands.remove(key);
+  }
+  //#endregion
+
+  //#region Gender
+  getGenders():AngularFireList<Gender> {
+    this.genders = this.db.list(GenderEnum.TableName);
+    return this.genders;
+  }
+  //#endregion
+
+  //#region Categories
+  getCategories() {
+    this.categories = this.db.list(CategoriesEnum.TableName);
+    return this.categories;
+  }
+
+  createCategory(data: Category, callback: () => void) {
+    this.categories.push(data);
+    callback();
+  }
+
+  getCategoryById(key: string) {
+    return this.db.object(CategoriesEnum.TableName + "/" + key);
+  }
+
+  updateCategory(data: Category) {
+    this.categories.update(data.$key, data);
+  }
+
+  deleteCategory(key: string) {
+    this.categories.remove(key);
   }
   //#endregion
 }
