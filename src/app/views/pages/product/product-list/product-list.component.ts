@@ -9,12 +9,14 @@ import { Brand, Product, Gender, Category } from "../../../../shared/models";
   styleUrls: ["./product-list.component.scss"],
 })
 export class ProductListComponent implements OnInit {
+  productMasterList: Product[];
   productList: Product[];
   loading = false;
   brands: Brand[];
   selectedBrand:Brand = { $key: '', name: "All", description: '', id: 0, index: 1  };
-  selectedCategory:Category = { $key: '', name: "All Categories", description: '', id: 0, index: 1  };
+  selectedCategory:Category = { $key: '', name: "All Categories", genderKey: '', description: '', id: 0, index: 1  };
   genderList: Gender[];
+  categoryMasterList: Category[];
   categoryList: Category[];
   selecredGender: Gender;
   page = 1;
@@ -86,19 +88,11 @@ export class ProductListComponent implements OnInit {
 
     const allCteogories = this.productService.getCategories();
     allCteogories.snapshotChanges().subscribe(
-      (gender) => {
-        this.categoryList = [
-          {
-            $key: '',
-            id: 0,
-            name: 'All Categories',
-            description: '',
-            index: 1
-          }
-        ];
-        gender.forEach((element) => {
+      (category) => {
+        this.categoryMasterList = [];
+        category.forEach((element) => {
           const y = { ...element.payload.toJSON(), $key: element.key };
-          this.categoryList.push(y as Category);
+          this.categoryMasterList.push(y as Category);
         });
         this.filterGender();
       },
@@ -113,10 +107,24 @@ export class ProductListComponent implements OnInit {
       if (this.genderList != null) {
       this.selecredGender = this.genderList.find(gender => gender.$key == queryParams.key);
       this.productService.setActiveGender(this.selecredGender);
+      this.selectCategoryByGender();
       this.getSelectdProducts();
       }
     });
 
+  }
+  private selectCategoryByGender() {
+    if(this.categoryMasterList != null) {
+      this.categoryList = [{
+        $key: '',
+        id: 0,
+        name: 'All Categories',
+        genderKey: '',
+        description: '',
+        index: 1
+      }];
+      this.categoryList = this.categoryMasterList.filter(category => category.genderKey == this.selecredGender.$key);
+    }
   }
 
   private getSelectdProducts() {
@@ -125,12 +133,19 @@ export class ProductListComponent implements OnInit {
     x.snapshotChanges().subscribe(
       (product) => {
         this.loading = false;
-        this.productList = [];
+        this.productMasterList = [];
         product.forEach((element) => {
           const y = { ...element.payload.toJSON(), $key: element.key };
-          this.productList.push(y as Product);
+          this.productMasterList.push(y as Product);
         });
-        this.productList = this.productList.filter(product => product.genderKey == this.selecredGender.$key);
+        const productTempList: Product[] = this.productMasterList.filter(product => product.genderKey == this.selecredGender.$key);
+        if(this.categoryList != null) {
+          this.productList = [];
+          this.categoryList.forEach(category => {
+            const productCategoryList = productTempList.filter(product => product.productCategory == category.$key);
+            this.productList.push(...productCategoryList);
+          });
+        }
       },
       (err) => {
         this.toastService.error("Error while fetching Products", err);

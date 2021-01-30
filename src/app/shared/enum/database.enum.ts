@@ -38,6 +38,7 @@ export enum CategoriesEnum {
   TableName = "categories",
   Id = "id",
   Name = "name",
+  GenderKey = "genderKey",
   Description = "description",
   index = "index"
 }
