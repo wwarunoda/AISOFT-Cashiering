@@ -29,6 +29,9 @@
 }
 .card.card-cascade {
   width: 100%;
+  &:hover {
+    transform: scale(1.005);
+  }
 }
 .card:not([class*="card-outline-"]) {
   border: 0;
@@ -121,4 +124,12 @@
 
 .card .card-footer .right a .fa-heart {
   color: var(--navBackground) !important;
+}
+
+.list-group-item {
+  cursor: pointer;
+  &:hover {
+    transform: scale(1.02);
+    box-shadow: -1px 0px 0px 0px #ddd;
+  }
 }

@@ -7,7 +7,7 @@
   aria-labelledby="exampleModalLongTitle"
   aria-hidden="true"
 >
-  <div class="modal-dialog" role="document">
+  <div class="custom-modal modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLongTitle">Add Product</h5>
@@ -46,15 +46,17 @@
             <div class="col-md-6 mb-3">
               <label for="productCategory">Product Category</label>
               <select
-              class="form-control"
-              name="productCategory"
-              id="category_select"
-              [(ngModel)]="categoryList"
-            >
-              <option *ngFor="let category of categoryList" [ngValue]="category.$key">{{
-                category.name
-              }}</option>
-            </select>
+                class="form-control"
+                name="productCategory"
+                id="category_select"
+                [(ngModel)]="categoryList"
+              >
+                <option
+                  *ngFor="let category of categoryList"
+                  [ngValue]="category.$key"
+                  >{{ category.name }}</option
+                >
+              </select>
             </div>
           </div>
 
@@ -110,15 +112,15 @@
           <div class="mb-3">
             <label for="productBrand">Brand</label>
             <select
-            class="form-control"
-            name="productBrand"
-            id="brand_select"
-            [(ngModel)]="brandsList"
-          >
-            <option *ngFor="let brand of brandsList" [ngValue]="brand.$key">{{
-              brand.name
-            }}</option>
-          </select>
+              class="form-control"
+              name="productBrand"
+              id="brand_select"
+              [(ngModel)]="brandsList"
+            >
+              <option *ngFor="let brand of brandsList" [ngValue]="brand.$key">{{
+                brand.name
+              }}</option>
+            </select>
           </div>
           <div class="mb-3">
             <label for="productSeller">Product Seller</label>
@@ -146,8 +148,7 @@
           </div>
 
           <hr class="mb-4" />
-
-          <button class="btn btn-primary btn-lg btn-block" type="submit">
+          <button class="btn btn-primary pull-right" type="submit">
             Add Product
           </button>
         </form>

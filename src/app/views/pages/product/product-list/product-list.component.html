@@ -14,7 +14,7 @@
       </div>
     </div>
   </div>
-  <div class="row">
+  <div class="row p-3">
     <div class="col-md-3">
       <div class="form-group">
         <label for="brand_select">By Brands:</label>
@@ -22,14 +22,21 @@
           class="form-control"
           name=""
           id="brand_select"
-          [(ngModel)]="selectedBrand">
+          [(ngModel)]="selectedBrand"
+        >
           <option *ngFor="let brand of brands" [ngValue]="brand">{{
             brand.name
           }}</option>
         </select>
       </div>
       <ul class="list-group">
-        <li class="list-group-item" *ngFor="let category of categoryList" (click)="selectCategory(category)">{{category.name}}</li>
+        <li
+          class="list-group-item"
+          *ngFor="let category of categoryList"
+          (click)="selectCategory(category)"
+        >
+          {{ category.name }}
+        </li>
       </ul>
     </div>
     <div class="col-md-9">
@@ -139,4 +146,5 @@
       <!--/.Card-->
     </div>
   </div>
-<app-add-product></app-add-product>
+  <app-add-product></app-add-product>
+</div>
