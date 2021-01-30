@@ -25,6 +25,7 @@ export class NavBarService {
   }
 
   createNavBarItem(data: NavBar, callback: () => void) {
+    // this.navBarList = this.getNavBarItems();
     this.navBarList.push(data);
     callback();
   }

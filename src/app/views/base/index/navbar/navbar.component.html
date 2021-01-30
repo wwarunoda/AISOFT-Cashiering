@@ -26,13 +26,14 @@
           <span class="sr-only">(current)</span>
         </a>
       </li>
-      <li class="nav-item" *ngFor = "let item of genderList">
+      <li class="nav-item" *ngFor="let item of genderList">
         <a
           class="nav-link"
           href="jaascript:;;"
           [routerLink]="['/products/all-products']"
           [queryParams]="{ key: item.$key }"
-          >{{ item.name }}</a>
+          >{{ item.name }}</a
+        >
       </li>
       <li class="nav-item">
         <a
@@ -42,6 +43,21 @@
           >{{ this.translate.data["TASKBOARD"] | translate }}</a
         >
       </li>
+
+      <li class="nav-item" *ngFor="let navItem of activeNavItems">
+        <a
+          class="nav-link"
+          href="jaascript:;;"
+          [routerLink]="[navItem?.routerLink]"
+        >
+          <!-- {{ this.translate.data[navItem?.description] | translate }} -->
+          {{ navItem?.description }}
+        </a>
+      </li>
+      <!-- <li class="nav-item">
+        <a class="nav-link" href="jaascript:;;" [routerLink]="['/task-board/tasks']">{{ this.translate.data["TASKBOARD"]
+          | translate }}</a>
+      </li> -->
       <!-- <li class="nav-item">
         <a class="nav-link" href="#">Pricing</a>
       </li> -->

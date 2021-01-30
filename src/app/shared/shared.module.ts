@@ -4,7 +4,7 @@ import { NoProductsFoundComponent } from "./components/no-products-found/no-prod
 import { MDBBootstrapModule } from "angular-bootstrap-md";
 import { AngularFireModule } from "@angular/fire";
 import { AngularFireDatabaseModule } from "@angular/fire/database";
-import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { AngularFirestoreModule } from "@angular/fire/firestore";
 import { AngularFireAuthModule } from "@angular/fire/auth";
 import { FormsModule, FormBuilder } from "@angular/forms";
 import { RouterModule, Router } from "@angular/router";
@@ -31,6 +31,7 @@ import { CdkTreeModule } from "@angular/cdk/tree";
 import { FireBaseConfig } from "./../../environments/firebase.config";
 import { FileService } from "./services/file.service";
 import { AngularFireStorageModule } from "@angular/fire/storage";
+import { NavBarService } from "./services/nav-bar.service";
 @NgModule({
   imports: [
     CommonModule,
@@ -45,7 +46,7 @@ import { AngularFireStorageModule } from "@angular/fire/storage";
     OwlModule,
     NgxPaginationModule,
     NgxContentLoadingModule,
-    AngularFirestoreModule
+    AngularFirestoreModule,
   ],
   declarations: [
     NoProductsFoundComponent,
@@ -88,6 +89,7 @@ import { AngularFireStorageModule } from "@angular/fire/storage";
     AuthGuard,
     AdminGaurd,
     ProductService,
+    NavBarService,
     UserService,
     FormBuilder,
   ],
