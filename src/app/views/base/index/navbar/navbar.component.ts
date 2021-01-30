@@ -1,4 +1,3 @@
-import { TranslateService } from "./../../../../shared/services/translate.service";
 import { Component, OnDestroy, OnInit, VERSION } from "@angular/core";
 import { Router } from "@angular/router";
 
@@ -8,13 +7,13 @@ import {
   ThemeService,
   ToastService,
   ProductService,
+  NavBarService,
   AuthService,
 } from "./../../../../shared/services";
-import { ThemeService } from "src/app/shared/services/theme.service";
-import { NavBarService } from "src/app/shared/services/nav-bar.service";
+
 import { NavBar } from "src/app/shared/models/navbar";
-import { ToastService } from "src/app/shared/services/toast.service";
 import { SubSink } from "subsink";
+
 declare var $: any;
 declare var toast: any;
 
