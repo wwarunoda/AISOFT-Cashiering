@@ -44,20 +44,38 @@
               </div>
             </div>
             <div class="col-md-6 mb-3">
+              <label for="genderControl">Genders</label>
+              <select
+                class="form-control"
+                name="genderControl"
+                id="gender_select"
+                [(ngModel)]="selectedGend"
+                (ngModelChange)="onGenderChange($event)"
+              >
+                <option
+                  *ngFor="let gender of genderList"
+                  [ngValue]="gender"
+                  >{{ gender.name }}</option
+                >
+              </select>
+            </div>
+          </div>
+
+          <div class="mb-3">
               <label for="productCategory">Product Category</label>
               <select
                 class="form-control"
                 name="productCategory"
                 id="category_select"
-                [(ngModel)]="categoryList"
+                [(ngModel)]="selectedCategory"
+                (ngModelChange)="onCategoryChange($event)"
               >
                 <option
                   *ngFor="let category of categoryList"
-                  [ngValue]="category.$key"
+                  [ngValue]="category"
                   >{{ category.name }}</option
                 >
               </select>
-            </div>
           </div>
 
           <div class="mb-3">
@@ -115,7 +133,6 @@
               class="form-control"
               name="productBrand"
               id="brand_select"
-              [(ngModel)]="brandsList"
             >
               <option *ngFor="let brand of brandsList" [ngValue]="brand.$key">{{
                 brand.name

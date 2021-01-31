@@ -16,7 +16,6 @@ export class ProductService {
   brands: AngularFireList<any>;
   genders: AngularFireList<Gender>;
   categories: AngularFireList<Category>;
-  activeGend: Gender;
   // favouriteProducts
   favouriteProducts: AngularFireList<FavouriteProduct>;
   cartProducts: AngularFireList<FavouriteProduct>;
@@ -28,13 +27,6 @@ export class ProductService {
   ) {}
 
   //#region old services
-  setActiveGender(gend: Gender) {
-    this.activeGend = gend;
-  }
-
-  getActiveGender(): Gender {
-    return this.activeGend;
-  }
 
   getProducts() {
     this.products = this.db.list(ProductsEnum.TableName);

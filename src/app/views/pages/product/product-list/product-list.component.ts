@@ -106,13 +106,12 @@ export class ProductListComponent implements OnInit {
     this.activatedRoute.queryParams.subscribe(queryParams => {
       if (this.genderList != null) {
       this.selecredGender = this.genderList.find(gender => gender.$key == queryParams.key);
-      this.productService.setActiveGender(this.selecredGender);
       this.selectCategoryByGender();
       this.getSelectdProducts();
       }
     });
-
   }
+
   private selectCategoryByGender() {
     if(this.categoryMasterList != null) {
       this.categoryList = [{
@@ -139,6 +138,7 @@ export class ProductListComponent implements OnInit {
           this.productMasterList.push(y as Product);
         });
         const productTempList: Product[] = this.productMasterList.filter(product => product.genderKey == this.selecredGender.$key);
+        // no need to filter product by category, Gender selection is automatically filter relevant categories
         if(this.categoryList != null) {
           this.productList = [];
           this.categoryList.forEach(category => {

@@ -1,8 +1,9 @@
 import { ToastService } from './../../../../shared/services/toast.service';
 import { Component, OnInit } from "@angular/core";
-import { NgForm } from "@angular/forms";
+import { FormBuilder, FormGroup, NgForm, Validators } from "@angular/forms";
 import { ProductService } from "../../../../shared/services/product.service";
 import { Product, Brand, Gender, Category } from "../../../../shared/models";
+import { ActivatedRoute } from '@angular/router';
 
 declare var $: any;
 declare var require: any;
@@ -16,23 +17,30 @@ const moment = require("moment");
   styleUrls: ["./add-product.component.scss"],
 })
 export class AddProductComponent implements OnInit {
+  selectedGend: Gender;
+  genderList: Gender[];
   product: Product = new Product();
   brandsList: Brand[];
+  categoryMasterList: Category[];
   categoryList: Category[];
+  selectedCategory: Category;
   seletedBrand: "All";
+  selectedGenderKey: '';
   constructor(private productService: ProductService,
-              private toastService: ToastService) {}
+              private toastService: ToastService,
+              private activatedRoute:ActivatedRoute) {}
 
   ngOnInit() {
       this.getMasterData();
+
   }
 
   createProduct(productForm: NgForm) {
-    const selectedGend: Gender = this.productService.getActiveGender();
     const payload: Product = {
       ...productForm.value,
-      genderKey: selectedGend.$key,
-      gender: selectedGend.name,
+      productCategory: this.selectedCategory.$key,
+      genderKey: this.selectedGend.$key,
+      gender: this.selectedGend.name,
       productId: "PROD_" + shortId.generate(),
       productAdded: moment().unix(),
       ratings: Math.floor(Math.random() * 5 + 1),
@@ -70,19 +78,62 @@ export class AddProductComponent implements OnInit {
       }
     );
 
+    const allGenders = this.productService.getGenders();
+    allGenders.snapshotChanges().subscribe(
+      (gender) => {
+        this.genderList = [];
+        gender.forEach((element) => {
+          const y = { ...element.payload.toJSON(), $key: element.key };
+          this.genderList.push(y as Gender);
+        });
+        if (this.genderList != null) {
+        this.selectedGend = this.genderList.find(gender => gender.$key == this.selectedGenderKey);
+        }
+      },
+      (err) => {
+        this.toastService.error("Error while fetching Genders", err);
+      }
+    );
+
     // Select Brands
     const allCategories = this.productService.getCategories();
     allCategories.snapshotChanges().subscribe(
       (brand) => {
-        this.categoryList = [];
+        this.categoryMasterList = [];
         brand.forEach((element) => {
           const y = { ...element.payload.toJSON(), $key: element.key };
-          this.categoryList.push(y as Category);
+          this.categoryMasterList.push(y as Category);
         });
+        this.selectCategoryByGender();
       },
       (err) => {
         this.toastService.error("Error while fetching Category", err);
       }
     );
+
+    this.activatedRoute.queryParams.subscribe(queryParams => {
+      this.selectedGenderKey = queryParams.key;
+      if (this.genderList != null) {
+      this.selectedGend = this.genderList.find(gender => gender.$key == queryParams.key);
+      }
+    });
+
+
+  }
+  onGenderChange(genderChangeValue: Gender) {
+    this.categoryList = this.categoryMasterList.filter(category => category.genderKey == genderChangeValue.$key);
+  }
+  onCategoryChange(categoryChangeValue: Category) {
+    this.selectedCategory = categoryChangeValue;
+  }
+  private selectCategoryByGender() {
+    if(this.categoryMasterList != null) {
+      this.categoryList = [];
+      if(this.getMasterData != null && this.selectedGend != null) {
+        this.categoryList = this.categoryMasterList.filter(category => category.genderKey == this.selectedGend.$key);
+        if(this.categoryList != null)
+          this.selectedCategory = this.categoryList[0];
+      }
+    }
   }
 }
