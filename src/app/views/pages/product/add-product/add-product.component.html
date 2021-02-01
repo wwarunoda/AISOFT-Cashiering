@@ -52,30 +52,28 @@
                 [(ngModel)]="selectedGend"
                 (ngModelChange)="onGenderChange($event)"
               >
-                <option
-                  *ngFor="let gender of genderList"
-                  [ngValue]="gender"
-                  >{{ gender.name }}</option
-                >
+                <option *ngFor="let gender of genderList" [ngValue]="gender">{{
+                  gender.name
+                }}</option>
               </select>
             </div>
           </div>
 
           <div class="mb-3">
-              <label for="productCategory">Product Category</label>
-              <select
-                class="form-control"
-                name="productCategory"
-                id="category_select"
-                [(ngModel)]="selectedCategory"
-                (ngModelChange)="onCategoryChange($event)"
+            <label for="productCategory">Product Category</label>
+            <select
+              class="form-control"
+              name="productCategory"
+              id="category_select"
+              [(ngModel)]="selectedCategory"
+              (ngModelChange)="onCategoryChange($event)"
+            >
+              <option
+                *ngFor="let category of categoryList"
+                [ngValue]="category"
+                >{{ category.name }}</option
               >
-                <option
-                  *ngFor="let category of categoryList"
-                  [ngValue]="category"
-                  >{{ category.name }}</option
-                >
-              </select>
+            </select>
           </div>
 
           <div class="mb-3">
@@ -129,11 +127,7 @@
           </div>
           <div class="mb-3">
             <label for="productBrand">Brand</label>
-            <select
-              class="form-control"
-              name="productBrand"
-              id="brand_select"
-            >
+            <select class="form-control" name="productBrand" id="brand_select">
               <option *ngFor="let brand of brandsList" [ngValue]="brand.$key">{{
                 brand.name
               }}</option>
@@ -152,15 +146,16 @@
             />
           </div>
           <div class="mb-3">
-            <label for="productImageUrl">Product Image</label>
+            <!-- <input type="text" class="form-control" id="productImageUrl" [(ngModel)]="product.productImageUrl"
+              name="productImageUrl" placeholder="Image Url" required /> -->
+            <label for="formFileMultiple" class="form-label"
+              >Product Image</label
+            >
             <input
-              type="text"
-              class="form-control"
-              id="productImageUrl"
-              [(ngModel)]="product.productImageUrl"
-              name="productImageUrl"
-              placeholder="Image Url"
-              required
+              class="form-control file-uploader"
+              type="file"
+              id="formFileMultiple"
+              multiple
             />
           </div>
 

@@ -21,6 +21,12 @@ router-outlet ~ * {
     box-shadow: none;
     border-bottom: 1px solid #0069d9;
   }
+  &.file-uploader {
+    border: none;
+  }
+  ::before {
+    background-color: transparent;
+  }
 }
 
 .btn {
