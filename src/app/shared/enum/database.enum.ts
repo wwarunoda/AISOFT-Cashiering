@@ -42,3 +42,17 @@ export enum CategoriesEnum {
   Description = "description",
   index = "index"
 }
+
+export enum SizeEnum {
+  TableName = "size",
+  Data = "data",
+  IsActive = "isActive",
+  Name = "name",
+  SizeTypeKey = "sizeTypeKey"
+}
+
+export enum SizeTypeEnum {
+  TableName = "sizeType",
+  Description = "description",
+  Name = "name"
+}

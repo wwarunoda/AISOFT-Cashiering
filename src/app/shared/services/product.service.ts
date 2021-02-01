@@ -6,8 +6,8 @@ import {
 } from "@angular/fire/database";
 import { AuthService } from "./auth.service";
 import { ToastService } from "./toast.service";
-import { FavouriteProductsEnum, ProductsEnum, BrandEnum, GenderEnum, CategoriesEnum } from "../enum";
-import { FavouriteProduct, Product, Brand, Gender, Category } from "../models";
+import { FavouriteProductsEnum, ProductsEnum, BrandEnum, GenderEnum, CategoriesEnum, SizeEnum, SizeTypeEnum } from "../enum";
+import { FavouriteProduct, Product, Brand, Gender, Category, Size, SizeType } from "../models";
 
 @Injectable()
 export class ProductService {
@@ -16,6 +16,8 @@ export class ProductService {
   brands: AngularFireList<any>;
   genders: AngularFireList<Gender>;
   categories: AngularFireList<Category>;
+  sizes: AngularFireList<Size>;
+  sizeTypes: AngularFireList<SizeType>;
   // favouriteProducts
   favouriteProducts: AngularFireList<FavouriteProduct>;
   cartProducts: AngularFireList<FavouriteProduct>;
@@ -196,6 +198,18 @@ export class ProductService {
 
   deleteCategory(key: string) {
     this.categories.remove(key);
+  }
+  //#endregion
+
+  //#region size
+  getSizes() {
+    this.sizes = this.db.list(SizeEnum.TableName);
+    return this.sizes;
+  }
+
+  getSizeTypes() {
+    this.sizeTypes = this.db.list(SizeTypeEnum.TableName);
+    return this.sizeTypes;
   }
   //#endregion
 }

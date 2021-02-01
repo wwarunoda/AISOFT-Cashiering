@@ -7,3 +7,5 @@ export * from "./colour";
 export * from "./size";
 export * from "./gender";
 export * from "./category";
+export * from "./size";
+export * from "./sizeType";

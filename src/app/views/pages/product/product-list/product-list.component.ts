@@ -14,7 +14,7 @@ export class ProductListComponent implements OnInit {
   loading = false;
   brands: Brand[];
   selectedBrand:Brand = { $key: '', name: "All", description: '', id: 0, index: 1  };
-  selectedCategory:Category = { $key: '', name: "All Categories", genderKey: '', description: '', id: 0, index: 1  };
+  selectedCategory:Category = { $key: '', name: "All Categories", genderKey: '', description: '', id: 0, index: 1, sizeTypeKey: ''  };
   genderList: Gender[];
   categoryMasterList: Category[];
   categoryList: Category[];
@@ -120,9 +120,10 @@ export class ProductListComponent implements OnInit {
         name: 'All Categories',
         genderKey: '',
         description: '',
-        index: 1
+        index: 1,
+        sizeTypeKey: ''
       }];
-      this.categoryList = this.categoryMasterList.filter(category => category.genderKey == this.selecredGender.$key);
+      this.categoryList = this.categoryList.concat(this.categoryMasterList.filter(category => category.genderKey == this.selecredGender.$key));
     }
   }
 

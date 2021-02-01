@@ -2,8 +2,9 @@ import { ToastService } from './../../../../shared/services/toast.service';
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, NgForm, Validators } from "@angular/forms";
 import { ProductService } from "../../../../shared/services/product.service";
-import { Product, Brand, Gender, Category } from "../../../../shared/models";
+import { Product, Brand, Gender, Category, Size } from "../../../../shared/models";
 import { ActivatedRoute } from '@angular/router';
+import { timeStamp } from 'console';
 
 declare var $: any;
 declare var require: any;
@@ -24,6 +25,9 @@ export class AddProductComponent implements OnInit {
   categoryMasterList: Category[];
   categoryList: Category[];
   selectedCategory: Category;
+  sizeMasterList: Size[];
+  sizeList: Size[];
+  selectedSize: Size;
   seletedBrand: "All";
   selectedGenderKey: '';
   constructor(private productService: ProductService,
@@ -64,6 +68,7 @@ export class AddProductComponent implements OnInit {
 
   private getMasterData(): void {
     // Select Brands
+
     const allBrands = this.productService.getBrands();
     allBrands.snapshotChanges().subscribe(
       (brand) => {
@@ -115,17 +120,23 @@ export class AddProductComponent implements OnInit {
       this.selectedGenderKey = queryParams.key;
       if (this.genderList != null) {
       this.selectedGend = this.genderList.find(gender => gender.$key == queryParams.key);
+      this.categoryList = this.categoryMasterList.filter(category => category.genderKey == this.selectedGend.$key);
+      if(this.categoryList != null)
+         this.selectedCategory = this.categoryList[0];
+          this.selectSizes(this.selectedCategory);
       }
     });
-
-
   }
+
   onGenderChange(genderChangeValue: Gender) {
     this.categoryList = this.categoryMasterList.filter(category => category.genderKey == genderChangeValue.$key);
   }
+
   onCategoryChange(categoryChangeValue: Category) {
     this.selectedCategory = categoryChangeValue;
+    this.sizeList = this.sizeMasterList.filter(size => size.sizeTypeKey == categoryChangeValue.sizeTypeKey);
   }
+
   private selectCategoryByGender() {
     if(this.categoryMasterList != null) {
       this.categoryList = [];
@@ -133,7 +144,27 @@ export class AddProductComponent implements OnInit {
         this.categoryList = this.categoryMasterList.filter(category => category.genderKey == this.selectedGend.$key);
         if(this.categoryList != null)
           this.selectedCategory = this.categoryList[0];
+          this.selectSizes(this.selectedCategory);
       }
+    }
+  }
+
+  private selectSizes(categorySelected: Category) {
+    if(categorySelected != null) {
+      const allSizes = this.productService.getSizes();
+      allSizes.snapshotChanges().subscribe(
+        (size) => {
+          this.sizeMasterList = [];
+          size.forEach((element) => {
+            const y = { ...element.payload.toJSON(), $key: element.key };
+            this.sizeMasterList.push(y as Size);
+          });
+          this.sizeList = this.sizeMasterList.filter(size => size.sizeTypeKey == categorySelected.sizeTypeKey);
+        },
+        (err) => {
+          this.toastService.error("Error while fetching Size", err);
+        }
+      );
     }
   }
 }

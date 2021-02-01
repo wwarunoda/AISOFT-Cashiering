@@ -5,4 +5,5 @@ export class Category {
   name: string;
   description: string;
   index: number;
+  sizeTypeKey: string;
 }
