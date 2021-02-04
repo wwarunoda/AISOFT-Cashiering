@@ -7,6 +7,7 @@ import { Injectable } from "@angular/core";
 import { FirebaseApp } from "@angular/fire";
 import { AngularFireStorage } from "@angular/fire/storage";
 import { promise } from "protractor";
+import { FileExt } from "../models/file.ext";
 
 @Injectable({
   providedIn: "root",
@@ -48,10 +49,13 @@ export class FileService {
       });
   }
 
-  uploadFile(list: string, file: File): void {
-    // const key = this.db.list(list).push(file.name).key;
-    // this.fa.storage().ref().put(file).then((snapshot) => {
-    //     console.log("Uploaded a blob or file!", snapshot, key);
-    // });
+  uploadFile(path: string, file: FileExt) {
+    const storageRef = this.fa.storage().ref();
+
+    const uploadTask = storageRef
+      .child(`${path}/${file.key$}.${file.fileExtension}`)
+      .put(file);
+
+    return uploadTask;
   }
 }

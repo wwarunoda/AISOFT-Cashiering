@@ -13,10 +13,16 @@ router-outlet ~ * {
   font-family: "Ubuntu", sans-serif;
 }
 
+.no-margin {
+  margin: 0;
+}
+
 .form-control {
   border: none;
   border-bottom: 1px solid #ced4da;
   border-radius: 0px;
+  height: fit-content;
+  font-size: 0.9em;
   &:focus {
     box-shadow: none;
     border-bottom: 1px solid #0069d9;
@@ -31,4 +37,12 @@ router-outlet ~ * {
 
 .btn {
   border-radius: 1.25rem;
+  &.btn-sm {
+    padding: 0.2em 1em;
+    font-size: 0.9em;
+  }
+}
+
+.required {
+  color: #ff0000;
 }

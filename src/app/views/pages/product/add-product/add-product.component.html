@@ -23,153 +23,226 @@
       <div class="modal-body">
         <form
           class="needs-validation"
+          autocomplete="off"
           #addProductForm="ngForm"
           (ngSubmit)="createProduct(addProductForm)"
         >
           <div class="row">
-            <div class="col-md-6 mb-3">
-              <label for="productName">Product Name</label>
-              <input
-                type="text"
-                class="form-control"
-                id="productName"
-                name="productName"
-                [(ngModel)]="product.productName"
-                placeholder="Product Name"
-                value=""
-                required
-              />
-              <div class="invalid-feedback">
-                Valid product name is required.
+            <div class="col-md-6 vertical-divider spacer">
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label class="no-margin" for="genderControl"
+                    >Gender<span class="required">*</span></label
+                  >
+                  <select
+                    class="form-control"
+                    name="genderControl"
+                    id="gender_select"
+                    [(ngModel)]="selectedGend"
+                    (ngModelChange)="onGenderChange($event)"
+                  >
+                    <option
+                      *ngFor="let gender of genderList"
+                      [ngValue]="gender"
+                      >{{ gender.name }}</option
+                    >
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <label class="no-margin" for="productBrand"
+                    >Brand<span class="required">*</span></label
+                  >
+                  <select
+                    class="form-control"
+                    name="productBrand"
+                    id="brand_select"
+                  >
+                    <option
+                      *ngFor="let brand of brandsList"
+                      [ngValue]="brand.$key"
+                      >{{ brand.name }}</option
+                    >
+                  </select>
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label class="no-margin" for="productName"
+                    >Product Name<span class="required">*</span></label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    style="padding: 0.26rem 0.75rem;"
+                    id="productName"
+                    name="productName"
+                    [(ngModel)]="product.productName"
+                    placeholder="Product Name"
+                    value=""
+                    required
+                  />
+                  <div class="invalid-feedback">
+                    Valid product name is required.
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <label class="no-margin" for="productCategory"
+                    >Product Category<span class="required">*</span></label
+                  >
+                  <select
+                    class="form-control"
+                    name="productCategory"
+                    id="category_select"
+                    [(ngModel)]="selectedCategory"
+                    (ngModelChange)="onCategoryChange($event)"
+                  >
+                    <option
+                      *ngFor="let category of categoryList"
+                      [ngValue]="category"
+                      >{{ category.name }}</option
+                    >
+                  </select>
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label class="no-margin" for="productPrice"
+                    >Product Price<span class="required">*</span></label
+                  >
+                  <input
+                    type="number"
+                    name="productPrice"
+                    class="form-control"
+                    [(ngModel)]="product.productPrice"
+                    placeholder="Product Price"
+                    id="productPrice"
+                    value=""
+                    required
+                  />
+                  <div class="invalid-feedback">
+                    Valid product price is required.
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <label class="no-margin" for="productDescription"
+                    >Product Description</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="productDescription"
+                    placeholder="Product Description"
+                    name="productDescription"
+                    [(ngModel)]="product.productDescription"
+                  />
+                  <!-- <textarea type="text" class="form-control" id="productDescription" placeholder="Product Description"
+                    name="productDescription" [(ngModel)]="product.productDescription"></textarea> -->
+                </div>
+              </div>
+
+              <!-- <div class="mb-3">
+                <label for="productSeller">Product Seller</label>
+                <input type="text" class="form-control" id="productSeller" [(ngModel)]="product.productSeller"
+                  name="productSeller" placeholder="Product Seller" required />
+              </div> -->
+
+              <div class="mb-3">
+                <!-- <input type="text" class="form-control" id="productImageUrl" [(ngModel)]="product.productImageUrl"
+                  name="productImageUrl" placeholder="Image Url" required /> -->
+                <label for="formFileMultiple" class="form-label"
+                  >Product Image</label
+                >
+                <input
+                  (change)="onFileChange($event)"
+                  class="form-control file-uploader"
+                  type="file"
+                  id="formFileMultiple"
+                  multiple
+                />
+                <div style="display: flex;">
+                  <div *ngFor="let file of fileList" style="padding: 0.5em;">
+                    <div class="progress" style="height: 20px; width: 150px;">
+                      <div
+                        class="progress-bar"
+                        role="progressbar"
+                        [ngStyle]="{
+                          width: file?.uploadProgress.toFixed(2) + '%'
+                        }"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                      >
+                        {{ file?.uploadProgress | number: "0.2" }}%
+                      </div>
+                    </div>
+                    <img
+                      style="display: flex; padding: 0.5em;"
+                      [src]="file?.downloadedUrl"
+                      style="width: 50px;"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="col-md-6 mb-3">
-              <label for="genderControl">Genders</label>
-              <select
-                class="form-control"
-                name="genderControl"
-                id="gender_select"
-                [(ngModel)]="selectedGend"
-                (ngModelChange)="onGenderChange($event)"
-              >
-                <option *ngFor="let gender of genderList" [ngValue]="gender">{{
-                  gender.name
-                }}</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="mb-3">
-            <label for="productCategory">Product Category</label>
-            <select
-              class="form-control"
-              name="productCategory"
-              id="category_select"
-              [(ngModel)]="selectedCategory"
-              (ngModelChange)="onCategoryChange($event)"
-            >
-              <option
-                *ngFor="let category of categoryList"
-                [ngValue]="category"
-                >{{ category.name }}</option
-              >
-            </select>
-          </div>
-
-          <div class="mb-3">
-            <label for="productDescription"
-              >Product Description
-              <span class="text-muted">(Optional)</span>
-            </label>
-            <textarea
-              type="text"
-              class="form-control"
-              id="productDescription"
-              placeholder="Product Description"
-              name="productDescription"
-              [(ngModel)]="product.productDescription"
-            ></textarea>
-          </div>
-
-          <div class="row">
-            <div class="col-md-6 mb-3">
-              <label for="productPrice">Product Price</label>
-              <input
-                type="number"
-                name="productPrice"
-                class="form-control"
-                [(ngModel)]="product.productPrice"
-                placeholder="Product Price"
-                id="productPrice"
-                value=""
-                required
-              />
-              <div class="invalid-feedback">
-                Valid product price is required.
+            <div class="col-md-6 spacer">
+              <div class="row mb-3">
+                <div class="col-md-3">
+                  <label class="no-margin" for="productSize"
+                    >Color<span class="required">*</span></label
+                  >
+                  <select
+                    class="form-control"
+                    name="productSize"
+                    id="size_select"
+                  >
+                    <option *ngFor="let size of sizeList" [ngValue]="size">{{
+                      size.name
+                    }}</option>
+                  </select>
+                </div>
+                <div class="col-md-3">
+                  <label class="no-margin" for="productSize"
+                    >Size<span class="required">*</span></label
+                  >
+                  <select
+                    class="form-control"
+                    name="productSize"
+                    id="size_select"
+                  >
+                    <option *ngFor="let size of sizeList" [ngValue]="size">{{
+                      size.name
+                    }}</option>
+                  </select>
+                </div>
+                <div class="col-md-4">
+                  <label class="no-margin" for="productQuatity"
+                    >Quantity<span class="required">*</span></label
+                  >
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="productQuatity"
+                    name="productQuatity"
+                    style="padding: 0.26rem 0.75rem;"
+                    [(ngModel)]="product.productQuatity"
+                    placeholder="Quantity"
+                    value=""
+                    required
+                  />
+                  <div class="invalid-feedback">
+                    Valid product quantity is required.
+                  </div>
+                </div>
               </div>
-            </div>
-            <div class="col-md-6 mb-3">
-              <label for="productQuatity">Product Quantity</label>
-              <input
-                type="text"
-                class="form-control"
-                id="productQuatity"
-                name="productQuatity"
-                [(ngModel)]="product.productQuatity"
-                placeholder="Product Quantity"
-                value=""
-                required
-              />
-              <div class="invalid-feedback">
-                Valid product quantity is required.
+              <div class="mb-2">
+                <button class="btn btn-sm btn-primary pull-right">
+                  Add
+                </button>
               </div>
             </div>
           </div>
-          <div class="row">
-          <div class="col-md-6 mb-3">
-            <label for="productBrand">Brand</label>
-            <select class="form-control" name="productBrand" id="brand_select">
-              <option *ngFor="let brand of brandsList" [ngValue]="brand.$key">{{
-                brand.name
-              }}</option>
-            </select>
-          </div>
-          <div class="col-md-6 mb-3">
-            <label for="productSize">Size</label>
-            <select class="form-control" name="productSize" id="size_select">
-              <option *ngFor="let size of sizeList" [ngValue]="size">{{
-                size.name
-              }}</option>
-            </select>
-          </div>
-          </div>
-          <div class="mb-3">
-            <label for="productSeller">Product Seller</label>
-            <input
-              type="text"
-              class="form-control"
-              id="productSeller"
-              [(ngModel)]="product.productSeller"
-              name="productSeller"
-              placeholder="Product Seller"
-              required
-            />
-          </div>
-          <div class="mb-3">
-            <!-- <input type="text" class="form-control" id="productImageUrl" [(ngModel)]="product.productImageUrl"
-              name="productImageUrl" placeholder="Image Url" required /> -->
-            <label for="formFileMultiple" class="form-label"
-              >Product Image</label
-            >
-            <input
-              class="form-control file-uploader"
-              type="file"
-              id="formFileMultiple"
-              multiple
-            />
-          </div>
-
-          <hr class="mb-4" />
           <button class="btn btn-primary pull-right" type="submit">
             Add Product
           </button>

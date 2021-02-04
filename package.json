@@ -53,6 +53,7 @@
     "bootstrap": "^4.5.0",
     "bootstrap-icons": "^1.0.0-alpha5",
     "classlist.js": "^1.1.20150312",
+    "eway": "^0.1.0",
     "firebase": "^7.15.5",
     "font-awesome": "^4.7.0",
     "html2canvas": "^1.0.0-rc.5",
