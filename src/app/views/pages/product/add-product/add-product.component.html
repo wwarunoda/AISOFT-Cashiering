@@ -21,14 +21,13 @@
         </button>
       </div>
       <div class="modal-body">
-        <form
-          class="needs-validation"
-          autocomplete="off"
-          #addProductForm="ngForm"
-          (ngSubmit)="createProduct(addProductForm)"
-        >
+        <form autocomplete="off">
           <div class="row">
-            <div class="col-md-6 vertical-divider spacer">
+            <div
+              class="col-md-6 vertical-divider spacer"
+              [formGroup]="productForm"
+              autocomplete="off"
+            >
               <div class="row mb-3">
                 <div class="col-md-6">
                   <label class="no-margin" for="genderControl"
@@ -38,8 +37,8 @@
                     class="form-control"
                     name="genderControl"
                     id="gender_select"
-                    [(ngModel)]="selectedGend"
-                    (ngModelChange)="onGenderChange($event)"
+                    formControlName="productGender"
+                    (change)="onGenderChange($event)"
                   >
                     <option
                       *ngFor="let gender of genderList"
@@ -56,10 +55,11 @@
                     class="form-control"
                     name="productBrand"
                     id="brand_select"
+                    formControlName="productBrand"
                   >
                     <option
                       *ngFor="let brand of brandsList"
-                      [ngValue]="brand.$key"
+                      [ngValue]="brand"
                       >{{ brand.name }}</option
                     >
                   </select>
@@ -77,7 +77,7 @@
                     style="padding: 0.26rem 0.75rem;"
                     id="productName"
                     name="productName"
-                    [(ngModel)]="product.productName"
+                    formControlName="productName"
                     placeholder="Product Name"
                     value=""
                     required
@@ -94,7 +94,7 @@
                     class="form-control"
                     name="productCategory"
                     id="category_select"
-                    [(ngModel)]="selectedCategory"
+                    formControlName="productCategory"
                     (ngModelChange)="onCategoryChange($event)"
                   >
                     <option
@@ -106,7 +106,7 @@
                 </div>
               </div>
 
-              <div class="row mb-3">
+              <div class="row mb-4">
                 <div class="col-md-6">
                   <label class="no-margin" for="productPrice"
                     >Product Price<span class="required">*</span></label
@@ -115,7 +115,7 @@
                     type="number"
                     name="productPrice"
                     class="form-control"
-                    [(ngModel)]="product.productPrice"
+                    formControlName="productPrice"
                     placeholder="Product Price"
                     id="productPrice"
                     value=""
@@ -136,72 +136,64 @@
                     id="productDescription"
                     placeholder="Product Description"
                     name="productDescription"
-                    [(ngModel)]="product.productDescription"
+                    formControlName="productDescription"
                   />
-                  <!-- <textarea type="text" class="form-control" id="productDescription" placeholder="Product Description"
-                    name="productDescription" [(ngModel)]="product.productDescription"></textarea> -->
                 </div>
               </div>
 
-              <!-- <div class="mb-3">
-                <label for="productSeller">Product Seller</label>
-                <input type="text" class="form-control" id="productSeller" [(ngModel)]="product.productSeller"
-                  name="productSeller" placeholder="Product Seller" required />
-              </div> -->
-
-              <div class="mb-3">
-                <!-- <input type="text" class="form-control" id="productImageUrl" [(ngModel)]="product.productImageUrl"
-                  name="productImageUrl" placeholder="Image Url" required /> -->
-                <label for="formFileMultiple" class="form-label"
-                  >Product Image</label
-                >
-                <input
-                  (change)="onFileChange($event)"
-                  class="form-control file-uploader"
-                  type="file"
-                  id="formFileMultiple"
-                  multiple
-                />
-                <div style="display: flex;">
-                  <div *ngFor="let file of fileList" style="padding: 0.5em;">
-                    <div class="progress" style="height: 20px; width: 150px;">
-                      <div
-                        class="progress-bar"
-                        role="progressbar"
-                        [ngStyle]="{
-                          width: file?.uploadProgress.toFixed(2) + '%'
-                        }"
-                        aria-valuemin="0"
-                        aria-valuemax="100"
-                      >
-                        {{ file?.uploadProgress | number: "0.2" }}%
+              <div class="row mb-3">
+                <div class="col-md-12">
+                  <label for="formFileMultiple" class="form-label"
+                    >Product Image(s)<span class="required">*</span></label
+                  >
+                  <div
+                    class="custom-dropzone"
+                    ngx-dropzone
+                    [accept]="'image/*'"
+                    [disabled]="
+                      isSavedSuccessfully || productImagesController.disabled
+                    "
+                    (change)="onSelect($event)"
+                  >
+                    <ngx-dropzone-label>
+                      <div>
+                        <h3>Drop your file(s).</h3>
                       </div>
-                    </div>
-                    <img
-                      style="display: flex; padding: 0.5em;"
-                      [src]="file?.downloadedUrl"
-                      style="width: 50px;"
-                    />
+                    </ngx-dropzone-label>
+                    <ngx-dropzone-image-preview
+                      ngProjectAs="ngx-dropzone-preview"
+                      *ngFor="let file of fileList"
+                      [file]="file"
+                      [removable]="true"
+                      (removed)="onRemove(file)"
+                    >
+                      <ngx-dropzone-label *ngIf="file?.uploadProgress < 100">
+                        <div class="progress" style="height: 20px; width: 75%;">
+                          <div
+                            class="progress-bar"
+                            role="progressbar"
+                            [ngStyle]="{
+                              width: file?.uploadProgress + '%'
+                            }"
+                            aria-valuemin="0"
+                            aria-valuemax="100"
+                          >
+                            {{ file?.uploadProgress | number: "0.2" }}%
+                          </div>
+                        </div>
+                      </ngx-dropzone-label>
+                    </ngx-dropzone-image-preview>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="col-md-6 spacer">
+
+            <div
+              class="col-md-6 spacer"
+              [formGroup]="productFormExt"
+              autocomplete="off"
+            >
               <div class="row mb-3">
-                <div class="col-md-3">
-                  <label class="no-margin" for="productSize"
-                    >Color<span class="required">*</span></label
-                  >
-                  <select
-                    class="form-control"
-                    name="productSize"
-                    id="size_select"
-                  >
-                    <option *ngFor="let size of sizeList" [ngValue]="size">{{
-                      size.name
-                    }}</option>
-                  </select>
-                </div>
                 <div class="col-md-3">
                   <label class="no-margin" for="productSize"
                     >Size<span class="required">*</span></label
@@ -210,12 +202,43 @@
                     class="form-control"
                     name="productSize"
                     id="size_select"
+                    formControlName="productSize"
                   >
                     <option *ngFor="let size of sizeList" [ngValue]="size">{{
                       size.name
                     }}</option>
                   </select>
                 </div>
+
+                <div class="col-md-4">
+                  <label class="no-margin" for="productSize"
+                    >Color<span class="required">*</span></label
+                  >
+                  <div class="row">
+                    <div class="col-md-3">
+                      <input
+                        type="color"
+                        id="color_picker"
+                        name="color_picker"
+                        formControlName="productColor"
+                      />
+                    </div>
+                    <div class="col-md-9">
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="color_description"
+                        name="color_description"
+                        formControlName="productColorDescription"
+                        style="padding: 0.26rem 0.75rem;"
+                        placeholder="Color"
+                        value=""
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+
                 <div class="col-md-4">
                   <label class="no-margin" for="productQuatity"
                     >Quantity<span class="required">*</span></label
@@ -225,8 +248,8 @@
                     class="form-control"
                     id="productQuatity"
                     name="productQuatity"
+                    formControlName="productQuantity"
                     style="padding: 0.26rem 0.75rem;"
-                    [(ngModel)]="product.productQuatity"
                     placeholder="Quantity"
                     value=""
                     required
@@ -236,17 +259,114 @@
                   </div>
                 </div>
               </div>
-              <div class="mb-2">
-                <button class="btn btn-sm btn-primary pull-right">
-                  Add
-                </button>
+              <div class="row">
+                <div class="col-12">
+                  <button
+                    [disabled]="productFormExt?.invalid || isSavedSuccessfully"
+                    class="btn btn-sm btn-default pull-right"
+                    (click)="resetProductQuantity()"
+                  >
+                    Reset
+                  </button>
+                  <button
+                    [disabled]="productFormExt?.invalid || isSavedSuccessfully"
+                    class="btn btn-sm pull-right"
+                    [ngClass]="isQuantityUpdate ? 'btn-warning' : 'btn-primary'"
+                    (click)="addProductQuantity()"
+                  >
+                    {{ isQuantityUpdate ? "Update" : "Add" }}
+                  </button>
+                </div>
+              </div>
+
+              <div class="row" *ngIf="productQuantityList?.length">
+                <div class="col-md-12">
+                  <table class="table table-hover table-sm text-gray text-xs">
+                    <thead>
+                      <tr>
+                        <th scope="col" style="width: 4%;">Size</th>
+                        <th scope="col" style="width: 4%;">Color</th>
+                        <th scope="col" style="width: 4%;">Quantity</th>
+                        <th scope="col" style="width: 2%;"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        *ngFor="
+                          let quantity of productQuantityList
+                            | paginate: { itemsPerPage: 3, currentPage: page }
+                        "
+                      >
+                        <td>
+                          {{ quantity?.productSize?.name }}
+                        </td>
+                        <td style="display: flex;">
+                          <div
+                            class="color-box"
+                            [ngStyle]="{
+                              'background-color': quantity.productColor
+                            }"
+                          ></div>
+                          <div>{{ quantity?.productColorDescription }}</div>
+                        </td>
+                        <td>
+                          {{ quantity?.productQuantity }}
+                        </td>
+                        <td>
+                          <i
+                            class="fas fa-pen-alt table-action"
+                            (click)="updateProductQuantity(quantity)"
+                          ></i>
+                          <i
+                            class="fas fa-trash table-action"
+                            (click)="deleteProductQuantity(quantity)"
+                          ></i>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="col-md-6"></div>
+                <div
+                  class="col-md-6 custom-pagination"
+                  *ngIf="productQuantityList?.length > 3"
+                >
+                  <pagination-controls
+                    (pageChange)="page = $event"
+                  ></pagination-controls>
+                </div>
               </div>
             </div>
           </div>
-          <button class="btn btn-primary pull-right" type="submit">
-            Add Product
-          </button>
         </form>
+      </div>
+
+      <div class="row mb-2 px-3">
+        <div class="col-12">
+          <ng-container *ngIf="!isSavedSuccessfully">
+            <button
+              class="btn btn-sm btn-default pull-right spacer"
+              (click)="resetProductForm()"
+            >
+              Reset
+            </button>
+            <button
+              [disabled]="productForm?.invalid || !productQuantityList?.length"
+              class="btn btn-sm btn-primary pull-right spacer"
+              (click)="addProduct()"
+            >
+              Add Product
+            </button>
+          </ng-container>
+          <ng-container *ngIf="isSavedSuccessfully">
+            <button
+              class="btn btn-sm btn-success pull-right spacer"
+              (click)="closeDialog()"
+            >
+              Close
+            </button>
+          </ng-container>
+        </div>
       </div>
     </div>
   </div>

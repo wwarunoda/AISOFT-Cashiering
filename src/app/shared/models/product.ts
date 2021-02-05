@@ -1,17 +1,20 @@
-import { Size, Colour, Brand } from "./";
+import { Size, Colour, Brand, Category } from "./";
+import { Gender } from "./gender";
+import { ProductQuantity } from "./product.quantity";
 export class Product {
   $key?: string;
   productId?: string;
   productName?: string;
   productCategoryId?: number;
   productCategory?: string;
+  productCategoryVM?: Category;
   productDescription?: string;
   genderKey?: string;
   gender?: string;
+  genderVM?: Gender;
   productPrice?: number;
   productImageUrl?: string;
   productAdded?: number;
-  productQuatity?: number;
   ratings?: number;
   favourite?: boolean;
   productSeller?: string;
@@ -23,5 +26,7 @@ export class Product {
   size?: Size;
   modelDetails?: string;
   isProductAvailable?: boolean;
-  productBrand?: string;
+  productBrandName?: string;
+  productBrand?: Brand;
+  productQuantity?: ProductQuantity[];
 }

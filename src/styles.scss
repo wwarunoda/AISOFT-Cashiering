@@ -29,6 +29,16 @@ router-outlet ~ * {
   }
   &.file-uploader {
     border: none;
+    &.ng-touched {
+      &.ng-invalid {
+        border: none;
+      }
+    }
+  }
+  &.ng-touched {
+    &.ng-invalid {
+      border-bottom: 1px solid #ff0000;
+    }
   }
   ::before {
     background-color: transparent;
@@ -37,12 +47,28 @@ router-outlet ~ * {
 
 .btn {
   border-radius: 1.25rem;
+  margin: 0.2em;
   &.btn-sm {
     padding: 0.2em 1em;
     font-size: 0.9em;
+  }
+  &.btn-default {
+    background-color: #ededed;
   }
 }
 
 .required {
   color: #ff0000;
+}
+
+.text-gray {
+  color: #3e3e3e;
+}
+
+.text-xs {
+  font-size: 0.9em;
+}
+
+.text-center {
+  text-align: center;
 }

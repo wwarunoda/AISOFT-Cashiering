@@ -6,7 +6,7 @@ import { AngularFireModule } from "@angular/fire";
 import { AngularFireDatabaseModule } from "@angular/fire/database";
 import { AngularFirestoreModule } from "@angular/fire/firestore";
 import { AngularFireAuthModule } from "@angular/fire/auth";
-import { FormsModule, FormBuilder } from "@angular/forms";
+import { FormsModule, FormBuilder, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule, Router } from "@angular/router";
 import { OwlModule } from "ngx-owl-carousel";
 import { NgxPaginationModule } from "ngx-pagination";
@@ -34,6 +34,8 @@ import { AngularFireStorageModule } from "@angular/fire/storage";
 import { NavBarService } from "./services/nav-bar.service";
 import { GetBrandByBrandKeyPipe } from "./pipes/getBrandByBrandKey.pipe";
 import { GetCategoryByCategoryKeyPipe } from "./pipes/getCategoryByCategoryKey.pipe";
+import { NgxDropzoneModule } from "ngx-dropzone";
+
 @NgModule({
   imports: [
     CommonModule,
@@ -42,6 +44,7 @@ import { GetCategoryByCategoryKeyPipe } from "./pipes/getCategoryByCategoryKey.p
     AngularFireDatabaseModule,
     AngularFireAuthModule,
     AngularFireStorageModule,
+    ReactiveFormsModule,
     FormsModule,
     HttpClientModule,
     RouterModule,
@@ -49,6 +52,7 @@ import { GetCategoryByCategoryKeyPipe } from "./pipes/getCategoryByCategoryKey.p
     NgxPaginationModule,
     NgxContentLoadingModule,
     AngularFirestoreModule,
+    NgxDropzoneModule,
   ],
   declarations: [
     NoProductsFoundComponent,
@@ -71,6 +75,7 @@ import { GetCategoryByCategoryKeyPipe } from "./pipes/getCategoryByCategoryKey.p
     AngularFireDatabaseModule,
     AngularFirestoreModule,
     FormsModule,
+    ReactiveFormsModule,
     RouterModule,
     OwlModule,
     NgxPaginationModule,
@@ -88,6 +93,7 @@ import { GetCategoryByCategoryKeyPipe } from "./pipes/getCategoryByCategoryKey.p
     CdkTreeModule,
     DragDropModule,
     ScrollingModule,
+    NgxDropzoneModule,
   ],
   providers: [
     AuthService,

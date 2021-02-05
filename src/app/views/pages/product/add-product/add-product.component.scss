@@ -9,3 +9,48 @@
 .spacer {
   padding: 0.5em 1.5em;
 }
+
+input[type="color"] {
+  -webkit-appearance: none;
+  border: none;
+  border-radius: 5px;
+  background-color: transparent;
+  width: 35px;
+  height: 35px;
+  cursor: pointer;
+  &:focus {
+    outline: transparent;
+  }
+}
+input[type="color"]::-webkit-color-swatch {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.color-box {
+  margin: 0.2em;
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+}
+
+.table-action {
+  padding: 0 0.2em;
+  cursor: pointer;
+}
+
+.custom-pagination {
+  pagination-controls {
+    font-size: 0.9em;
+  }
+}
+
+ngx-dropzone,
+.custom-dropzone {
+  ngx-dropzone-label {
+    width: 90%;
+    .progress {
+      margin: 0 auto;
+    }
+  }
+}

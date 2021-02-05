@@ -18,6 +18,10 @@ export class ShippingDetailsComponent implements OnInit {
   userDetail: UserDetail;
 
   products: Product[];
+  key =
+    "A1001CTYCxgwTHvadCWKyV9m/ixKCimCqN/cv5/2+SiU0iNc267zZAdNMpqUkizVY9tG7J";
+  password = "s4nydboX";
+  endpoint = "sandbox";
 
   constructor(
     authService: AuthService,
@@ -66,4 +70,28 @@ export class ShippingDetailsComponent implements OnInit {
       { outlets: { checkOutlet: ["billing-details"] } },
     ]);
   }
+
+  // private checkOut() {
+  //   const client = rapid.createClient(this.key, this.password, this.endpoint);
+
+  //   client.createTransaction(rapid.Enum.Method.DIRECT, {
+  //     Customer: {
+  //       CardDetails: {
+  //         Name: "John Smith",
+  //         Number: "4444333322221111",
+  //         ExpiryMonth: "12",
+  //         ExpiryYear: "25",
+  //         CVN: "123"
+  //       }
+  //     },
+  //     Payment: {
+  //       TotalAmount: 1000
+  //     },
+  //     TransactionType: "Purchase"
+  //   }).then((response) => {
+  //     if (response.get("TransactionStatus")) {
+  //       console.log("Payment successful! ID: " + response.get("TransactionID"));
+  //     }
+  //   });
+  // }
 }

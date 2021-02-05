@@ -6,8 +6,24 @@ import {
 } from "@angular/fire/database";
 import { AuthService } from "./auth.service";
 import { ToastService } from "./toast.service";
-import { FavouriteProductsEnum, ProductsEnum, BrandEnum, GenderEnum, CategoriesEnum, SizeEnum, SizeTypeEnum } from "../enum";
-import { FavouriteProduct, Product, Brand, Gender, Category, Size, SizeType } from "../models";
+import {
+  FavouriteProductsEnum,
+  ProductsEnum,
+  BrandEnum,
+  GenderEnum,
+  CategoriesEnum,
+  SizeEnum,
+  SizeTypeEnum,
+} from "../enum";
+import {
+  FavouriteProduct,
+  Product,
+  Brand,
+  Gender,
+  Category,
+  Size,
+  SizeType,
+} from "../models";
 
 @Injectable()
 export class ProductService {
@@ -38,6 +54,11 @@ export class ProductService {
   createProduct(data: Product, callback: () => void) {
     this.products.push(data);
     callback();
+  }
+
+  addProduct(data: Product, callback: (key: string) => void) {
+    const pushedItem = this.products.push(data);
+    callback(pushedItem.key);
   }
 
   getProductById(key: string) {
@@ -160,7 +181,7 @@ export class ProductService {
     this.brands.push({
       id: data.id,
       name: data.name,
-      description: data.description
+      description: data.description,
     });
     callback();
   }
@@ -175,7 +196,7 @@ export class ProductService {
   //#endregion
 
   //#region Gender
-  getGenders():AngularFireList<Gender> {
+  getGenders(): AngularFireList<Gender> {
     this.genders = this.db.list(GenderEnum.TableName);
     return this.genders;
   }
