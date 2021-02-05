@@ -32,6 +32,8 @@ import { FireBaseConfig } from "./../../environments/firebase.config";
 import { FileService } from "./services/file.service";
 import { AngularFireStorageModule } from "@angular/fire/storage";
 import { NavBarService } from "./services/nav-bar.service";
+import { GetBrandByBrandKeyPipe } from "./pipes/getBrandByBrandKey.pipe";
+import { GetCategoryByCategoryKeyPipe } from "./pipes/getCategoryByCategoryKey.pipe";
 @NgModule({
   imports: [
     CommonModule,
@@ -52,6 +54,8 @@ import { NavBarService } from "./services/nav-bar.service";
     NoProductsFoundComponent,
     FilterByBrandPipe,
     FilterByCategoryPipe,
+    GetBrandByBrandKeyPipe,
+    GetCategoryByCategoryKeyPipe,
     NoAccessComponent,
     PageNotFoundComponent,
     TranslatePipe,
@@ -72,6 +76,8 @@ import { NavBarService } from "./services/nav-bar.service";
     NgxPaginationModule,
     FilterByBrandPipe,
     FilterByCategoryPipe,
+    GetBrandByBrandKeyPipe,
+    GetCategoryByCategoryKeyPipe,
     NoAccessComponent,
     PageNotFoundComponent,
     TranslatePipe,

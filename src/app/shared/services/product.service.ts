@@ -151,6 +151,10 @@ export class ProductService {
     return this.brands;
   }
 
+  getBrandById(key: string) {
+    return this.db.object(BrandEnum.TableName + "/" + key);
+  }
+
   createBrand(data: Brand, callback: () => void) {
     this.brands = this.getBrands();
     this.brands.push({
@@ -174,6 +178,10 @@ export class ProductService {
   getGenders():AngularFireList<Gender> {
     this.genders = this.db.list(GenderEnum.TableName);
     return this.genders;
+  }
+
+  getGenderById(key: string) {
+    return this.db.object(GenderEnum.TableName + "/" + key);
   }
   //#endregion
 
