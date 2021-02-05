@@ -23,7 +23,7 @@
                 >AUD {{ product.productPrice }}</span
               >
             </li>
-            <li
+            <!-- <li
               class="list-group-item d-flex justify-content-between lh-condensed"
             >
               <div>
@@ -32,7 +32,7 @@
               <span class="text-muted" style="color: crimson !important;">{{
                 product.productSeller
               }}</span>
-            </li>
+            </li> -->
           </ul>
           <button class="btn btn-primary" (click)="addToCart(product)">
             Add to Cart
@@ -55,7 +55,11 @@
             </tr>
             <tr>
               <th scope="row">Product Category</th>
-              <td>{{ product.productCategory }}</td>
+              <td>{{ product.productCategory | getCategoryByCategoryKey | async}}</td>
+            </tr>
+            <tr>
+              <th scope="row">Product Brand</th>
+              <td>{{ product.productBrand | getBrandByBrandKey | async}}</td>
             </tr>
             <tr>
               <th scope="row">No. of quantity available</th>

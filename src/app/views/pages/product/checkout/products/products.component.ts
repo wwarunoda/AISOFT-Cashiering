@@ -9,14 +9,23 @@ import { Product } from "../../../../../shared/models/product";
 })
 export class ProductsComponent implements OnInit {
   checkoutProducts: Product[];
+  totalPrice: number = 0;
 
-  totalPrice = 0;
-  constructor(productService: ProductService) {
+  constructor(private productService: ProductService) { }
+
+  ngOnInit() {
+    this.createShoppingCartTabs();
+    this.getProductData();
+  }
+
+  private createShoppingCartTabs(): void {
     document.getElementById("shippingTab").style.display = "none";
     document.getElementById("billingTab").style.display = "none";
     document.getElementById("resultTab").style.display = "none";
+  }
 
-    const products = productService.getLocalCartProducts();
+  private getProductData(): void {
+    const products = this.productService.getLocalCartProducts();
 
     this.checkoutProducts = products;
 
@@ -24,6 +33,4 @@ export class ProductsComponent implements OnInit {
       this.totalPrice += product.productPrice;
     });
   }
-
-  ngOnInit() {}
 }

@@ -41,4 +41,5 @@ Thumbs.db
 #Personal Config
 /src/environments/firebase.ConfigDummy.ts
 firebase.json
+package-lock.json
 .travis.yml

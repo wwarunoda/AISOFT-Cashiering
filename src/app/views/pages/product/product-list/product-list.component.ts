@@ -18,14 +18,7 @@ export class ProductListComponent implements OnInit {
   productList: Product[];
   loading = false;
   brands: Brand[];
-  selectedBrand: Brand = {
-    $key: "",
-    name: "All",
-    description: "",
-    id: 0,
-    index: 1,
-  };
-  selectedCategory: Category = {
+  initialCategory: Category = {
     $key: "",
     name: "All Categories",
     genderKey: "",
@@ -34,6 +27,14 @@ export class ProductListComponent implements OnInit {
     index: 1,
     sizeTypeKey: "",
   };
+  selectedBrand: Brand = {
+    $key: "",
+    name: "All",
+    description: "",
+    id: 0,
+    index: 1,
+  };
+  selectedCategory: Category = this.initialCategory;
   genderList: Gender[];
   categoryMasterList: Category[];
   categoryList: Category[];
@@ -142,25 +143,13 @@ export class ProductListComponent implements OnInit {
 
   private selectCategoryByGender() {
     if (this.categoryMasterList != null) {
-      this.categoryList = [
-        {
-          $key: "",
-          id: 0,
-          name: "All Categories",
-          genderKey: "",
-          description: "",
-          index: 1,
-          sizeTypeKey: "",
-        },
-      ];
-
-      if (this.selectedGender) {
-        this.categoryList = this.categoryList.concat(
-          this.categoryMasterList.filter(
-            (category) => category.genderKey === this.selectedGender.$key
-          )
-        );
-      }
+      this.selectedCategory = this.initialCategory;
+      this.categoryList = [this.initialCategory];
+      this.categoryList = this.categoryList.concat(
+        this.categoryMasterList.filter(
+          (category) => category.genderKey == this.selecredGender.$key
+        )
+      );
     }
   }
 
