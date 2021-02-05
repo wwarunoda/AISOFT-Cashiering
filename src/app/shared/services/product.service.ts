@@ -14,6 +14,7 @@ import {
   CategoriesEnum,
   SizeEnum,
   SizeTypeEnum,
+  MaterialEnum,
 } from "../enum";
 import {
   FavouriteProduct,
@@ -23,7 +24,9 @@ import {
   Category,
   Size,
   SizeType,
+  Material,
 } from "../models";
+import * as firebase from "firebase";
 
 @Injectable()
 export class ProductService {
@@ -34,15 +37,20 @@ export class ProductService {
   categories: AngularFireList<Category>;
   sizes: AngularFireList<Size>;
   sizeTypes: AngularFireList<SizeType>;
+  material: AngularFireList<Material>;
   // favouriteProducts
   favouriteProducts: AngularFireList<FavouriteProduct>;
   cartProducts: AngularFireList<FavouriteProduct>;
-
+  currentDate: Date;
+  currentUserId: string;
   constructor(
     private db: AngularFireDatabase,
     private authService: AuthService,
     private toastService: ToastService
-  ) {}
+  ) {
+    this.currentDate = firebase.firestore.Timestamp.fromDate(new Date()).toDate();
+    this.currentUserId = authService.getLoggedUser();
+  }
 
   //#region old services
 
@@ -57,6 +65,8 @@ export class ProductService {
   }
 
   addProduct(data: Product, callback: (key: string) => void) {
+    data.createdDate = data.lastUpdatedDate =  this.currentDate;
+    data.createdUser = this.currentUserId;
     const pushedItem = this.products.push(data);
     callback(pushedItem.key);
   }
@@ -242,4 +252,10 @@ export class ProductService {
     return this.sizeTypes;
   }
   //#endregion
+
+  //#region material
+  getMaterial() {
+    this.material = this.db.list(MaterialEnum.TableName);
+    return this.material;
+  }
 }

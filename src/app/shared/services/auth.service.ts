@@ -12,6 +12,7 @@ export const ANONYMOUS_USER: User = new User();
 
 @Injectable()
 export class AuthService {
+  loggedUerEmail: string = '';
   user: Observable<firebase.User>;
 
   private subject = new BehaviorSubject<User>(undefined);
@@ -86,5 +87,13 @@ export class AuthService {
     return this.firebaseAuth.signInWithPopup(
       new firebase.auth.GoogleAuthProvider()
     );
+  }
+
+  setLoggedUser(email: string) {
+    this.loggedUerEmail = email;
+  }
+
+  getLoggedUser() {
+    return this.loggedUerEmail;
   }
 }

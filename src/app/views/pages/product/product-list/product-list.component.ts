@@ -6,7 +6,7 @@ import {
   ProductService,
   ToastService,
 } from "../../../../shared/services/";
-import { Brand, Product, Gender, Category } from "../../../../shared/models";
+import { Brand, Product, Gender, Category, Material } from "../../../../shared/models";
 
 @Component({
   selector: "app-product-list",
@@ -40,6 +40,8 @@ export class ProductListComponent implements OnInit {
   categoryList: Category[];
   selectedGender: Gender;
   activatedRouteKey: string;
+  materialList: Material[];
+  selectedMaterial: Material = { $key: "", name: "All" };
   page = 1;
   constructor(
     public authService: AuthService,
@@ -126,6 +128,24 @@ export class ProductListComponent implements OnInit {
         this.toastService.error("Error while fetching Category", err);
       }
     );
+
+    const allMaterials = this.productService.getMaterial();
+    allMaterials.snapshotChanges().subscribe(
+      (material) => {
+        this.materialList = [
+          {
+            $key: "", name: "All"
+          }
+        ];
+        material.forEach((element) => {
+          const y = { ...element.payload.toJSON(), $key: element.key };
+          this.materialList.push(y as Material);
+        });
+      },
+      (err) => {
+        this.toastService.error("Error while fetching Material", err);
+      }
+    );
   }
 
   private filterGender(): void {
@@ -148,7 +168,7 @@ export class ProductListComponent implements OnInit {
       if(this.selectedGender) {
         this.categoryList = this.categoryList.concat(
           this.categoryMasterList.filter(
-            (category) => category.genderKey == this.selectedGender.$key
+            (category) => category.genderKey === this.selectedGender.$key
           )
         );
       }

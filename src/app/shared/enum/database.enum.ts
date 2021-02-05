@@ -56,3 +56,9 @@ export enum SizeTypeEnum {
   Description = "description",
   Name = "name"
 }
+
+export enum MaterialEnum {
+  TableName = "materials",
+  Name = "name"
+}
+

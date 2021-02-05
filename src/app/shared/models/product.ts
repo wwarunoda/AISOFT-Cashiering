@@ -27,8 +27,13 @@ export class Product {
   size?: Size;
   modelDetails?: string;
   isProductAvailable?: boolean;
-  productBrandName?: string;
+  productBrandKey?: string;
   productBrandVM?: Brand;
   productQuantity?: ProductQuantity[];
   imageList?: FileExt[];
+  createdDate?: Date;
+  lastUpdatedDate?: Date;
+  createdUser?: string;
+  isActive?: boolean;
+  materialKey?: string;
 }

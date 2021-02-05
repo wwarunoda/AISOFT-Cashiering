@@ -35,6 +35,7 @@ import { NavBarService } from "./services/nav-bar.service";
 import { GetBrandByBrandKeyPipe } from "./pipes/getBrandByBrandKey.pipe";
 import { GetCategoryByCategoryKeyPipe } from "./pipes/getCategoryByCategoryKey.pipe";
 import { NgxDropzoneModule } from "ngx-dropzone";
+import { FilterByMaterialPipe } from "./pipes/filterByMaterial.pipe";
 
 @NgModule({
   imports: [
@@ -58,6 +59,7 @@ import { NgxDropzoneModule } from "ngx-dropzone";
     NoProductsFoundComponent,
     FilterByBrandPipe,
     FilterByCategoryPipe,
+    FilterByMaterialPipe,
     GetBrandByBrandKeyPipe,
     GetCategoryByCategoryKeyPipe,
     NoAccessComponent,
@@ -81,6 +83,7 @@ import { NgxDropzoneModule } from "ngx-dropzone";
     NgxPaginationModule,
     FilterByBrandPipe,
     FilterByCategoryPipe,
+    FilterByMaterialPipe,
     GetBrandByBrandKeyPipe,
     GetCategoryByCategoryKeyPipe,
     NoAccessComponent,

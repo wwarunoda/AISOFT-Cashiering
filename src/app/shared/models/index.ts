@@ -11,3 +11,4 @@ export * from "./size";
 export * from "./sizeType";
 export * from "./product.quantity";
 export * from "./file.ext";
+export * from "./material";

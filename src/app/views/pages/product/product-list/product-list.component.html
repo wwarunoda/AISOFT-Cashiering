@@ -29,15 +29,31 @@
           }}</option>
         </select>
       </div>
-      <ul class="list-group">
-        <li
-          class="list-group-item"
-          *ngFor="let category of categoryList"
-          (click)="selectCategory(category)"
+      <div class="col-md-12">
+        <ul class="list-group">
+          <li
+            class="list-group-item"
+            *ngFor="let category of categoryList"
+            (click)="selectCategory(category)"
+          >
+            {{ category.name }}
+          </li>
+        </ul>
+      </div>
+      <p></p>
+      <div class="form-group">
+        <label for="material_select">Material:</label>
+        <select
+          class="form-control"
+          name=""
+          id="material_select"
+          [(ngModel)]="selectedMaterial"
         >
-          {{ category.name }}
-        </li>
-      </ul>
+          <option *ngFor="let material of materialList" [ngValue]="material">{{
+            material.name
+          }}</option>
+        </select>
+      </div>
     </div>
     <div class="col-md-9">
       <div class="container">
@@ -54,6 +70,7 @@
               let product of productList
                 | filterByBrand: selectedBrand
                 | filterByCategory: selectedCategory
+                | filterByMaterial: selectedMaterial
                 | paginate: { itemsPerPage: 6, currentPage: page }
             "
           >

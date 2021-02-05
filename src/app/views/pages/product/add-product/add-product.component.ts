@@ -17,10 +17,12 @@ import {
   Size,
   FileExt,
   ProductQuantity,
+  Material
 } from "../../../../shared/models";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ProductsEnum } from "../../../../shared/enum";
 import { FirebaseApp } from "@angular/fire";
+import { now } from "moment";
 
 declare var $: any;
 declare var require: any;
@@ -46,6 +48,7 @@ export class AddProductComponent implements OnInit {
   categoryMasterList: Category[];
   categoryList: Category[];
   selectedCategory: Category;
+  selectedMaterial: Material;
   sizeMasterList: Size[];
   sizeList: Size[];
   fileList: FileExt[] = [];
@@ -56,6 +59,7 @@ export class AddProductComponent implements OnInit {
   isUpdate = false;
   isAttachmentUploading = false;
   isSavedSuccessfully = false;
+  materialList: Material[];
 
   get keyController(): AbstractControl {
     return this.productForm.controls.key$;
@@ -71,6 +75,9 @@ export class AddProductComponent implements OnInit {
   }
   get productCategoryController(): AbstractControl {
     return this.productForm.controls.productCategory;
+  }
+  get productMaterialController(): AbstractControl {
+    return this.productForm.controls.productMaterial;
   }
   get productPriceController(): AbstractControl {
     return this.productForm.controls.productPrice;
@@ -124,6 +131,7 @@ export class AddProductComponent implements OnInit {
       productBrand: [null, Validators.required],
       productName: [null, Validators.required],
       productCategory: [null, Validators.required],
+      productMaterial: [null, Validators.required],
       productPrice: [0, Validators.required],
       productDescription: null,
       productImages: null,
@@ -165,7 +173,7 @@ export class AddProductComponent implements OnInit {
         });
         if (this.genderList != null) {
           this.selectedGend = this.genderList.find(
-            (gender) => gender.$key == this.selectedGenderKey
+            (gender) => gender.$key === this.selectedGenderKey
           );
         }
       },
@@ -209,6 +217,25 @@ export class AddProductComponent implements OnInit {
         this.getProductByKey(queryParams.productKey);
       }
     });
+
+    // Select Material
+    const allMaterials = this.productService.getMaterial();
+    allMaterials.snapshotChanges().subscribe(
+      (material) => {
+        this.materialList = [];
+        material.forEach((element) => {
+          const y = { ...element.payload.toJSON(), $key: element.key };
+          this.materialList.push(y as Material);
+        });
+        if (this.materialList) {
+          this.selectedMaterial = this.materialList[0];
+          this.productMaterialController.setValue(this.selectedMaterial);
+        }
+      },
+      (err) => {
+        this.toastService.error("Error while fetching Material", err);
+      }
+    );
   }
 
   // get product by id
@@ -255,6 +282,9 @@ export class AddProductComponent implements OnInit {
           );
         }
 
+        if (this.product.materialKey) {
+          this.productMaterialController.setValue(this.materialList.find(m => m.$key === this.product.materialKey));
+        }
         // if (this.product.imageList && this.product.imageList.length) {
         //   this.fileList = [];
         //   this.product.imageList.forEach(file => {
@@ -354,6 +384,7 @@ export class AddProductComponent implements OnInit {
       productCategory: this.selectedCategory.$key,
       genderKey: this.selectedGend.$key,
       gender: this.selectedGend.name,
+      materialKey: this.selectedMaterial.$key,
       productId: "PROD_" + shortId.generate(),
       productAdded: moment().unix(),
       ratings: Math.floor(Math.random() * 5 + 1),
@@ -389,6 +420,10 @@ export class AddProductComponent implements OnInit {
     );
   }
 
+  onMaterialChange(materialChangeValue: Category) {
+    this.selectedMaterial = materialChangeValue;
+  }
+
   // on select images
   onSelect(event) {
     this.fileList = [...event.addedFiles];
@@ -417,17 +452,19 @@ export class AddProductComponent implements OnInit {
       if (!this.isUpdate) {
         this.product = {
           productQuantity: this.productQuantityList,
-          productBrandName: this.productBrandController.value.name,
+          productBrandKey: this.productBrandController.value.$key,
           productBrandVM: this.productBrandController.value,
           genderKey: this.selectedGenderKey,
           gender: this.productGenderController.value.name,
           genderVM: this.productGenderController.value,
-          productCategory: this.productCategoryController.value.name,
+          productCategory: this.productCategoryController.value.$key,
           productCategoryVM: this.productCategoryController.value,
           productPrice: this.productPriceController.value,
           productDescription: this.productDescriptionController.value,
           productName: this.productNameController.value,
           imageList: this.fileList,
+          isActive: true,
+          materialKey: this.productMaterialController.value.$key,
         };
         delete this.product.productBrandVM.$key;
         delete this.product.genderVM.$key;
