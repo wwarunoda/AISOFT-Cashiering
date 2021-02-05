@@ -2,7 +2,7 @@ import { Product } from "../../../../shared/models/product";
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { ProductService } from "../../../../shared/services/product.service";
-import { ToastService } from "src/app/shared/services/toast.service";
+import { ToastService } from "../../../../shared/services";
 @Component({
   selector: "app-product-detail",
   templateUrl: "./product-detail.component.html",

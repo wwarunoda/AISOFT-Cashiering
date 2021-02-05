@@ -145,11 +145,13 @@ export class ProductListComponent implements OnInit {
     if (this.categoryMasterList != null) {
       this.selectedCategory = this.initialCategory;
       this.categoryList = [this.initialCategory];
-      this.categoryList = this.categoryList.concat(
-        this.categoryMasterList.filter(
-          (category) => category.genderKey == this.selecredGender.$key
-        )
-      );
+      if(this.selectedGender) {
+        this.categoryList = this.categoryList.concat(
+          this.categoryMasterList.filter(
+            (category) => category.genderKey == this.selectedGender.$key
+          )
+        );
+      }
     }
   }
 
