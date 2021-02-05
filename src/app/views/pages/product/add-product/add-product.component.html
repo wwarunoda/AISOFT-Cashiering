@@ -346,8 +346,6 @@
 
       <div class="row mb-2 px-3">
         <div class="col-12">
-          {{ productForm?.invalid }} ||{{ !productQuantityList?.length }}||
-          {{ !fileList?.length }}|| {{ isAttachmentUploading }}
           <ng-container *ngIf="!isSavedSuccessfully">
             <button
               class="btn btn-sm btn-default pull-right spacer"
@@ -368,6 +366,10 @@
             >
               {{ isUpdate ? "Update Product" : "Add Product" }}
             </button>
+
+            <span *ngIf="isAttachmentUploading" class="spacer pull-right">
+              Please wait...
+            </span>
           </ng-container>
           <ng-container *ngIf="isSavedSuccessfully">
             <button

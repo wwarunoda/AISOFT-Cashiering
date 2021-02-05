@@ -219,6 +219,7 @@ export class AddProductComponent implements OnInit {
       .subscribe((product) => {
         this.isUpdate = true;
         this.product = product;
+        this.fileList = this.product.imageList;
         this.categoryList = this.categoryMasterList;
         this.productQuantityList = this.product.productQuantity;
         this.productPriceController.setValue(this.product.productPrice);
