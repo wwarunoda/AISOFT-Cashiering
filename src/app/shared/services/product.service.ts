@@ -66,8 +66,9 @@ export class ProductService {
     return this.product;
   }
 
-  updateProduct(data: Product) {
+  updateProduct(data: Product, callback: () => void) {
     this.products.update(data.$key, data);
+    callback();
   }
 
   deleteProduct(key: string) {

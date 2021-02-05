@@ -119,6 +119,22 @@
                         </a>
                         <a
                           placement="top"
+                          mdbTooltip="Update Product"
+                          container="body"
+                          href="jaascript:;;"
+                          data-toggle="modal"
+                          data-target="#exampleModalLong"
+                          [routerLink]="['/products/all-products']"
+                          [queryParams]="{
+                            key: activatedRouteKey,
+                            productKey: product.$key
+                          }"
+                          *ngIf="authService.isAdmin$ | async"
+                        >
+                          <i class="fas fa-pen-alt"></i>
+                        </a>
+                        <a
+                          placement="top"
                           mdbTooltip="Remove Product"
                           container="body"
                           *ngIf="authService.isAdmin$ | async"

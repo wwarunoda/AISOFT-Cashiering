@@ -1,11 +1,14 @@
 <!-- Modal -->
 <div
+  mdbModal
+  #basicModal="mdbModal"
   class="modal fade"
   id="exampleModalLong"
   tabindex="-1"
   role="dialog"
   aria-labelledby="exampleModalLongTitle"
   aria-hidden="true"
+  (onHide)="closeDialog()"
 >
   <div class="custom-modal modal-dialog" role="document">
     <div class="modal-content">
@@ -38,7 +41,7 @@
                     name="genderControl"
                     id="gender_select"
                     formControlName="productGender"
-                    (change)="onGenderChange($event)"
+                    (change)="onGenderChange()"
                   >
                     <option
                       *ngFor="let gender of genderList"
@@ -343,6 +346,8 @@
 
       <div class="row mb-2 px-3">
         <div class="col-12">
+          {{ productForm?.invalid }} ||{{ !productQuantityList?.length }}||
+          {{ !fileList?.length }}|| {{ isAttachmentUploading }}
           <ng-container *ngIf="!isSavedSuccessfully">
             <button
               class="btn btn-sm btn-default pull-right spacer"
@@ -351,11 +356,17 @@
               Reset
             </button>
             <button
-              [disabled]="productForm?.invalid || !productQuantityList?.length"
-              class="btn btn-sm btn-primary pull-right spacer"
+              [disabled]="
+                productForm?.invalid ||
+                !productQuantityList?.length ||
+                !fileList?.length ||
+                isAttachmentUploading
+              "
+              class="btn btn-sm pull-right spacer"
+              [ngClass]="isUpdate ? 'btn-warning' : 'btn-primary'"
               (click)="addProduct()"
             >
-              Add Product
+              {{ isUpdate ? "Update Product" : "Add Product" }}
             </button>
           </ng-container>
           <ng-container *ngIf="isSavedSuccessfully">

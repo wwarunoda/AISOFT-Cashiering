@@ -1,5 +1,5 @@
 export interface FileExt extends File {
-  key$?: string;
+  fileKey?: string;
   fileExtension?: string;
   fileName?: string;
   uploadProgress?: number;

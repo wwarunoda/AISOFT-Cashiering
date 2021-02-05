@@ -53,7 +53,7 @@ export class FileService {
     const storageRef = this.fa.storage().ref();
 
     const uploadTask = storageRef
-      .child(`${path}/${file.key$}.${file.fileExtension}`)
+      .child(`${path}/${file.fileKey}.${file.fileExtension}`)
       .put(file);
 
     return uploadTask;

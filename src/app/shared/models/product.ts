@@ -1,4 +1,5 @@
 import { Size, Colour, Brand, Category } from "./";
+import { FileExt } from "./file.ext";
 import { Gender } from "./gender";
 import { ProductQuantity } from "./product.quantity";
 export class Product {
@@ -27,6 +28,7 @@ export class Product {
   modelDetails?: string;
   isProductAvailable?: boolean;
   productBrandName?: string;
-  productBrand?: Brand;
+  productBrandVM?: Brand;
   productQuantity?: ProductQuantity[];
+  imageList?: FileExt[];
 }

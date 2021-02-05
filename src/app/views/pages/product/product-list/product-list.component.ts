@@ -1,5 +1,5 @@
 import { ActivatedRoute, Router } from "@angular/router";
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 
 import {
   AuthService,
@@ -7,6 +7,7 @@ import {
   ToastService,
 } from "../../../../shared/services/";
 import { Brand, Product, Gender, Category } from "../../../../shared/models";
+
 @Component({
   selector: "app-product-list",
   templateUrl: "./product-list.component.html",
@@ -36,7 +37,8 @@ export class ProductListComponent implements OnInit {
   genderList: Gender[];
   categoryMasterList: Category[];
   categoryList: Category[];
-  selecredGender: Gender;
+  selectedGender: Gender;
+  activatedRouteKey: string;
   page = 1;
   constructor(
     public authService: AuthService,
@@ -56,6 +58,10 @@ export class ProductListComponent implements OnInit {
 
   removeProduct(key: string) {
     this.productService.deleteProduct(key);
+  }
+
+  updateProduct(key: string) {
+    console.log(this.activatedRoute);
   }
 
   addFavourite(product: Product) {
@@ -124,11 +130,12 @@ export class ProductListComponent implements OnInit {
   private filterGender(): void {
     this.activatedRoute.queryParams.subscribe((queryParams) => {
       if (this.genderList != null) {
-        this.selecredGender = this.genderList.find(
-          (gender) => gender.$key == queryParams.key
+        this.activatedRouteKey = queryParams.key;
+        this.selectedGender = this.genderList.find(
+          (gender) => gender.$key === queryParams.key
         );
         this.selectCategoryByGender();
-        this.getSelectdProducts();
+        this.getSelectedProducts();
       }
     });
   }
@@ -146,15 +153,18 @@ export class ProductListComponent implements OnInit {
           sizeTypeKey: "",
         },
       ];
-      this.categoryList = this.categoryList.concat(
-        this.categoryMasterList.filter(
-          (category) => category.genderKey == this.selecredGender.$key
-        )
-      );
+
+      if (this.selectedGender) {
+        this.categoryList = this.categoryList.concat(
+          this.categoryMasterList.filter(
+            (category) => category.genderKey === this.selectedGender.$key
+          )
+        );
+      }
     }
   }
 
-  private getSelectdProducts() {
+  private getSelectedProducts() {
     this.loading = true;
     const x = this.productService.getProducts();
     x.snapshotChanges().subscribe(
@@ -165,15 +175,23 @@ export class ProductListComponent implements OnInit {
           const y = { ...element.payload.toJSON(), $key: element.key };
           this.productMasterList.push(y as Product);
         });
-        const productTempList: Product[] = this.productMasterList.filter(
-          (product) => product.genderKey == this.selecredGender.$key
-        );
+        let productTempList: Product[] = [];
+        if (this.selectedGender) {
+          productTempList = this.productMasterList.filter(
+            (productTemp) => productTemp.genderKey === this.selectedGender.$key
+          );
+        }
         // no need to filter product by category, Gender selection is automatically filter relevant categories
-        if (this.categoryList != null) {
+        if (
+          this.categoryList &&
+          this.categoryList.length &&
+          productTempList &&
+          productTempList.length
+        ) {
           this.productList = [];
           this.categoryList.forEach((category) => {
             const productCategoryList = productTempList.filter(
-              (product) => product.productCategory == category.$key
+              (productTemp) => productTemp.productCategory === category.$key
             );
             this.productList.push(...productCategoryList);
           });

@@ -20,7 +20,7 @@
                 <h6 class="my-0">Product Price</h6>
               </div>
               <span class="text-muted" style="color: crimson !important;"
-                >₹ {{ product.productPrice }}</span
+                >AUD {{ product.productPrice }}</span
               >
             </li>
             <li
@@ -60,10 +60,6 @@
             <tr>
               <th scope="row">No. of quantity available</th>
               <td>{{ product?.productQuantity?.length }}</td>
-            </tr>
-            <tr>
-              <th scope="row">Product Added on</th>
-              <td>{{ product.productAdded * 1000 | date }}</td>
             </tr>
           </tbody>
         </table>

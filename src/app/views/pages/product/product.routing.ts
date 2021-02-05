@@ -19,7 +19,7 @@ export const ProductRoutes: Routes = [
         component: ProductListComponent,
       },
       {
-        path: "favourite-products",
+        path: "favorite-products",
         component: FavouriteProductsComponent,
       },
       {

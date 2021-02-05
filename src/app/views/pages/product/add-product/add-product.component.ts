@@ -18,8 +18,9 @@ import {
   FileExt,
   ProductQuantity,
 } from "../../../../shared/models";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { ProductsEnum } from "../../../../shared/enum";
+import { FirebaseApp } from "@angular/fire";
 
 declare var $: any;
 declare var require: any;
@@ -52,6 +53,8 @@ export class AddProductComponent implements OnInit {
   seletedBrand: "All";
   selectedGenderKey: "";
   isQuantityUpdate = false;
+  isUpdate = false;
+  isAttachmentUploading = false;
   isSavedSuccessfully = false;
 
   get keyController(): AbstractControl {
@@ -100,7 +103,9 @@ export class AddProductComponent implements OnInit {
     private toastService: ToastService,
     private activatedRoute: ActivatedRoute,
     private fileService: FileService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private router: Router,
+    private storage: FirebaseApp
   ) {}
 
   ngOnInit() {
@@ -108,6 +113,7 @@ export class AddProductComponent implements OnInit {
     this.getMasterData();
     // init form
     this.initForms();
+    this.getSlideShowImages();
   }
 
   // init forms
@@ -188,17 +194,73 @@ export class AddProductComponent implements OnInit {
       this.selectedGenderKey = queryParams.key;
       if (this.genderList != null) {
         this.selectedGend = this.genderList.find(
-          (gender) => gender.$key == queryParams.key
+          (gender) => gender.$key === queryParams.key
         );
         this.categoryList = this.categoryMasterList.filter(
-          (category) => category.genderKey == this.selectedGend.$key
+          (category) => category.genderKey === this.selectedGend.$key
         );
         if (this.categoryList != null) {
           this.selectedCategory = this.categoryList[0];
           this.selectSizes(this.selectedCategory);
         }
       }
+      this.getProductByKey("-MSm9vCJ5xs-qA8aBBWK");
+      if (queryParams && queryParams.productKey) {
+        this.getProductByKey(queryParams.productKey);
+      }
     });
+  }
+
+  // get product by id
+  private getProductByKey(productKey: string) {
+    this.productService
+      .getProductById(productKey)
+      .valueChanges()
+      .subscribe((product) => {
+        this.isUpdate = true;
+        this.product = product;
+        this.categoryList = this.categoryMasterList;
+        this.productQuantityList = this.product.productQuantity;
+        this.productPriceController.setValue(this.product.productPrice);
+        this.productDescriptionController.setValue(
+          this.product.productDescription
+        );
+        this.productNameController.setValue(this.product.productName);
+
+        this.productForm.disable();
+        this.productImagesController.enable();
+
+        if (this.product.productCategoryVM) {
+          this.productCategoryController.setValue(
+            this.categoryList.find(
+              (category) => category.id === this.product.productCategoryVM.id
+            )
+          );
+        }
+
+        if (this.product.genderVM) {
+          this.productGenderController.setValue(
+            this.genderList.find(
+              (gender) => gender.id === this.product.genderVM.id
+            )
+          );
+        }
+
+        if (this.product.productBrandVM) {
+          this.productBrandController.setValue(
+            this.brandsList.find(
+              (brand) => brand.id === this.product.productBrandVM.id
+            )
+          );
+        }
+
+        // if (this.product.imageList && this.product.imageList.length) {
+        //   this.fileList = [];
+        //   this.product.imageList.forEach(file => {
+        //     this.fileList = [...this.fileList, file];
+        //   });
+        // }
+      });
   }
 
   private selectCategoryByGender() {
@@ -240,7 +302,7 @@ export class AddProductComponent implements OnInit {
   // upload files
   private uploadFiles(productKey$: string): void {
     if (this.fileList && this.fileList.length) {
-      this.productImagesController.disable();
+      this.isAttachmentUploading = true;
       let fileCount = 0;
       let downloadedFileCount = 0;
       this.fileList.forEach((file) => {
@@ -253,7 +315,7 @@ export class AddProductComponent implements OnInit {
           const name = file.name.substr(0, file.name.indexOf("."));
           file.fileExtension = extension;
           file.fileName = name;
-          file.key$ = productKey$ + "_" + fileCount;
+          file.fileKey = productKey$ + "_" + fileCount;
         }
         const uploadTask = this.fileService.uploadFile(
           ProductsEnum.TableName,
@@ -276,13 +338,7 @@ export class AddProductComponent implements OnInit {
               downloadedFileCount += 1;
 
               if (downloadedFileCount === this.fileList.length) {
-                this.isSavedSuccessfully = true;
-                toastr.success(
-                  "Product " +
-                    this.product.productName +
-                    " is added successfully",
-                  "Product Creation"
-                );
+                this.isAttachmentUploading = false;
               }
             });
           }
@@ -318,7 +374,7 @@ export class AddProductComponent implements OnInit {
     });
   }
 
-  onGenderChange(genderChangeValue: Gender) {
+  onGenderChange() {
     this.categoryList = this.categoryMasterList.filter(
       (category) =>
         category.genderKey === this.productGenderController.value.$key
@@ -339,7 +395,7 @@ export class AddProductComponent implements OnInit {
       file.uploadProgress = 1;
     });
 
-    // this.uploadFiles(shortId);
+    this.uploadFiles(shortId.generate());
   }
 
   // on remove images
@@ -349,27 +405,50 @@ export class AddProductComponent implements OnInit {
 
   // add product
   addProduct() {
-    this.product = {
-      productQuantity: this.productQuantityList,
-      productBrandName: this.productBrandController.value.name,
-      productBrand: this.productBrandController.value,
-      genderKey: this.productGenderController.value.$key,
-      gender: this.productGenderController.value.name,
-      genderVM: this.productGenderController.value,
-      productCategory: this.productCategoryController.value.name,
-      productCategoryVM: this.productCategoryController.value,
-      productPrice: this.productPriceController.value,
-      productDescription: this.productDescriptionController.value,
-      productName: this.productNameController.value,
-    };
-    delete this.product.productBrand.$key;
-    delete this.product.genderVM.$key;
-    delete this.product.productCategoryVM.$key;
+    if (
+      this.productForm.valid &&
+      this.productQuantityList &&
+      this.productQuantityList.length &&
+      this.fileList &&
+      this.fileList.length &&
+      !this.isAttachmentUploading
+    ) {
+      if (!this.isUpdate) {
+        this.product = {
+          productQuantity: this.productQuantityList,
+          productBrandName: this.productBrandController.value.name,
+          productBrandVM: this.productBrandController.value,
+          genderKey: this.selectedGenderKey,
+          gender: this.productGenderController.value.name,
+          genderVM: this.productGenderController.value,
+          productCategory: this.productCategoryController.value.name,
+          productCategoryVM: this.productCategoryController.value,
+          productPrice: this.productPriceController.value,
+          productDescription: this.productDescriptionController.value,
+          productName: this.productNameController.value,
+          imageList: this.fileList,
+        };
+        delete this.product.productBrandVM.$key;
+        delete this.product.genderVM.$key;
+        delete this.product.productCategoryVM.$key;
 
-    this.productService.addProduct(this.product, (key) => {
-      this.product = new Product();
-      this.uploadFiles(key);
-    });
+        this.productService.addProduct(this.product, (key) => {
+          toastr.success(
+            "Product " + this.product.productName + " is added successfully",
+            "Product Creation"
+          );
+          this.isSavedSuccessfully = true;
+        });
+      } else {
+        this.productService.updateProduct(this.product, () => {
+          toastr.success(
+            "Product " + this.product.productName + " is updated successfully",
+            "Product Modification"
+          );
+          this.isSavedSuccessfully = true;
+        });
+      }
+    }
   }
 
   // add product quantity
@@ -406,8 +485,18 @@ export class AddProductComponent implements OnInit {
   // add product quantity
   updateProductQuantity(quantity: ProductQuantity): void {
     this.isQuantityUpdate = true;
-    this.productFormExt.setValue(quantity);
-    // this.productSizeController.setValue(this.sizeList.find(size => size.$key === quantity.productSize.$key));
+    this.productColorController.setValue(quantity.productColor);
+    this.productColorDescriptionController.setValue(
+      quantity.productColorDescription
+    );
+    this.productQuantityController.setValue(quantity.productQuantity);
+    this.productQuantityKeyController.setValue(quantity.id);
+    this.productSizeController.setValue(
+      this.sizeMasterList.find(
+        (size) => size.data === quantity.productSize.data
+      )
+    );
+    this.productSizeController.disable();
   }
 
   // add product quantity
@@ -420,6 +509,7 @@ export class AddProductComponent implements OnInit {
   // rest product quantity form
   resetProductQuantity() {
     this.productFormExt.reset();
+    this.productFormExt.enable();
     this.productColorController.setValue("#ffffff");
   }
 
@@ -428,8 +518,10 @@ export class AddProductComponent implements OnInit {
     this.product = {};
     this.fileList = [];
     this.isSavedSuccessfully = false;
+    this.isUpdate = false;
     this.productQuantityList = [];
     this.productForm.reset();
+    this.productForm.enable();
     this.resetProductQuantity();
   }
 
@@ -437,5 +529,22 @@ export class AddProductComponent implements OnInit {
   closeDialog() {
     $("#exampleModalLong").modal("hide");
     this.resetProductForm();
+    this.router.navigate(["products/all-products"], {
+      queryParams: { key: this.selectedGenderKey },
+    });
+  }
+
+  private getSlideShowImages(): void {
+    const fileList = this.storage.storage().ref().child("products");
+    this.fileList = [];
+    fileList.listAll().then((res) => {
+      res.items.forEach((item) => {
+        const fileName = item.fullPath;
+        this.fileService.getFileByName(fileName).then((url) => {
+          const blob = new File(url, fileName);
+          this.fileList = [...this.fileList, url];
+        });
+      });
+    });
   }
 }
