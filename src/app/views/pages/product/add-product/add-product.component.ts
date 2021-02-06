@@ -17,12 +17,12 @@ import {
   Size,
   FileExt,
   ProductQuantity,
-  Material
+  Material,
+  File
 } from "../../../../shared/models";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ProductsEnum } from "../../../../shared/enum";
 import { FirebaseApp } from "@angular/fire";
-import { now } from "moment";
 
 declare var $: any;
 declare var require: any;
@@ -30,6 +30,10 @@ declare var toastr: any;
 const shortId = require("shortid");
 const moment = require("moment");
 
+declare var File: {
+  prototype: File;
+  new(fileBits: BlobPart[], fileName: string, options?: FilePropertyBag): File;
+};
 @Component({
   selector: "app-add-product",
   templateUrl: "./add-product.component.html",
@@ -173,7 +177,7 @@ export class AddProductComponent implements OnInit {
         });
         if (this.genderList != null) {
           this.selectedGend = this.genderList.find(
-            (gender) => gender.$key === this.selectedGenderKey
+            (activeGender) => activeGender.$key === this.selectedGenderKey
           );
         }
       },
@@ -246,7 +250,12 @@ export class AddProductComponent implements OnInit {
       .subscribe((product) => {
         this.isUpdate = true;
         this.product = product;
-        this.fileList = this.product.imageList;
+        this.product.imageList.map(p => {
+          const blob = new File([p.downloadedUrl], p.fileName.concat(".").concat(p.fileExtension), {
+            type: "image/jpeg",
+          });
+          this.fileList = [...this.fileList, blob];
+        });
         this.categoryList = this.categoryMasterList;
         this.productQuantityList = this.product.productQuantity;
         this.productPriceController.setValue(this.product.productPrice);
@@ -415,9 +424,11 @@ export class AddProductComponent implements OnInit {
 
   onCategoryChange(categoryChangeValue: Category) {
     this.selectedCategory = categoryChangeValue;
-    this.sizeList = this.sizeMasterList.filter(
-      (size) => size.sizeTypeKey === categoryChangeValue.sizeTypeKey
-    );
+    if (this.sizeMasterList) {
+      this.sizeList = this.sizeMasterList.filter(
+        (size) => size.sizeTypeKey === categoryChangeValue.sizeTypeKey
+      );
+    }
   }
 
   onMaterialChange(materialChangeValue: Category) {
@@ -579,8 +590,10 @@ export class AddProductComponent implements OnInit {
       res.items.forEach((item) => {
         const fileName = item.fullPath;
         this.fileService.getFileByName(fileName).then((url) => {
-          const blob = new File(url, fileName);
-          this.fileList = [...this.fileList, url];
+          const blob = new File([url], fileName, {
+            type: "image/jpeg",
+          });
+          this.fileList = [...this.fileList, blob];
         });
       });
     });

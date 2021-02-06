@@ -12,3 +12,4 @@ export * from "./sizeType";
 export * from "./product.quantity";
 export * from "./file.ext";
 export * from "./material";
+export * from "./file";
