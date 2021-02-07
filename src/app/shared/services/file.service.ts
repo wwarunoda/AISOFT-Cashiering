@@ -58,4 +58,23 @@ export class FileService {
 
     return uploadTask;
   }
+
+  deleteFile(path: string, file: FileExt) {
+    const storageRef = this.fa
+      .storage()
+      .ref()
+      .child(`${path}/${file.fileKey}.${file.fileExtension}`);
+
+    // Delete the file
+    storageRef
+      .delete()
+      .then(() => {
+        // File deleted successfully
+        console.log("Deleted");
+      })
+      .catch((error) => {
+        // Uh-oh, an error occurred!
+        console.log(error);
+      });
+  }
 }

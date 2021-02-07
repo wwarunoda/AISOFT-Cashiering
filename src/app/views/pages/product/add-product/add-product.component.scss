@@ -47,10 +47,66 @@ input[type="color"]::-webkit-color-swatch {
 
 ngx-dropzone,
 .custom-dropzone {
+  height: 150px;
+  ngx-dropzone-image-preview {
+    min-height: 120px !important;
+    height: 120px !important;
+  }
   ngx-dropzone-label {
     width: 90%;
     .progress {
       margin: 0 auto;
+    }
+  }
+}
+
+.existing-file {
+  display: flex;
+  .image-container {
+    cursor: pointer;
+    position: relative;
+    margin: 0 0.5em;
+    width: 80px;
+    height: 80px;
+    min-height: 80px;
+    border-radius: 5px;
+    box-shadow: 0px 4px 2px 0px #ddd;
+    .image {
+      position: absolute;
+    }
+    &:hover {
+      img {
+        opacity: 0.7;
+      }
+      .remove-badge {
+        opacity: 1;
+      }
+    }
+    img {
+      opacity: 0.8;
+      border-radius: 5px;
+      width: 100%;
+      height: 80px;
+    }
+    .remove-badge {
+      opacity: 0;
+      align-items: center;
+      background: #bbb;
+      border-radius: 50%;
+      color: #fbfbfbfb;
+      cursor: pointer;
+      display: flex;
+      height: 20px;
+      justify-content: center;
+      position: absolute;
+      right: 5px;
+      top: 5px;
+      width: 20px;
+      font-size: 0.9em;
+      padding: 0.8em;
+      &:hover {
+        background: #aeaeae;
+      }
     }
   }
 }

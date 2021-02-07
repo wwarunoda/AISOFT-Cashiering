@@ -165,7 +165,7 @@
                 </div>
               </div>
 
-              <div class="row mb-3">
+              <div class="row">
                 <div class="col-md-12">
                   <label for="formFileMultiple" class="form-label"
                     >Product Image(s)<span class="required">*</span></label
@@ -181,7 +181,13 @@
                   >
                     <ngx-dropzone-label>
                       <div>
-                        <h3>Drop your file(s).</h3>
+                        <h3>
+                          Drop your
+                          <ng-container *ngIf="isUpdate">
+                            new
+                          </ng-container>
+                          file(s).
+                        </h3>
                       </div>
                     </ngx-dropzone-label>
                     <ngx-dropzone-image-preview
@@ -207,6 +213,27 @@
                         </div>
                       </ngx-dropzone-label>
                     </ngx-dropzone-image-preview>
+                  </div>
+                </div>
+                <div class="col-md-12" *ngIf="isUpdate">
+                  <label class="text-xs">Existing Image(s)</label>
+                  <div class="existing-file">
+                    <ng-template ngFor let-image [ngForOf]="existingFileList">
+                      <div class="image-container">
+                        <div class="image">
+                          <img [src]="image?.downloadedUrl" />
+                        </div>
+                        <div class="remove-badge">
+                          <i
+                            class="fas fa-times"
+                            (click)="removeImage(image)"
+                          ></i>
+                        </div>
+                      </div>
+                    </ng-template>
+                    <ng-container *ngIf="!existingFileList?.length">
+                      <i class="text-xs">Not found!</i>
+                    </ng-container>
                   </div>
                 </div>
               </div>
@@ -283,7 +310,7 @@
                   </div>
                 </div>
               </div>
-              <div class="row">
+              <div class="row mb-2">
                 <div class="col-12">
                   <button
                     [disabled]="productFormExt?.invalid || isSavedSuccessfully"
@@ -378,7 +405,7 @@
               [disabled]="
                 productForm?.invalid ||
                 !productQuantityList?.length ||
-                !fileList?.length ||
+                !(fileList?.length || existingFileList?.length) ||
                 isAttachmentUploading
               "
               class="btn btn-sm pull-right spacer"

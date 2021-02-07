@@ -18,11 +18,12 @@ import {
   FileExt,
   ProductQuantity,
   Material,
-  File
+  File,
 } from "../../../../shared/models";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ProductsEnum } from "../../../../shared/enum";
 import { FirebaseApp } from "@angular/fire";
+import { DomSanitizer } from "@angular/platform-browser";
 
 declare var $: any;
 declare var require: any;
@@ -32,7 +33,7 @@ const moment = require("moment");
 
 declare var File: {
   prototype: File;
-  new(fileBits: BlobPart[], fileName: string, options?: FilePropertyBag): File;
+  new (fileBits: BlobPart[], fileName: string, options?: FilePropertyBag): File;
 };
 @Component({
   selector: "app-add-product",
@@ -55,10 +56,13 @@ export class AddProductComponent implements OnInit {
   selectedMaterial: Material;
   sizeMasterList: Size[];
   sizeList: Size[];
-  fileList: FileExt[] = [];
+  fileList: any[] = [];
+  existingFileList: FileExt[] = [];
   selectedSize: Size;
   seletedBrand: "All";
   selectedGenderKey: "";
+  productKey: string;
+
   isQuantityUpdate = false;
   isUpdate = false;
   isAttachmentUploading = false;
@@ -115,8 +119,7 @@ export class AddProductComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private fileService: FileService,
     private formBuilder: FormBuilder,
-    private router: Router,
-    private storage: FirebaseApp
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -124,7 +127,6 @@ export class AddProductComponent implements OnInit {
     this.getMasterData();
     // init form
     this.initForms();
-    this.getSlideShowImages();
   }
 
   // init forms
@@ -216,7 +218,7 @@ export class AddProductComponent implements OnInit {
           this.selectSizes(this.selectedCategory);
         }
       }
-      this.getProductByKey("-MSm9vCJ5xs-qA8aBBWK");
+      // this.getProductByKey("-MSuKdjfhWfrkoO875Bf");
       if (queryParams && queryParams.productKey) {
         this.getProductByKey(queryParams.productKey);
       }
@@ -244,62 +246,56 @@ export class AddProductComponent implements OnInit {
 
   // get product by id
   private getProductByKey(productKey: string) {
+    this.productKey = productKey;
     this.productService
       .getProductById(productKey)
       .valueChanges()
       .subscribe((product) => {
-        this.isUpdate = true;
-        this.product = product;
-        this.product.imageList.map(p => {
-          const blob = new File([p.downloadedUrl], p.fileName.concat(".").concat(p.fileExtension), {
-            type: "image/jpeg",
-          });
-          this.fileList = [...this.fileList, blob];
-        });
-        this.categoryList = this.categoryMasterList;
-        this.productQuantityList = this.product.productQuantity;
-        this.productPriceController.setValue(this.product.productPrice);
-        this.productDescriptionController.setValue(
-          this.product.productDescription
-        );
-        this.productNameController.setValue(this.product.productName);
-
-        this.productForm.disable();
-        this.productImagesController.enable();
-
-        if (this.product.productCategoryVM) {
-          this.productCategoryController.setValue(
-            this.categoryList.find(
-              (category) => category.id === this.product.productCategoryVM.id
-            )
+        if (!this.isSavedSuccessfully) {
+          this.isUpdate = true;
+          this.product = product;
+          this.existingFileList = this.product.imageList;
+          this.categoryList = this.categoryMasterList;
+          this.productQuantityList = this.product.productQuantity;
+          this.productPriceController.setValue(this.product.productPrice);
+          this.productDescriptionController.setValue(
+            this.product.productDescription
           );
-        }
+          this.productNameController.setValue(this.product.productName);
 
-        if (this.product.genderVM) {
-          this.productGenderController.setValue(
-            this.genderList.find(
-              (gender) => gender.id === this.product.genderVM.id
-            )
-          );
-        }
+          this.productForm.disable();
+          this.productImagesController.enable();
 
-        if (this.product.productBrandVM) {
-          this.productBrandController.setValue(
-            this.brandsList.find(
-              (brand) => brand.id === this.product.productBrandVM.id
-            )
-          );
-        }
+          if (this.product.productCategoryVM) {
+            this.productCategoryController.setValue(
+              this.categoryList.find(
+                (category) => category.id === this.product.productCategoryVM.id
+              )
+            );
+          }
 
-        if (this.product.materialKey) {
-          this.productMaterialController.setValue(this.materialList.find(m => m.$key === this.product.materialKey));
+          if (this.product.genderVM) {
+            this.productGenderController.setValue(
+              this.genderList.find(
+                (gender) => gender.id === this.product.genderVM.id
+              )
+            );
+          }
+
+          if (this.product.productBrandVM) {
+            this.productBrandController.setValue(
+              this.brandsList.find(
+                (brand) => brand.id === this.product.productBrandVM.id
+              )
+            );
+          }
+
+          if (this.product.materialKey) {
+            this.productMaterialController.setValue(
+              this.materialList.find((m) => m.$key === this.product.materialKey)
+            );
+          }
         }
-        // if (this.product.imageList && this.product.imageList.length) {
-        //   this.fileList = [];
-        //   this.product.imageList.forEach(file => {
-        //     this.fileList = [...this.fileList, file];
-        //   });
-        // }
       });
   }
 
@@ -448,6 +444,7 @@ export class AddProductComponent implements OnInit {
   // on remove images
   onRemove(event) {
     this.fileList.splice(this.fileList.indexOf(event), 1);
+    this.fileService.deleteFile(ProductsEnum.TableName, event);
   }
 
   // add product
@@ -456,8 +453,10 @@ export class AddProductComponent implements OnInit {
       this.productForm.valid &&
       this.productQuantityList &&
       this.productQuantityList.length &&
-      this.fileList &&
-      this.fileList.length &&
+      ((this.fileList && this.fileList.length) ||
+        (this.isUpdate &&
+          this.existingFileList &&
+          this.existingFileList.length)) &&
       !this.isAttachmentUploading
     ) {
       if (!this.isUpdate) {
@@ -489,7 +488,13 @@ export class AddProductComponent implements OnInit {
           this.isSavedSuccessfully = true;
         });
       } else {
-        this.productService.updateProduct(this.product, () => {
+        if (this.fileList.length) {
+          this.product.imageList = [...this.existingFileList, ...this.fileList];
+        } else {
+          this.product.imageList = this.existingFileList;
+        }
+        this.product.productQuantity = this.productQuantityList;
+        this.productService.updateProduct(this.productKey, this.product, () => {
           toastr.success(
             "Product " + this.product.productName + " is updated successfully",
             "Product Modification"
@@ -525,7 +530,11 @@ export class AddProductComponent implements OnInit {
         quantity.id = updatingQuantity.id;
         this.isQuantityUpdate = false;
       }
-      this.productQuantityList = [...this.productQuantityList, quantity];
+      if (this.productQuantityList) {
+        this.productQuantityList = [...this.productQuantityList, quantity];
+      } else {
+        this.productQuantityList = [quantity];
+      }
 
       this.resetProductQuantity();
     }
@@ -583,19 +592,8 @@ export class AddProductComponent implements OnInit {
     });
   }
 
-  private getSlideShowImages(): void {
-    const fileList = this.storage.storage().ref().child("products");
-    this.fileList = [];
-    fileList.listAll().then((res) => {
-      res.items.forEach((item) => {
-        const fileName = item.fullPath;
-        this.fileService.getFileByName(fileName).then((url) => {
-          const blob = new File([url], fileName, {
-            type: "image/jpeg",
-          });
-          this.fileList = [...this.fileList, blob];
-        });
-      });
-    });
+  removeImage(image: FileExt) {
+    this.existingFileList.splice(this.fileList.indexOf(image), 1);
+    this.fileService.deleteFile(ProductsEnum.TableName, image);
   }
 }

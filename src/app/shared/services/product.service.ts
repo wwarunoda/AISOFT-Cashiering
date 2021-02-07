@@ -48,7 +48,9 @@ export class ProductService {
     private authService: AuthService,
     private toastService: ToastService
   ) {
-    this.currentDate = firebase.firestore.Timestamp.fromDate(new Date()).toDate();
+    this.currentDate = firebase.firestore.Timestamp.fromDate(
+      new Date()
+    ).toDate();
     this.currentUserId = authService.getLoggedUser();
   }
 
@@ -65,7 +67,7 @@ export class ProductService {
   }
 
   addProduct(data: Product, callback: (key: string) => void) {
-    data.createdDate = data.lastUpdatedDate =  this.currentDate;
+    data.createdDate = data.lastUpdatedDate = this.currentDate;
     data.createdUser = this.currentUserId;
     const pushedItem = this.products.push(data);
     callback(pushedItem.key);
@@ -76,8 +78,8 @@ export class ProductService {
     return this.product;
   }
 
-  updateProduct(data: Product, callback: () => void) {
-    this.products.update(data.$key, data);
+  updateProduct(key: string, data: Product, callback: () => void) {
+    this.products.update(key, data);
     callback();
   }
 
