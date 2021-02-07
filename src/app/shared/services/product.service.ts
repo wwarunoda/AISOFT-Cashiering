@@ -26,8 +26,7 @@ import {
   SizeType,
   Material,
 } from "../models";
-import * as firebase from "firebase";
-
+import { firestore } from 'firebase/app';
 @Injectable()
 export class ProductService {
   products: AngularFireList<Product>;
@@ -48,10 +47,9 @@ export class ProductService {
     private authService: AuthService,
     private toastService: ToastService
   ) {
-    this.currentDate = firebase.firestore.Timestamp.fromDate(
-      new Date()
-    ).toDate();
-    this.currentUserId = authService.getLoggedUser();
+    authService.user.subscribe(user => {
+      this.currentUserId = user.email;
+    });
   }
 
   //#region old services
@@ -67,7 +65,7 @@ export class ProductService {
   }
 
   addProduct(data: Product, callback: (key: string) => void) {
-    data.createdDate = data.lastUpdatedDate = this.currentDate;
+    data.createdDate = data.lastUpdatedDate = firestore.Timestamp.now().toDate().toLocaleString();
     data.createdUser = this.currentUserId;
     const pushedItem = this.products.push(data);
     callback(pushedItem.key);

@@ -82,8 +82,6 @@ export class LoginComponent implements OnInit {
           this.router.navigate([returnUrl || "/"]);
         }, 1500);
 
-        this.authService.setLoggedUser(userForm.value["emailId"]);
-
         this.router.navigate(["/"]);
       })
       .catch((err) => {

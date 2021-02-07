@@ -31,8 +31,8 @@ export class Product {
   productBrandVM?: Brand;
   productQuantity?: ProductQuantity[];
   imageList?: FileExt[];
-  createdDate?: Date;
-  lastUpdatedDate?: Date;
+  createdDate?: string;
+  lastUpdatedDate?: string;
   createdUser?: string;
   isActive?: boolean;
   materialKey?: string;
