@@ -11,7 +11,7 @@ import { ToastService } from "../../../../shared/services";
 export class ProductDetailComponent implements OnInit, OnDestroy {
   private sub: any;
   product: Product;
-
+  totalQuantity: number;
   constructor(
     private route: ActivatedRoute,
     private productService: ProductService,
@@ -33,6 +33,15 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
       (product) => {
         const y = { ...(product.payload.toJSON() as Product), $key: id };
         this.product = y;
+
+        if(this.product) {
+          this.totalQuantity = 0;
+          this.product.productQuantity.forEach(p => {
+            if(p.productQuantity) {
+              this.totalQuantity += p.productQuantity;
+            }
+          })
+        }
       },
       (error) => {
         this.ToastService.error("Error while fetching Product Detail", error);
@@ -41,7 +50,10 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   }
 
   addToCart(product: Product) {
-    this.productService.addToCart(product);
+    if (this.totalQuantity > 0)
+      this.productService.addToCart(product);
+    else
+      this.ToastService.error("Item not Available", '');
   }
 
   ngOnDestroy() {

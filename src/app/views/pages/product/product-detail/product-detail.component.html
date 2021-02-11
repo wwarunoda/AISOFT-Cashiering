@@ -17,7 +17,7 @@
               class="list-group-item d-flex justify-content-between lh-condensed"
             >
               <div>
-                <h6 class="my-0">Product Price</h6>
+                <h6 class="my-0">Price</h6>
               </div>
               <span class="text-muted" style="color: crimson !important;"
                 >AUD {{ product.productPrice }}</span
@@ -34,7 +34,7 @@
               }}</span>
             </li> -->
           </ul>
-          <button class="btn btn-primary" (click)="addToCart(product)">
+          <button class="btn btn-primary" (click)="addToCart(product)" [disabled] = "totalQuantity < 1">
             Add to Cart
           </button>
         </div>
@@ -42,28 +42,30 @@
     </div>
     <div class="col-sm-8">
       <div class="product-detail">
-        <h5 class="product-head">Product Details</h5>
+        <!-- <h5 class="product-head">Product Details</h5> -->
         <table class="table" cellspacing="0" style="max-height: 28px;">
           <tbody>
             <tr>
-              <th scope="row">Product Name</th>
-              <td>{{ product.productName }}</td>
+              <!-- <th scope="row">Product Name</th> -->
+              <td class="font-Large">{{ product.productName }}</td>
             </tr>
             <tr>
-              <th scope="row">Product Description</th>
-              <td>{{ product.productDescription }}</td>
+              <!-- <th scope="row">Product Description</th> -->
+              <td class="font-Bold">{{ product.productDescription }}</td>
             </tr>
             <tr>
-              <th scope="row">Product Category</th>
-              <td>{{ product.productCategory | getCategoryByCategoryKey | async}}</td>
+              <!-- <th scope="row">Product Category</th> -->
+              <td class="font-Bold">{{ product.productCategory | getCategoryByCategoryKey | async}}</td>
             </tr>
             <tr>
-              <th scope="row">Product Brand</th>
-              <td>{{ product.productBrandKey | getBrandByBrandKey | async}}</td>
+              <td><h5>Brand </h5> {{ product.productBrandKey | getBrandByBrandKey | async}}</td>
             </tr>
             <tr>
-              <th scope="row">No. of quantity available</th>
-              <td>{{ product?.productQuantity?.length }}</td>
+              <td><p *ngFor="let clr of product.productQuantity"><button class="mh-100" ngClass="{background-color: clr.productColor}" style="width: 40px; height: 40px;"></button></p>
+              </td>
+            </tr>
+            <tr>
+              <td class="font-italic">{{ totalQuantity }} items left</td>
             </tr>
           </tbody>
         </table>
