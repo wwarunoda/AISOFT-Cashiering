@@ -1,9 +1,11 @@
 import { Size } from ".";
 
 export interface ProductQuantity {
-  id?: number;
+  id?: string;
   productSize?: Size;
   productColor?: string;
   productColorDescription?: string;
   productQuantity?: number;
+  isSelected?: boolean;
+  isColorSelected?: boolean;
 }

@@ -36,6 +36,7 @@ import { GetBrandByBrandKeyPipe } from "./pipes/getBrandByBrandKey.pipe";
 import { GetCategoryByCategoryKeyPipe } from "./pipes/getCategoryByCategoryKey.pipe";
 import { NgxDropzoneModule } from "ngx-dropzone";
 import { FilterByMaterialPipe } from "./pipes/filterByMaterial.pipe";
+import { ImageSlideShowComponent } from "./components/image-slide-show/image-slide-show.component";
 
 @NgModule({
   imports: [
@@ -67,6 +68,7 @@ import { FilterByMaterialPipe } from "./pipes/filterByMaterial.pipe";
     TranslatePipe,
     CardLoaderComponent,
     MomentTimeAgoPipe,
+    ImageSlideShowComponent,
   ],
   exports: [
     NoProductsFoundComponent,
@@ -97,6 +99,7 @@ import { FilterByMaterialPipe } from "./pipes/filterByMaterial.pipe";
     DragDropModule,
     ScrollingModule,
     NgxDropzoneModule,
+    ImageSlideShowComponent,
   ],
   providers: [
     AuthService,

@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { FirebaseApp } from "@angular/fire";
 import { AngularFireStorage } from "@angular/fire/storage";
 import { Observable } from "rxjs";
+import { FileExt } from "src/app/shared/models";
 import { FileService } from "src/app/shared/services/file.service";
 
 @Component({

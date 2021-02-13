@@ -488,6 +488,9 @@ export class AddProductComponent implements OnInit {
         });
       } else {
         if (this.fileList.length) {
+          this.existingFileList = this.existingFileList
+            ? this.existingFileList
+            : [];
           this.product.imageList = [...this.existingFileList, ...this.fileList];
         } else {
           this.product.imageList = this.existingFileList;

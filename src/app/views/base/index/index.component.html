@@ -13,12 +13,8 @@
         data-target="#carousel-example-2"
         *ngFor="let item of images; let i = index"
         class="{{ i === 0 ? 'active' : '' }}"
-        data-slide-to="{{ i }}"
+        [attr.data-slide-to]="i"
       ></li>
-      <!-- <li data-target="#carousel-example-2" data-slide-to="1"></li>
-      <li data-target="#carousel-example-2" data-slide-to="2"></li>
-      <li data-target="#carousel-example-2" data-slide-to="3"></li>
-      <li data-target="#carousel-example-2" data-slide-to="4"></li> -->
     </ol>
     <!--/.Indicators-->
     <!--Slides-->
@@ -61,6 +57,7 @@
   </div>
   <!--/.Carousel Wrapper-->
   <br />
+
   <app-best-product></app-best-product>
   <app-footer></app-footer>
 </div>
