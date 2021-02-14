@@ -3,8 +3,9 @@
     <h4 class="mb-3">Shipping Address</h4>
     <form
       class="needs-validation"
-      #userDetailsForm="ngForm"
-      (ngSubmit)="updateUserDetails(userDetailsForm)"
+      (ngSubmit)="updateUserDetails()"
+      [formGroup]="shippingForm"
+       autocomplete="off"
     >
       <div class="row">
         <div class="col-md-6 mb-3">
@@ -13,7 +14,7 @@
             type="text"
             class="form-control"
             id="firstName"
-            [(ngModel)]="userDetail.firstName"
+            formControlName="firstName"
             name="firstName"
             required
           />
@@ -27,7 +28,7 @@
             type="text"
             class="form-control"
             id="lastName"
-            [(ngModel)]="userDetail.lastName"
+            formControlName="lastName"
             name="lastName"
             required
           />
@@ -46,7 +47,7 @@
           type="email"
           class="form-control"
           id="email"
-          [(ngModel)]="userDetails.emailId"
+          formControlName="email"
           name="email"
           [disabled]="true"
         />
@@ -61,9 +62,9 @@
           type="text"
           class="form-control"
           id="address"
+          formControlName="address"
           placeholder="1234 Main St"
-          [(ngModel)]="userDetail.address1"
-          name="address1"
+          name="address"
           required
         />
         <div class="invalid-feedback">
@@ -80,8 +81,8 @@
           type="text"
           class="form-control"
           id="address2"
+          formControlName="address2"
           placeholder="Apartment or suite"
-          [(ngModel)]="userDetail.address2"
           name="address2"
         />
       </div>
@@ -108,8 +109,8 @@
           <select
             class="custom-select d-block w-100"
             id="state"
-            [(ngModel)]="userDetail.state"
             name="state"
+            formControlName="state"
             required
           >
             <option value="">Choose...</option>
@@ -122,21 +123,6 @@
           </select>
           <div class="invalid-feedback">
             Please provide a valid state.
-          </div>
-        </div>
-        <div class="col-md-3 mb-3">
-          <label for="zip">Zip</label>
-          <input
-            type="text"
-            class="form-control"
-            id="zip"
-            placeholder=""
-            [(ngModel)]="userDetail.zip"
-            name="zip"
-            required
-          />
-          <div class="invalid-feedback">
-            Zip code required.
           </div>
         </div>
       </div>
