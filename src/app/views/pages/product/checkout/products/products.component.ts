@@ -11,7 +11,7 @@ export class ProductsComponent implements OnInit {
   checkoutProducts: Product[];
   totalPrice: number = 0;
 
-  constructor(private productService: ProductService) { }
+  constructor(private productService: ProductService) {}
 
   ngOnInit() {
     this.createShoppingCartTabs();
@@ -20,7 +20,7 @@ export class ProductsComponent implements OnInit {
 
   private createShoppingCartTabs(): void {
     document.getElementById("shippingTab").style.display = "none";
-    document.getElementById("billingTab").style.display = "none";
+    // document.getElementById("billingTab").style.display = "none";
     document.getElementById("resultTab").style.display = "none";
   }
 

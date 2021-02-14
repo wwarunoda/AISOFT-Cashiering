@@ -72,3 +72,22 @@ router-outlet ~ * {
 .text-center {
   text-align: center;
 }
+
+.eway-button {
+  width: 100%;
+  border-radius: 1.25rem !important;
+  box-shadow: unset !important;
+  &:focus {
+    outline: unset;
+    box-shadow: 0 0 0 0.13rem rgb(38 143 255 / 50%);
+  }
+  span {
+    border-radius: 1.25rem !important;
+    height: unset !important;
+    line-height: unset !important;
+    padding: 0.5em 1rem !important;
+    background-color: #28a745 !important;
+    box-shadow: unset !important;
+    font-size: 1rem !important;
+  }
+}
