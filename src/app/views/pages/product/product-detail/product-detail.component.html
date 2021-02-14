@@ -59,7 +59,8 @@
       </div>
     </div>
     <div class="col-sm-6">
-      <div class="product-detail">
+      <div class="product-detail" [formGroup]="productForm"
+      autocomplete="off">
         <!-- <h5 class="product-head">Product Details</h5> -->
         <table class="table" cellspacing="0" style="max-height: 28px;">
           <tbody>
@@ -149,19 +150,35 @@
               </td>
             </tr>
             <tr>
-              <td class="font-italic">
-                {{ totalQuantity }} items left!
-                <ng-container *ngIf="totalQuantity">Hurry up.</ng-container>
+              <td>
+                <div class="text-xs text-gray">
+                  <input
+                  style="align-items: left; width: 80px;"
+                    type="number"
+                    class="form-control"
+                    id="productQuatity"
+                    name="productQuatity"
+                    formControlName="productQuantity"
+                    placeholder="Quantity"
+                    value="1"
+                    (input)="onQuantityChange($event.target.value)"
+                    required
+                  />
+                <div class="invalid-feedback">
+                    Valid product quantity is required.
+                </div>
+                </div>
+                <div class="text-xs text-gray font-italic">
+                  {{ totalQuantity }} items left!
+                  <ng-container *ngIf="totalQuantity">Hurry up.</ng-container>
+                </div>
               </td>
             </tr>
             <tr>
               <button
                 class="btn btn-primary"
                 (click)="addToCart(product)"
-                [disabled]="
-                  totalQuantity < 1 || !product?.selectedProductQuantityKey
-                "
-              >
+                [disabled]="totalQuantity < 1 || !product?.selectedProductQuantityKey || totalQuantity == 0">
                 Add to Cart
               </button>
               <a
@@ -170,6 +187,7 @@
                   '/checkouts',
                   { outlets: { checkOutlet: ['shipping-details'] } }
                 ]"
+                [class.disabled]="totalQuantity < 1 || !product?.selectedProductQuantityKey || totalQuantity == 0 ? true: null"
                 routerLinkActive="active"
                 >Buy Now</a
               >

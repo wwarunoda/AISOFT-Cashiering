@@ -3,12 +3,14 @@ import { ActivatedRoute } from "@angular/router";
 import { ProductService } from "../../../../shared/services/product.service";
 import { ToastService } from "../../../../shared/services";
 import { ProductQuantity, Product } from "src/app/shared/models";
+import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
 @Component({
   selector: "app-product-detail",
   templateUrl: "./product-detail.component.html",
   styleUrls: ["./product-detail.component.scss"],
 })
 export class ProductDetailComponent implements OnInit, OnDestroy {
+  productForm: FormGroup;
   private sub: any;
   product: Product;
   totalQuantity: number;
@@ -20,9 +22,11 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private productService: ProductService,
-    private ToastService: ToastService
+    private ToastService: ToastService,
+    private formBuilder: FormBuilder,
   ) {
     this.product = new Product();
+    this.initForms();
   }
 
   ngOnInit() {
@@ -30,8 +34,21 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
       const id = params.id; // (+) converts string 'id' to a number
       this.getProductDetail(id);
     });
+
   }
 
+  private initForms() {
+    this.productForm = this.formBuilder.group({
+      key$: "",
+      productQuantity: ["1", Validators.required]
+    });
+  }
+  get keyController(): AbstractControl {
+    return this.productForm.controls.key$;
+  }
+  get productQuantityController(): AbstractControl {
+    return this.productForm.controls.productQuantity;
+  }
   getProductDetail(id: string) {
     const x = this.productService.getProductById(id);
     x.valueChanges().subscribe(
@@ -46,6 +63,9 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
               this.totalQuantity += p.productQuantity;
             }
           });
+          if(this.totalQuantity == 0) {
+            this.productQuantityController.setValue("0");
+          }
         }
       },
       (error) => {
@@ -112,7 +132,13 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
       this.calculateProductQuantity();
     }
   }
+  onQuantityChange(searchValue: string): void {
+    if(!searchValue || searchValue == "" || (Number(searchValue) <= 0))
+      this.productQuantityController.setValue("1");
+    else if (this.totalQuantity < Number(searchValue))
+    this.productQuantityController.setValue(this.totalQuantity + "");
 
+  }
   onSelectColor(color: ProductQuantity) {
     if (color && this.product.productQuantity) {
       this.product.selectedProductQuantityKey = null;

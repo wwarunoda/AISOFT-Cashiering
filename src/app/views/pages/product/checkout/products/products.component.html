@@ -14,8 +14,8 @@
       </div>
       <div style="padding: 10px;">
         <h6 class="my-0">Name : {{ product.productName }}</h6>
-        <p>Brand : {{ product.productBrand | getBrandByBrandKey | async }}</p>
-        <p>Quantity : {{ product.productQuatity }}</p>
+        <p>Brand : {{ product.productBrandKey | getBrandByBrandKey | async }}</p>
+        <p>Quantity : {{ product?.productQuantity[0]?.productQuantity }}</p>
       </div>
       <span class="text-muted">AUD {{ product.productPrice }}</span>
     </li>
