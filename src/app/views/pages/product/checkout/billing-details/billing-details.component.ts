@@ -7,7 +7,7 @@ import { AuthService } from "../../../../../shared/services/auth.service";
 import { Router } from "@angular/router";
 import { NgForm } from "@angular/forms";
 import { map } from "rxjs/operators";
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT } from "@angular/common";
 
 @Component({
   selector: "app-billing-details",
@@ -25,7 +25,7 @@ export class BillingDetailsComponent implements OnInit {
     productService: ProductService,
     private router: Router,
     private _renderer2: Renderer2,
-   @Inject(DOCUMENT) private _document: Document
+    @Inject(DOCUMENT) private _document: Document
   ) {
     /* Hiding Shipping Tab Element */
     document.getElementById("productsTab").style.display = "none";
@@ -45,35 +45,35 @@ export class BillingDetailsComponent implements OnInit {
   ngOnInit() {}
 
   updateUserDetails(form: NgForm) {
-    let totalPrice = 0;
-    const products = [];
-    this.products.forEach((product) => {
-      delete product.$key;
-      totalPrice += product.productPrice;
-      products.push(product);
-    });
+    // let totalPrice = 0;
+    // const products = [];
+    // this.products.forEach((product) => {
+    //   delete product.$key;
+    //   totalPrice += product.productPrice;
+    //   products.push(product);
+    // });
 
-    const data = {
-      ...form.value,
-      emailId: this.userDetails.emailId,
-      userId: this.userDetails.$key,
-      products,
-      totalPrice,
-      billingDate: Date.now(),
-    };
+    // const data = {
+    //   ...form.value,
+    //   emailId: this.userDetails.emailId,
+    //   userId: this.userDetails.$key,
+    //   products,
+    //   totalPrice,
+    //   billingDate: Date.now(),
+    // };
     this.PayNow();
     // this.billingService.createBillings(data);
 
-    // this.router.navigate([
-    //   "checkouts",
-    //   { outlets: { checkOutlet: ["result"] } },
-    // ]);
+    this.router.navigate([
+      "checkouts",
+      { outlets: { checkOutlet: ["result"] } },
+    ]);
   }
 
   private PayNow() {
-    let script = this._renderer2.createElement('script');
-        script.type = `application/ld+json`;
-        script.text = `
+    let script = this._renderer2.createElement("script");
+    script.type = `application/ld+json`;
+    script.text = `
             {
                 "@context": "https://secure.ewaypayments.com/scripts/eCrypt.min.js"
                 /* your schema.org microdata goes here */
@@ -85,6 +85,6 @@ export class BillingDetailsComponent implements OnInit {
             }
         `;
 
-        this._renderer2.appendChild(this._document.body, script);
+    this._renderer2.appendChild(this._document.body, script);
   }
 }

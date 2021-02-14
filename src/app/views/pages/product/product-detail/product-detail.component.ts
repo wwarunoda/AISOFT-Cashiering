@@ -39,7 +39,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         // const y = { ...(product.payload.toJSON() as Product), $key: id };
         this.product = product;
 
-        if (this.product) {
+        if (this.product && this.product.productQuantity) {
           this.totalQuantity = 0;
           this.product.productQuantity.forEach((p) => {
             if (p.productQuantity) {

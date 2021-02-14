@@ -2,37 +2,35 @@ import { Product } from "../../../../../shared/models/product";
 import { ShippingService } from "../../../../../shared/services/shipping.service";
 import { UserDetail, User } from "../../../../../shared/models/user";
 import { AuthService } from "../../../../../shared/services/auth.service";
-import { Component, OnInit, Renderer2, Inject } from "@angular/core";
-import { AbstractControl, FormBuilder, FormGroup, NgForm, Validators } from "@angular/forms";
+import { Component, OnInit, Renderer2, OnDestroy } from "@angular/core";
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  NgForm,
+  Validators,
+} from "@angular/forms";
 import { Router } from "@angular/router";
 import { ProductService } from "../../../../../shared/services/product.service";
-import { DOCUMENT } from '@angular/common';
-import { map } from "rxjs/operators";
 @Component({
   selector: "app-shipping-details",
   templateUrl: "./shipping-details.component.html",
   styleUrls: ["./shipping-details.component.scss"],
 })
-export class ShippingDetailsComponent implements OnInit {
+export class ShippingDetailsComponent implements OnInit, OnDestroy {
   userDetails: User;
   shippingForm: FormGroup;
-
-  // userDetail: UserDetail;
+  totalPrice: number = 0;
 
   products: Product[];
-  key =
-    "A1001CTYCxgwTHvadCWKyV9m/ixKCimCqN/cv5/2+SiU0iNc267zZAdNMpqUkizVY9tG7J";
-  password = "s4nydboX";
-  endpoint = "sandbox";
-  // handler:any = null;
+
   constructor(
     authService: AuthService,
     private shippingService: ShippingService,
     productService: ProductService,
     private router: Router,
     private _renderer2: Renderer2,
-    private formBuilder: FormBuilder,
-   @Inject(DOCUMENT) private _document: Document
+    private formBuilder: FormBuilder
   ) {
     /* Hiding products Element */
     document.getElementById("productsTab").style.display = "none";
@@ -42,6 +40,7 @@ export class ShippingDetailsComponent implements OnInit {
 
     // this.userDetail = new UserDetail();
     this.products = productService.getLocalCartProducts();
+    this.calculateTotalPrice();
     // authService.user$.pipe(
     //   map((user) => {
     //     this.userDetails = user;
@@ -49,10 +48,12 @@ export class ShippingDetailsComponent implements OnInit {
     // );
   }
 
-
   ngOnInit() {
     this.initForms();
-    this.loadStripe();
+  }
+
+  ngOnDestroy() {
+    // this.removePayment();
   }
 
   private initForms() {
@@ -91,77 +92,62 @@ export class ShippingDetailsComponent implements OnInit {
 
   updateUserDetails() {
     const products = [];
-    let totalPrice = 0;
     this.products.forEach((product) => {
       delete product.$key;
-      totalPrice += product.productPrice;
       products.push(product);
     });
     const data = {
-      $key: '',
+      $key: "",
       userId: 1,
       firstName: this.firstNameController.value,
       lastName: this.lastNameController.value,
       emailId: this.emailController.value,
       address1: this.addressController.value,
       address2: this.address2Controller.value,
-      country: '',
+      country: "",
       state: this.stateController.value,
-      zip: '000',
+      zip: "000",
       products,
-      totalPrice,
+      totalPrice: this.totalPrice,
       shippingDate: Date.now(),
     };
-    this.pay(totalPrice);
-    this.shippingService.createshippings(data);
+    // this.pay(this.totalPrice);
+    // this.shippingService.createshippings(data);
     this.router.navigate([
       "checkouts",
-      { outlets: { checkOutlet: ["billing-details"] } },
+      { outlets: { checkOutlet: ["result"] } },
     ]);
   }
 
-  private loadStripe() {
-    if(!window.document.getElementById('stripe-script')) {
-      var s = window.document.createElement("script");
-      s.id = "stripe-script";
-      s.type = "text/javascript";
-      s.src = "https://secure.ewaypayments.com/scripts/eCrypt.js";
-      // s.onload = () => {
-      //   this.handler = (<any>window).StripeCheckout.configure({
-      //     key: 'pk_test_aeUUjYYcx4XNfKVW60pmHTtI',
-      //     locale: 'auto',
-      //     token: function (token: any) {
-      //       // You can access the token ID with `token.id`.
-      //       // Get the token ID to your server-side code for use.
-      //       console.log(token)
-      //       alert('Payment Success!!');
-      //     }
-      //   });
-      // }
-      window.document.body.appendChild(s);
+  private calculateTotalPrice() {
+    if (this.products && this.products.length) {
+      this.totalPrice = 0;
+      this.products.forEach((product) => {
+        this.totalPrice += product.productPrice;
+      });
     }
   }
 
-  pay(amount: number) {
+  // pay(amount: number) {
 
-    var handler = (<any>window).StripeCheckout.configure({
-      key: 'pk_test_aeUUjYYcx4XNfKVW60pmHTtI',
-      locale: 'auto',
-      token: function (token: any) {
-        // You can access the token ID with `token.id`.
-        // Get the token ID to your server-side code for use.
-        console.log(token)
-        alert('Token Created!!');
-      }
-    });
+  //   var handler = (<any>window).StripeCheckout.configure({
+  //     key: 'C3AB9CkGMOrkP+C8ErM3kZ/zs3mRvbMr2ZTUKCicXSWcSq4Isut48wRp4ihSCYzA7WBf8z',
+  //     locale: 'auto',
+  //     token: function (token: any) {
+  //       // You can access the token ID with `token.id`.
+  //       // Get the token ID to your server-side code for use.
+  //       console.log(token)
+  //       alert('Token Created!!');
+  //     }
+  //   });
 
-    handler.open({
-      name: 'Demo Site',
-      description: '2 widgets',
-      amount
-    });
+  //   handler.open({
+  //     name: 'Demo Site',
+  //     description: '2 widgets',
+  //     amount
+  //   });
 
-}
+  // }
 
   // private checkOut() {
   //   const client = rapid.createClient(this.key, this.password, this.endpoint);

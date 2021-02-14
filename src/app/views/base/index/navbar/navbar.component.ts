@@ -74,9 +74,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     private themeService: ThemeService,
     private navBarService: NavBarService,
     private toastService: ToastService
-  ) {
-    console.log(translate.data);
-  }
+  ) {}
 
   ngOnInit() {
     this.getMasterData();

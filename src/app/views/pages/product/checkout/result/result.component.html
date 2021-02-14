@@ -1,14 +1,18 @@
-<div class="mt-5 mb-5" id="receipt">
-  <a
-    name=""
-    style="position: relative; float: right;"
-    id=""
-    class="btn btn-primary"
-    href="javascript:;;"
-    role="button"
-    (click)="downloadReceipt()"
-    ><i class="fa fa-download"></i> Receipt</a
-  >
+<div class="mt-3 mb-3" id="receipt">
+  <div class="row">
+    <div class="col-md-12 px-4 text-right">
+      <a
+        name=""
+        style="position: relative; float: right;"
+        id=""
+        class="btn btn-primary"
+        href="javascript:;;"
+        role="button"
+        (click)="downloadReceipt()"
+        ><i class="fa fa-download"></i> Receipt</a
+      >
+    </div>
+  </div>
 
   <div class="row">
     <div
@@ -18,11 +22,11 @@
       <div class="row">
         <div class="col-xs-6 col-sm-6 col-md-6">
           <address>
-            <strong>ikismail</strong>
+            <strong>Uclobbers</strong>
             <br />
-            Tamil Nadu, IN 600094
+            Australia
             <br />
-            <abbr title="Phone">P:</abbr> (+91) 8124794942
+            <abbr title="Phone">P:</abbr> (+61) 11111111
           </address>
         </div>
         <div class="col-xs-6 col-sm-6 col-md-6 text-right">
@@ -55,8 +59,12 @@
                 </h6>
               </td>
               <td></td>
-              <td class="col-md-1 text-center">AUD {{ product.productPrice }}</td>
-              <td class="col-md-1 text-center">AUD {{ product.productPrice }}</td>
+              <td class="col-md-1 text-center">
+                AUD {{ product.productPrice }}
+              </td>
+              <td class="col-md-1 text-center">
+                AUD {{ product.productPrice }}
+              </td>
             </tr>
             <tr>
               <td></td>
@@ -92,22 +100,14 @@
             </tr>
           </tbody>
         </table>
-        <button type="button" class="btn btn-success btn-lg btn-block">
+        <!-- <button type="button" class="btn btn-success btn-lg btn-block">
           Pay Now <span class="glyphicon glyphicon-chevron-right"></span>
-        </button>
-
-        <form action="?" method="POST">
-          Name: <input type="text" name="customer_name" value="" />
-
-          <script src="https://secure.ewaypayments.com/scripts/eCrypt.js"
-            class="eway-paynow-button"
-            data-publicapikey="epk-2CD81383-0CDB-4956-857D-E26C15761812"
-            data-amount="1000"
-            data-currency="AUD" >
-          </script>
-
-        </form>
+        </button> -->
       </div>
+      <div class="row">
+        <div id="payment-detail" class="col-md-12"></div>
+      </div>
+      <br />
     </div>
   </div>
 </div>

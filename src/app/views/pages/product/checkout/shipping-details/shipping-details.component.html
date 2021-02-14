@@ -1,11 +1,11 @@
-<div class="container mt-3">
+<div id="shopping-detail" class="container mt-3" style="margin-bottom: 1em;">
   <div class="col-md order-md-1">
     <h4 class="mb-3">Shipping Address</h4>
     <form
       class="needs-validation"
       (ngSubmit)="updateUserDetails()"
       [formGroup]="shippingForm"
-       autocomplete="off"
+      autocomplete="off"
     >
       <div class="row">
         <div class="col-md-6 mb-3">
@@ -126,10 +126,12 @@
           </div>
         </div>
       </div>
-      <hr class="mb-4" />
+      <br />
+      <!-- <hr class="mb-3" /> -->
       <button class="btn btn-primary btn-lg btn-block" type="submit">
         Continue to checkout
       </button>
+      <br />
     </form>
   </div>
 </div>
