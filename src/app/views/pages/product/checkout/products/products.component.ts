@@ -1,6 +1,6 @@
 import { ProductService } from "../../../../../shared/services/product.service";
-import { Component, OnInit, ViewChild } from "@angular/core";
-import { Product } from "../../../../../shared/models/product";
+import { Component, OnInit } from "@angular/core";
+import { Product, Receipt } from "../../../../../shared/models";
 
 @Component({
   selector: "app-products",
@@ -9,6 +9,7 @@ import { Product } from "../../../../../shared/models/product";
 })
 export class ProductsComponent implements OnInit {
   checkoutProducts: Product[];
+  receipts: Receipt[];
   totalPrice: number = 0;
 
   constructor(private productService: ProductService) {}
@@ -28,6 +29,10 @@ export class ProductsComponent implements OnInit {
     const products = this.productService.getLocalCartProducts();
 
     this.checkoutProducts = products;
+
+    const receipts = this.productService.getLocalCartReceipt();
+
+    this.receipts = receipts;
 
     products.forEach((product) => {
       this.totalPrice += product.productPrice;

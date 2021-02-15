@@ -1,3 +1,4 @@
+import { ProductService } from 'src/app/shared/services/product.service';
 import {
   Component,
   OnInit,
@@ -17,7 +18,7 @@ export class CartCalculatorComponent implements OnInit, OnChanges {
   @Input() products: Product[];
 
   totalValue = 0;
-  constructor() {}
+  constructor(private productService: ProductService) {}
 
   ngOnChanges(changes: SimpleChanges) {
     const dataChanges: SimpleChange = changes.products;
@@ -30,4 +31,8 @@ export class CartCalculatorComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {}
+
+  clearCart() {
+    this.productService.removeLocalAllProducts();
+  }
 }

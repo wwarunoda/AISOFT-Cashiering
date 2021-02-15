@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { ProductService } from "../../../../shared/services/product.service";
 import { ToastService } from "../../../../shared/services";
-import { ProductQuantity, Product } from "src/app/shared/models";
+import { ProductQuantity, Product, Receipt } from "../../../../shared/models";
 import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
 @Component({
   selector: "app-product-detail",
@@ -15,6 +15,8 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   product: Product;
   totalQuantity: number;
   selectedImage: any;
+  selectedColour: string;
+  selectedSize: ProductQuantity;
 
   // Get the <span> element that closes the modal
   span = document.getElementsByClassName("close")[0];
@@ -55,6 +57,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
       (product) => {
         // const y = { ...(product.payload.toJSON() as Product), $key: id };
         this.product = product;
+        this.product.$key = id;
 
         if (this.product && this.product.productQuantity) {
           this.totalQuantity = 0;
@@ -63,7 +66,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
               this.totalQuantity += p.productQuantity;
             }
           });
-          if(this.totalQuantity == 0) {
+          if(this.totalQuantity === 0) {
             this.productQuantityController.setValue("0");
           }
         }
@@ -75,7 +78,26 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   }
 
   addToCart(product: Product) {
-    if (this.totalQuantity > 0) this.productService.addToCart(product);
+    let receipt: Receipt = {};
+    receipt.productId = product.$key;
+    receipt.colourKey = this.selectedColour;
+    receipt.gender = product.gender;
+    receipt.genderKey = product.genderKey;
+    receipt.liningMaterial = product.liningMaterial;
+    receipt.material = product.material;
+    receipt.materialComposition = product.materialComposition;
+    receipt.materialKey = product.materialKey;
+    receipt.modelDetails = product.modelDetails;
+    receipt.productBrandKey = product.productBrandKey;
+    receipt.productCategory = product.productCategory;
+    receipt.productCategoryId = product.productCategoryId;
+    receipt.productDescription = product.productDescription;
+    receipt.productImageUrl = product.productImageUrl;
+    receipt.productName = product.productName;
+    receipt.productPrice = product.productPrice;
+    receipt.productQuantity = this.productQuantityController.value;
+    receipt.sizeKey = this.selectedSize.id;
+    if (this.totalQuantity > 0) this.productService.addToCart(product,receipt);
     else this.ToastService.error("Item not Available", "");
   }
 
@@ -114,6 +136,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
 
   onSelectSize(size: ProductQuantity) {
     this.product.selectedProductQuantityKey = null;
+    this.selectedSize = size;
     if (size && this.product.productQuantity) {
       this.product.productQuantity.map((quantity) => {
         if (quantity.productSize.data === size.productSize.data) {
@@ -141,6 +164,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   }
   onSelectColor(color: ProductQuantity) {
     if (color && this.product.productQuantity) {
+      this.selectedColour = color.productColor;
       this.product.selectedProductQuantityKey = null;
       this.product.productQuantity.map((quantity) => {
         if (quantity.productColor === color.productColor) {
