@@ -4,10 +4,7 @@ export class Receipt {
   productId?: string;
   productName?: string;
   productCategoryId?: number;
-  productCategory?: string;
-  productDescription?: string;
   genderKey?: string;
-  gender?: string;
   productPrice?: number;
   productImageUrl?: string;
   material?: string;
@@ -16,10 +13,7 @@ export class Receipt {
   colourKey?: string;
   sizeType?: number;
   sizeKey?: string;
-  modelDetails?: string;
-  isProductAvailable?: boolean;
   productBrandKey?: string;
-  productBrandName?: string;
   productQuantity?: number;
   materialKey?: string;
 }

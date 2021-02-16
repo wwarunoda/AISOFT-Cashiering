@@ -9,7 +9,7 @@
     >
       <div class="row">
         <div class="col-md-6 mb-3">
-          <label for="firstName">First name</label>
+          <label for="firstName">First name<span class="required">*</span></label>
           <input
             type="text"
             class="form-control"
@@ -23,7 +23,7 @@
           </div>
         </div>
         <div class="col-md-6 mb-3">
-          <label for="lastName">Last name</label>
+          <label for="lastName">Last name<span class="required">*</span></label>
           <input
             type="text"
             class="form-control"
@@ -40,8 +40,7 @@
 
       <div class="mb-3">
         <label for="email"
-          >Email
-          <span class="text-muted">(Optional)</span>
+          >Email<span class="required">*</span>
         </label>
         <input
           type="email"
@@ -50,62 +49,75 @@
           formControlName="email"
           name="email"
           [disabled]="true"
+          [email]="true"
         />
         <div class="invalid-feedback">
           Please enter a valid email address for shipping updates.
         </div>
       </div>
-
-      <div class="mb-3">
-        <label for="address">Address</label>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+        <label for="unitNumber">Unit Number<span class="required">*</span></label>
         <input
           type="text"
           class="form-control"
-          id="address"
-          formControlName="address"
-          placeholder="1234 Main St"
-          name="address"
+          id="unitNumber"
+          formControlName="unitNumber"
+          placeholder="01"
+          name="unitNumber"
           required
         />
         <div class="invalid-feedback">
-          Please enter your shipping address.
+          Please enter your Unit Number.
         </div>
       </div>
 
-      <div class="mb-3">
-        <label for="address2"
-          >Address 2
-          <span class="text-muted">(Optional)</span>
+      <div class="col-md-6 mb-3">
+        <label for="street"
+          >Street<span class="required">*</span>
         </label>
         <input
           type="text"
           class="form-control"
-          id="address2"
-          formControlName="address2"
-          placeholder="Apartment or suite"
-          name="address2"
+          id="street"
+          formControlName="street"
+          placeholder="Lane 1"
+          name="street"
+        />
+      </div>
+      </div>
+      <div class="mb-3">
+        <label for="address2"
+          >Surburb<span class="required">*</span>
+        </label>
+        <input
+          type="text"
+          class="form-control"
+          id="surburb"
+          formControlName="surburb"
+          placeholder="Surburb"
+          name="surburb"
         />
       </div>
 
       <div class="row">
-        <!-- <div class="col-md-5 mb-3">
+        <div class="col-md-6 mb-3">
           <label for="country">Country</label>
           <select
             class="custom-select d-block w-100"
             id="country"
             required
-            [(ngModel)]="userDetail.country"
+            formControlName="country"
             name="country"
           >
-            <option value="">Choose...</option>
-            <option>United States</option>
+            <option>Australia</option>
           </select>
           <div class="invalid-feedback">
             Please select a valid country.
           </div>
-        </div> -->
-        <div class="col-md-4 mb-3">
-          <label for="state">State</label>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label for="state">State<span class="required">*</span></label>
           <select
             class="custom-select d-block w-100"
             id="state"
@@ -128,7 +140,7 @@
       </div>
       <br />
       <!-- <hr class="mb-3" /> -->
-      <button class="btn btn-primary btn-lg btn-block" type="submit">
+      <button [disabled] = " shippingForm?.invalid" class="btn btn-primary btn-lg btn-block" type="submit">
         Continue to checkout
       </button>
       <br />

@@ -81,17 +81,13 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     let receipt: Receipt = {};
     receipt.productId = product.$key;
     receipt.colourKey = this.selectedColour;
-    receipt.gender = product.gender;
     receipt.genderKey = product.genderKey;
     receipt.liningMaterial = product.liningMaterial;
     receipt.material = product.material;
     receipt.materialComposition = product.materialComposition;
     receipt.materialKey = product.materialKey;
-    receipt.modelDetails = product.modelDetails;
     receipt.productBrandKey = product.productBrandKey;
-    receipt.productCategory = product.productCategory;
     receipt.productCategoryId = product.productCategoryId;
-    receipt.productDescription = product.productDescription;
     receipt.productImageUrl = product.productImageUrl;
     receipt.productName = product.productName;
     receipt.productPrice = product.productPrice;

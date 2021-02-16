@@ -4,9 +4,10 @@ export class Billing {
   firstName: string;
   lastName: string;
   emailId: string;
-  address1: string;
-  address2: string;
+  unitNumber: string;
+  street: string;
   country: string;
+  surburb: string;
   state: string;
-  zip: string;
+  createdDate: string;
 }

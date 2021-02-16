@@ -1,3 +1,5 @@
+import { ToastService } from './../../../../../shared/services/toast.service';
+import { Billing } from './../../../../../shared/models/billing';
 import { Product } from "../../../../../shared/models/product";
 import { ShippingService } from "../../../../../shared/services/shipping.service";
 import { UserDetail, User } from "../../../../../shared/models/user";
@@ -29,8 +31,8 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
     private shippingService: ShippingService,
     productService: ProductService,
     private router: Router,
-    private _renderer2: Renderer2,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private toastService: ToastService
   ) {
     /* Hiding products Element */
     document.getElementById("productsTab").style.display = "none";
@@ -38,8 +40,6 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
     document.getElementById("productsTab").style.display = "none";
     document.getElementById("resultTab").style.display = "none";
 
-    // this.userDetail = new UserDetail();
-    this.products = productService.getLocalCartProducts();
     this.calculateTotalPrice();
     // authService.user$.pipe(
     //   map((user) => {
@@ -62,10 +62,13 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
       firstName: [null, Validators.required],
       lastName: [null, Validators.required],
       email: [null, Validators.required],
-      address: [null, Validators.required],
-      address2: [null, Validators.required],
-      state: [0, Validators.required],
+      unitNumber: [null, Validators.required],
+      street: [null, Validators.required],
+      state: [null, Validators.required],
+      surburb: [null, Validators.required],
+      country: [0, Validators.required],
     });
+    this.countryController.setValue("Australia");
   }
 
   get keyController(): AbstractControl {
@@ -80,43 +83,46 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
   get emailController(): AbstractControl {
     return this.shippingForm.controls.firstName;
   }
-  get addressController(): AbstractControl {
-    return this.shippingForm.controls.address;
+  get unitNumberController(): AbstractControl {
+    return this.shippingForm.controls.unitNumber;
   }
-  get address2Controller(): AbstractControl {
-    return this.shippingForm.controls.address2;
+  get streetController(): AbstractControl {
+    return this.shippingForm.controls.street;
   }
   get stateController(): AbstractControl {
     return this.shippingForm.controls.state;
   }
+  get surburbController(): AbstractControl {
+    return this.shippingForm.controls.surburb;
+  }
+  get countryController(): AbstractControl {
+    return this.shippingForm.controls.country;
+  }
 
   updateUserDetails() {
-    const products = [];
-    this.products.forEach((product) => {
-      delete product.$key;
-      products.push(product);
-    });
-    const data = {
+    if (this.validateForm()) {
+    const data: Billing = {
       $key: "",
       userId: 1,
       firstName: this.firstNameController.value,
       lastName: this.lastNameController.value,
       emailId: this.emailController.value,
-      address1: this.addressController.value,
-      address2: this.address2Controller.value,
-      country: "",
+      unitNumber: this.unitNumberController.value,
+      street: this.streetController.value,
+      country: this.countryController.value,
+      surburb: this.surburbController.value,
       state: this.stateController.value,
-      zip: "000",
-      products,
-      totalPrice: this.totalPrice,
-      shippingDate: Date.now(),
+      createdDate: Date.now().toLocaleString(),
     };
     // this.pay(this.totalPrice);
-    // this.shippingService.createshippings(data);
+    this.shippingService.createshippings(data);
     this.router.navigate([
       "checkouts",
       { outlets: { checkOutlet: ["result"] } },
     ]);
+  } else {
+    this.toastService.error("Form Invalid", "All required fields has to be filled");
+  }
   }
 
   private calculateTotalPrice() {
@@ -128,6 +134,16 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
+  private validateForm(): boolean {
+    return  this.firstNameController.value &&
+            this.lastNameController.value &&
+            this.emailController.value &&
+            this.unitNumberController.value &&
+            this.streetController.value &&
+            this.countryController.value &&
+            this.surburbController.value &&
+            this.stateController.value;
+  }
   // pay(amount: number) {
 
   //   var handler = (<any>window).StripeCheckout.configure({

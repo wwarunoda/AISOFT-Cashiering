@@ -6,6 +6,7 @@ import {
 import { Billing } from "./../models/billing";
 import { Injectable } from "@angular/core";
 import { ShippingsProductsEnum, ProductsEnum } from "../enum";
+import { ToastService } from "./toast.service";
 
 @Injectable({
   providedIn: "root",
@@ -13,11 +14,22 @@ import { ShippingsProductsEnum, ProductsEnum } from "../enum";
 export class ShippingService {
   shippings: AngularFireList<Billing>;
   shipping: AngularFireObject<Billing>;
-  constructor(private db: AngularFireDatabase) {
+  constructor(private db: AngularFireDatabase,
+              private toastService: ToastService) {
     this.getshippings();
   }
 
   createshippings(data: Billing) {
+    const a: Billing[] = JSON.parse(localStorage.getItem("avct_shipping")) || [];
+    if (data) {
+      a.push(data);
+    }
+    this.toastService.wait(
+      "Adding Shipping Address", "Shipping Address Added"
+    );
+    setTimeout(() => {
+      localStorage.setItem("avct_shipping", JSON.stringify(a));
+    }, 500);
     this.shippings.push(data);
   }
 
