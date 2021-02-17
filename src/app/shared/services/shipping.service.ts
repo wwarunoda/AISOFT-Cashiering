@@ -16,10 +16,13 @@ export class ShippingService {
   shipping: AngularFireObject<Billing>;
   constructor(private db: AngularFireDatabase,
               private toastService: ToastService) {
-    this.getshippings();
+    this.getShippings();
   }
 
   createshippings(data: Billing) {
+    // First previous address
+    this.removeLocalAddresses();
+
     const a: Billing[] = JSON.parse(localStorage.getItem("avct_shipping")) || [];
     if (data) {
       a.push(data);
@@ -30,10 +33,14 @@ export class ShippingService {
     setTimeout(() => {
       localStorage.setItem("avct_shipping", JSON.stringify(a));
     }, 500);
-    this.shippings.push(data);
+    // this.shippings.push(data);
   }
 
-  getshippings() {
+  removeLocalAddresses() {
+    localStorage.removeItem('avct_shipping');
+  }
+
+  getShippings() {
     this.shippings = this.db.list(ShippingsProductsEnum.TableName);
     return this.shippings;
   }

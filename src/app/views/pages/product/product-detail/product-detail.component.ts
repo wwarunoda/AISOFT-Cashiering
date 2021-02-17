@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { ProductService } from "../../../../shared/services/product.service";
 import { ToastService } from "../../../../shared/services";
-import { ProductQuantity, Product, Receipt } from "../../../../shared/models";
+import { ProductQuantity, Product, ReceiptProduct } from "../../../../shared/models";
 import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
 @Component({
   selector: "app-product-detail",
@@ -78,23 +78,22 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   }
 
   addToCart(product: Product) {
-    let receipt: Receipt = {};
-    receipt.productId = product.$key;
-    receipt.colourKey = this.selectedColour;
-    receipt.genderKey = product.genderKey;
-    receipt.liningMaterial = product.liningMaterial;
-    receipt.material = product.material;
-    receipt.materialComposition = product.materialComposition;
-    receipt.materialKey = product.materialKey;
-    receipt.productBrandKey = product.productBrandKey;
-    receipt.productCategoryId = product.productCategoryId;
-    receipt.productImageUrl = product.productImageUrl;
-    receipt.productName = product.productName;
-    receipt.productPrice = product.productPrice;
-    receipt.productQuantity = this.productQuantityController.value;
-    receipt.sizeKey = this.selectedSize.id;
-    if (this.totalQuantity > 0) this.productService.addToCart(product,receipt);
-    else this.ToastService.error("Item not Available", "");
+    let receiptProduct: ReceiptProduct = {};
+    receiptProduct.productBrandKey = product.productBrandKey;
+    receiptProduct.productKey = product.productId;
+    receiptProduct.productName = product.productName;
+    receiptProduct.productPrice = product.productPrice;
+    receiptProduct.productQuantity = this.productQuantityController.value;
+    receiptProduct.sizeKey = this.selectedSize.productSize.$key;
+    receiptProduct.sizeName = this.selectedSize.productSize.name;
+    receiptProduct.productColour = this.selectedSize.productColor;
+    receiptProduct.productImageUrl = product.productImageUrl;
+    if (this.totalQuantity > 0) {
+        this.productService.addToCart(product, receiptProduct);
+      }
+    else {
+      this.ToastService.error("Item not Available", "");
+    }
   }
 
   ngOnDestroy() {

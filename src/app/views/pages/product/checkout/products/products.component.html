@@ -2,22 +2,22 @@
   <ul class="list-group mb-3">
     <li
       class="list-group-item d-flex justify-content-between lh-condensed"
-      *ngFor="let receipt of receipts"
+      *ngFor="let product of receiptProduct"
     >
       <div>
         <img
-          [src]="receipt.productImageUrl"
-          [alt]="receipt.productName"
+          [src]="product.productImageUrl"
+          [alt]="product.productName"
           width="150"
           height="100"
         />
       </div>
       <div style="padding: 10px;">
-        <h6 class="my-0">Name : {{ receipt.productName }}</h6>
-        <p>Brand : {{ receipt.productBrandKey | getBrandByBrandKey | async }}</p>
-        <p>Quantity : {{ receipt.productQuantity }}</p>
+        <h6 class="my-0">Name : {{ product.productName }}</h6>
+        <p>Brand : {{ product.productBrandKey | getBrandByBrandKey | async }}</p>
+        <p>Quantity : {{ product.productQuantity }}</p>
       </div>
-      <span class="text-muted">AUD {{ receipt.productPrice }}</span>
+      <span class="text-muted">AUD {{ product.productPrice }}</span>
     </li>
     <hr />
     <li class="list-group-item d-flex justify-content-between">

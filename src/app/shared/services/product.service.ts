@@ -26,6 +26,7 @@ import {
   SizeType,
   Material,
   Receipt,
+  ReceiptProduct,
 } from "../models";
 import { firestore } from 'firebase/app';
 @Injectable()
@@ -142,9 +143,9 @@ export class ProductService {
   */
 
   // Adding new Product to cart db if logged in else localStorage
-  addToCart(data: Product, receipt: Receipt): void {
+  addToCart(data: Product, receipt: ReceiptProduct): void {
     const a: Product[] = JSON.parse(localStorage.getItem("avct_item")) || [];
-    const b: Receipt[] = JSON.parse(localStorage.getItem("avct_receipt")) || [];
+    const b: ReceiptProduct[] = JSON.parse(localStorage.getItem("avct_receiptProduct")) || [];
     if (data) {
       a.push(data);
     }
@@ -158,14 +159,14 @@ export class ProductService {
     );
     setTimeout(() => {
       localStorage.setItem("avct_item", JSON.stringify(a));
-      localStorage.setItem("avct_receipt", JSON.stringify(b));
+      localStorage.setItem("avct_receiptProduct", JSON.stringify(b));
     }, 500);
   }
 
   // Removing cart from local
   removeLocalCartProduct(product: Product) {
     const products: Product[] = JSON.parse(localStorage.getItem("avct_item"));
-    const receipts: Receipt[] = JSON.parse(localStorage.getItem("avct_receipt"));
+    const receiptProducts: ReceiptProduct[] = JSON.parse(localStorage.getItem("avct_receiptProduct"));
 
     for (let i = 0; i < products.length; i++) {
       if (products[i].$key === product.$key) {
@@ -174,20 +175,20 @@ export class ProductService {
       }
     }
 
-    for (let i = 0; i < receipts.length; i++) {
-      if (receipts[i].productId === product.$key) {
-        receipts.splice(i, 1);
+    for (let i = 0; i < receiptProducts.length; i++) {
+      if (receiptProducts[i].productKey === product.$key) {
+        receiptProducts.splice(i, 1);
         break;
       }
     }
     // ReAdding the products after remove
     localStorage.setItem("avct_item", JSON.stringify(products));
-    localStorage.setItem("avct_receipt", JSON.stringify(receipts));
+    localStorage.setItem("avct_receiptProduct", JSON.stringify(receiptProducts));
   }
 
   removeLocalAllProducts() {
     localStorage.removeItem('avct_item');
-    localStorage.removeItem('avct_receipt');
+    localStorage.removeItem('avct_receiptProduct');
   }
 
   // Fetching Locat CartsProducts
@@ -200,7 +201,7 @@ export class ProductService {
 
   getLocalCartReceipt(): Receipt[] {
     const receipts: Receipt[] =
-      JSON.parse(localStorage.getItem("avct_receipt")) || [];
+      JSON.parse(localStorage.getItem("avct_receiptProduct")) || [];
 
     return receipts;
   }
