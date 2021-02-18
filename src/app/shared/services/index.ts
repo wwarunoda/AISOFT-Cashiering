@@ -9,3 +9,4 @@ export * from "./theme.service";
 export * from "./toast.service";
 export * from "./translate.service";
 export * from "./user.service";
+export * from "./receipt.service";

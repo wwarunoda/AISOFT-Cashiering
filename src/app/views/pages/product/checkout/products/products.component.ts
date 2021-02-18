@@ -30,9 +30,7 @@ export class ProductsComponent implements OnInit {
 
     this.checkoutProducts = products;
 
-    const receiptProduct = this.productService.getLocalCartReceipt();
-
-    this.receiptProduct = receiptProduct;
+    this.receiptProduct = this.productService.getLocalCartReceipt();
 
     products.forEach((product) => {
       this.totalPrice += product.productPrice;

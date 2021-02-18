@@ -18,8 +18,7 @@ import { FilterByCategoryPipe } from "./pipes/filterByCategory.pipe";
 import { ProductService } from "./services/product.service";
 import { AdminGaurd } from "./guards/admin-gaurd";
 import { AuthGuard } from "./guards/auth_gaurd";
-import { AuthService } from "./services/auth.service";
-import { UserService } from "./services/user.service";
+import { AuthService, UserService, ReceiptService } from "./services";
 import { TranslatePipe } from "./pipes/translate.pipe";
 import { NgxContentLoadingModule } from "ngx-content-loading";
 import { CardLoaderComponent } from "./components/card-loader/card-loader.component";
@@ -110,6 +109,7 @@ import { ImageSlideShowComponent } from "./components/image-slide-show/image-sli
     NavBarService,
     UserService,
     FormBuilder,
+    ReceiptService
   ],
 })
 export class SharedModule {}

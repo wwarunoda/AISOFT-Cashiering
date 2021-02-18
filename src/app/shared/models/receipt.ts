@@ -1,7 +1,8 @@
-import { Billing } from './billing';
-import { ReceiptProduct } from "./receiptProduct";
+import { Billing, User, ReceiptProduct } from "./.";
 export class Receipt {
   $key?: string;
-  products?: ReceiptProduct[];
+  receiptProducts?: ReceiptProduct[];
   shippingDetails?: Billing;
+  user?: User;
+  userKey?: string;
 }

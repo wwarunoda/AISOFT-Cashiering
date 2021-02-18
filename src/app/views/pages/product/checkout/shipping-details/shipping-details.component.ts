@@ -116,10 +116,13 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
     };
     // this.pay(this.totalPrice);
     this.shippingService.createshippings(data);
-    this.router.navigate([
-      "checkouts",
-      { outlets: { checkOutlet: ["result"] } },
-    ]);
+
+    setTimeout(() => {
+      this.router.navigate([
+        "checkouts",
+        { outlets: { checkOutlet: ["result"] } },
+      ]);
+    }, 1000);
   } else {
     this.toastService.error("Form Invalid", "All required fields has to be filled");
   }

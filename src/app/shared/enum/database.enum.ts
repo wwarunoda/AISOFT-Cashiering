@@ -62,3 +62,8 @@ export enum MaterialEnum {
   Name = "name"
 }
 
+export enum ReceiptEnum {
+  TableName = "receipt",
+  Name = "name"
+}
+

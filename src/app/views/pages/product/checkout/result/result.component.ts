@@ -1,9 +1,13 @@
-import { Product } from "../../../../../shared/models/product";
+import { Product, Billing, ReceiptProduct, User, Receipt } from "../../../../../shared/models";
 import { ProductService } from "../../../../../shared/services/product.service";
 import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
 import * as jspdf from "jspdf";
 import html2canvas from "html2canvas";
 import { PaymentGateWayConfig } from "../../../../../../environments/payment-gateway.config";
+import { AuthService, ShippingService, ToastService, ReceiptService } from "../../../../../shared/services";
+import { threadId } from "worker_threads";
+import { SelectMultipleControlValueAccessor } from "@angular/forms";
+import { map } from "rxjs/operators";
 
 declare var $: any;
 @Component({
@@ -13,27 +17,30 @@ declare var $: any;
 })
 export class ResultComponent implements OnInit, AfterViewInit {
   products: Product[];
+  shippingDetails: Billing[];
+  receiptProduct: ReceiptProduct[];
+  userDetail: User;
   date: number;
   totalPrice = 0;
   tax = 6.4;
-
-  constructor(private productService: ProductService) {
+  isAddressFound: boolean = false;
+  constructor(private productService: ProductService,
+              private authService: AuthService,
+              private shippingService: ShippingService,
+              private toastService: ToastService,
+              private receiptService: ReceiptService) {
     /* Hiding Billing Tab Element */
     document.getElementById("productsTab").style.display = "none";
     document.getElementById("shippingTab").style.display = "none";
     // document.getElementById("billingTab").style.display = "none";
     document.getElementById("resultTab").style.display = "block";
 
-    this.products = productService.getLocalCartProducts();
-
-    this.products.forEach((product) => {
-      this.totalPrice += product.productPrice;
-    });
-
     this.date = Date.now();
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.getProductsAndCustomerDetails();
+  }
 
   ngAfterViewInit() {
     this.loadPaymentGateWay();
@@ -77,4 +84,55 @@ export class ResultComponent implements OnInit, AfterViewInit {
       shoppingDetail.appendChild(script);
     }
   }
+
+  private async getProductsAndCustomerDetails() {
+    this.authService.user$.subscribe(
+      user => { this.userDetail = user; }
+    );
+    this.products = this.productService.getLocalCartProducts();
+    this.receiptProduct = this.productService.getLocalCartReceipt();
+    this.shippingDetails = await this.getShippingDetails();
+
+    // Calculate total amount
+    this.products.forEach((product) => {
+      this.totalPrice += product.productPrice;
+    });
+
+    this.createReceipt();
+  }
+
+  private async getShippingDetails() {
+   let address: Billing[] = [];
+   let count: number = 0;
+   while ((address && address.length === 0) || count < 10) {
+    address = this.shippingService.getLocalShippings();
+    await delay(300);
+    count ++;
+   }
+   if (count < 10) {
+    this.isAddressFound = false;
+    this.toastService.error("Shipping Address Error", "Address Not Found");
+   } else {
+    this.isAddressFound = true;
+   }
+
+   return address;
+  }
+
+  private createReceipt() {
+    const receipt: Receipt = {};
+    receipt.receiptProducts = this.receiptProduct;
+    if (this.shippingDetails) {
+      this.shippingDetails.forEach(shipping => delete shipping.$key);
+      receipt.shippingDetails = this.shippingDetails[0];
+    }
+    // receipt.user = this.userDetail;
+    receipt.userKey = this.userDetail.$key;
+    receipt.receiptProducts.forEach(receipt => delete receipt.$key);
+    this.receiptService.createReceipts(receipt);
+  }
+}
+
+function delay(ms: number) {
+  return new Promise( resolve => setTimeout(resolve, ms) );
 }

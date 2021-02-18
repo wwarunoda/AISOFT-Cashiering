@@ -36,6 +36,13 @@ export class ShippingService {
     // this.shippings.push(data);
   }
 
+  getLocalShippings(): Billing[] {
+    const shipping: Billing[] =
+      JSON.parse(localStorage.getItem("avct_shipping")) || [];
+
+    return shipping;
+  }
+
   removeLocalAddresses() {
     localStorage.removeItem('avct_shipping');
   }
