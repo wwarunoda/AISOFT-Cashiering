@@ -7,7 +7,7 @@ import { PaymentGateWayConfig } from "../../../../../../environments/payment-gat
 import { AuthService, ShippingService, ToastService, ReceiptService } from "../../../../../shared/services";
 import { threadId } from "worker_threads";
 import { SelectMultipleControlValueAccessor } from "@angular/forms";
-import { map } from "rxjs/operators";
+import { ReceiptStatusEnum } from "../../../../../shared/enum";
 
 declare var $: any;
 @Component({
@@ -17,6 +17,7 @@ declare var $: any;
 })
 export class ResultComponent implements OnInit, AfterViewInit {
   products: Product[];
+  receiptNumber: string = "00000000000";
   shippingDetails: Billing[];
   receiptProduct: ReceiptProduct[];
   userDetail: User;
@@ -126,10 +127,16 @@ export class ResultComponent implements OnInit, AfterViewInit {
       this.shippingDetails.forEach(shipping => delete shipping.$key);
       receipt.shippingDetails = this.shippingDetails[0];
     }
-    // receipt.user = this.userDetail;
     receipt.userKey = this.userDetail.$key;
-    receipt.receiptProducts.forEach(receipt => delete receipt.$key);
-    this.receiptService.createReceipts(receipt);
+    receipt.userName = this.userDetail.userName;
+    receipt.userPhoneNumber = this.userDetail.phoneNumber;
+    receipt.userEmail = this.userDetail.emailId;
+
+    // remove product keys before insert
+    receipt.receiptProducts.forEach(rpt => delete rpt.$key);
+    receipt.status = ReceiptStatusEnum.PendingPayment;
+    // push data to database
+    this.receiptNumber = this.receiptService.createReceipts(receipt);
   }
 }
 

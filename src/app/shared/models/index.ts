@@ -15,3 +15,4 @@ export * from "./material";
 export * from "./file";
 export * from "./receipt";
 export * from "./receiptProduct";
+export * from "./localReceipt";
