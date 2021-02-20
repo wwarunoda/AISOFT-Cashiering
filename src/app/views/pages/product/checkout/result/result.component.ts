@@ -17,7 +17,7 @@ declare var $: any;
 })
 export class ResultComponent implements OnInit, AfterViewInit {
   products: Product[];
-  receiptNumber: string = "00000000000";
+  receiptNumber: string;
   shippingDetails: Billing[];
   receiptProduct: ReceiptProduct[];
   userDetail: User;
@@ -41,6 +41,7 @@ export class ResultComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.getProductsAndCustomerDetails();
+    this.getReceiptNumber();
   }
 
   ngAfterViewInit() {
@@ -131,12 +132,19 @@ export class ResultComponent implements OnInit, AfterViewInit {
     receipt.userName = this.userDetail.userName;
     receipt.userPhoneNumber = this.userDetail.phoneNumber;
     receipt.userEmail = this.userDetail.emailId;
-
+    receipt.totalAmount = this.totalPrice + this.tax;
     // remove product keys before insert
     receipt.receiptProducts.forEach(rpt => delete rpt.$key);
     receipt.status = ReceiptStatusEnum.PendingPayment;
     // push data to database
-    this.receiptNumber = this.receiptService.createReceipts(receipt);
+
+    this.receiptService.createReceipts(receipt);
+  }
+
+  private getReceiptNumber() {
+    this.receiptService.getReceiptNumber().subscribe((receipt) => {
+      this.receiptNumber = receipt;
+    });
   }
 }
 

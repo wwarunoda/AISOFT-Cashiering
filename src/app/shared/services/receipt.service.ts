@@ -6,18 +6,22 @@ import {
 import { Injectable } from "@angular/core";
 import { ReceiptEnum, ReceiptStatusEnum } from "../enum";
 import { LocalReceipt, Receipt } from "../models";
+import { first, map } from "rxjs/operators";
+import {BehaviorSubject, Observable} from 'rxjs';
 
 @Injectable({
   providedIn: "root",
 })
 export class ReceiptService {
+  private receiptNumber: BehaviorSubject<string>;
   receipts: AngularFireList<Receipt>;
   receipt: AngularFireObject<Receipt>;
   constructor(private db: AngularFireDatabase) {
+    this.receiptNumber = new BehaviorSubject<string>("00000000000");
     this.getReceipts();
   }
 
-  createReceipts(data: Receipt): string {
+  createReceipts(data: Receipt){
     let receiptKey: string;
     let generatedReceiptNumber: string;
     let dbRpt: Receipt;
@@ -25,24 +29,32 @@ export class ReceiptService {
     if (localReceiptNumber) {
       const localRcpt: LocalReceipt = JSON.parse(localReceiptNumber);
       const dbReceipt = this.getReceiptById(localRcpt.receiptKey);
-      dbReceipt.snapshotChanges().subscribe(
-        (rpt) => { dbRpt = rpt as Receipt });
-      if (dbRpt.status === ReceiptStatusEnum.PendingPayment) {
-        this.deleteReceipt(localRcpt.receiptKey);
+      dbReceipt.snapshotChanges().pipe(first()).subscribe(
+        (rpt) => {
+                   dbRpt = rpt.payload.toJSON() as Receipt;
+                   if (dbRpt && dbRpt.status === ReceiptStatusEnum.PendingPayment) {
+                      this.deleteReceipt(localRcpt.receiptKey);
+                      generatedReceiptNumber = localRcpt.receiptNumber;
+                  } else {
+                      generatedReceiptNumber = this.receiptNumberGenerate();
+                  }
+                   this.uploadReceipt(data, generatedReceiptNumber, receiptKey);
+        });
       } else {
         generatedReceiptNumber = this.receiptNumberGenerate();
+        this.uploadReceipt(data, generatedReceiptNumber, receiptKey);
       }
-    } else {
-      generatedReceiptNumber = this.receiptNumberGenerate();
-    }
+  }
+
+  private uploadReceipt(data: Receipt, generatedReceiptNumber: string, receiptKey: string) {
     localStorage.removeItem("UCLReceiptDetail");
     data.receiptNumber = generatedReceiptNumber;
     this.receipts.push(data).then(rpt => {
         receiptKey = rpt.key;
-        let rptObject: LocalReceipt = { receiptNumber: generatedReceiptNumber, receiptKey };
+        const rptObject: LocalReceipt = { receiptNumber: generatedReceiptNumber, receiptKey };
         localStorage.setItem("UCLReceiptDetail", JSON.stringify(rptObject));
     });
-    return data.receiptNumber;
+    this.setReceiptNumber(data.receiptNumber);
   }
 
   getReceipts() {
@@ -77,5 +89,12 @@ export class ReceiptService {
     let s = num + "";
     while (s.length < size) { s = "0" + s; }
     return s;
-}
+  }
+
+  getReceiptNumber(): Observable<string> {
+    return this.receiptNumber.asObservable();
+  }
+  setReceiptNumber(receiptNumber): void {
+    this.receiptNumber.next(receiptNumber);
+  }
 }
