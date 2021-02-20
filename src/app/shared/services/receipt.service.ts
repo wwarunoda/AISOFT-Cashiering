@@ -25,9 +25,8 @@ export class ReceiptService {
     let receiptKey: string;
     let generatedReceiptNumber: string;
     let dbRpt: Receipt;
-    const localReceiptNumber = localStorage.getItem("UCLReceiptDetail");
-    if (localReceiptNumber) {
-      const localRcpt: LocalReceipt = JSON.parse(localReceiptNumber);
+    const localRcpt = this.getLocalReceiptDetails();
+    if (localRcpt) {
       const dbReceipt = this.getReceiptById(localRcpt.receiptKey);
       dbReceipt.snapshotChanges().pipe(first()).subscribe(
         (rpt) => {
@@ -49,12 +48,20 @@ export class ReceiptService {
   private uploadReceipt(data: Receipt, generatedReceiptNumber: string, receiptKey: string) {
     localStorage.removeItem("UCLReceiptDetail");
     data.receiptNumber = generatedReceiptNumber;
-    this.receipts.push(data).then(rpt => {
+    this.createReceipt(data).then(rpt => {
         receiptKey = rpt.key;
         const rptObject: LocalReceipt = { receiptNumber: generatedReceiptNumber, receiptKey };
         localStorage.setItem("UCLReceiptDetail", JSON.stringify(rptObject));
     });
     this.setReceiptNumber(data.receiptNumber);
+  }
+
+  getLocalReceiptDetails(): LocalReceipt {
+    const localReceiptNumber = localStorage.getItem("UCLReceiptDetail");
+    return JSON.parse(localReceiptNumber);
+  }
+  createReceipt(data: Receipt) {
+    return this.receipts.push(data);
   }
 
   getReceipts() {
@@ -67,8 +74,8 @@ export class ReceiptService {
     return this.receipt;
   }
 
-  updateReceipt(data: Receipt) {
-    this.receipts.update(data.$key, data);
+  updateReceipt(key: string, data: Receipt) {
+    this.receipts.update(key, data);
   }
 
   deleteReceipt(key: string) {
@@ -94,7 +101,20 @@ export class ReceiptService {
   getReceiptNumber(): Observable<string> {
     return this.receiptNumber.asObservable();
   }
+
   setReceiptNumber(receiptNumber): void {
     this.receiptNumber.next(receiptNumber);
+  }
+
+  createReceiptId(id: string) {
+    localStorage.removeItem("ReceiptIdentification");
+    localStorage.setItem("ReceiptIdentification", id);
+  }
+  getReceiptId() {
+    return localStorage.getItem("ReceiptIdentification");
+  }
+  removeLocalAllReceipt() {
+    localStorage.removeItem("UCLReceiptDetail");
+    localStorage.removeItem("ReceiptIdentification");
   }
 }

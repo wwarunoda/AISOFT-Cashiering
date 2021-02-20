@@ -5,6 +5,7 @@ import { BillingDetailsComponent } from "./billing-details/billing-details.compo
 import { ProductsComponent } from "./products/products.component";
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
+import { PaymentDetailsComponent } from "./payment-success/payment-details.component";
 
 export const checkoutRoutes: Routes = [
   {
@@ -33,6 +34,10 @@ export const checkoutRoutes: Routes = [
       },
     ],
   },
+  {
+    path: "success",
+    component: PaymentDetailsComponent,
+  }
 ];
 
 @NgModule({

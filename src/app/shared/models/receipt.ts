@@ -10,4 +10,5 @@ export class Receipt {
   userEmail?: string;
   userPhoneNumber?: string;
   status?: number;
+  accessCode?: string;
 }

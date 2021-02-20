@@ -16,6 +16,7 @@ declare var $: any;
   styleUrls: ["./result.component.scss"],
 })
 export class ResultComponent implements OnInit, AfterViewInit {
+  id: string;
   products: Product[];
   receiptNumber: string;
   shippingDetails: Billing[];
@@ -40,12 +41,13 @@ export class ResultComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    this.createReceiptIdentification();
     this.getProductsAndCustomerDetails();
     this.getReceiptNumber();
   }
 
   ngAfterViewInit() {
-    this.loadPaymentGateWay();
+    // this.loadPaymentGateWay();
   }
 
   downloadReceipt() {
@@ -66,7 +68,11 @@ export class ResultComponent implements OnInit, AfterViewInit {
       pdf.save("uclobbers.pdf"); // Generated PDF
     });
   }
-
+  private createReceiptIdentification() {
+    const randomId =  makeReceiptId(10);
+    this.id = "http://localhost:4200/success?ReceiptId=" + randomId;
+    this.receiptService.createReceiptId(randomId);
+  }
   private loadPaymentGateWay() {
     if (!document.getElementById("eway-payments")) {
       const script = window.document.createElement("script");
@@ -78,9 +84,14 @@ export class ResultComponent implements OnInit, AfterViewInit {
         "data-publicapikey",
         PaymentGateWayConfig.publicApiKey
       );
-      script.setAttribute("data-amount", `${this.totalPrice}`);
+      script.setAttribute("data-amount", `${(this.totalPrice + this.tax) * 100}`);
       script.setAttribute("data-currency", PaymentGateWayConfig.currency);
       script.setAttribute("data-label", PaymentGateWayConfig.label);
+      script.setAttribute("data-invoiceref", `${this.receiptNumber}`);
+      script.setAttribute("data-resulturl", `${this.id}`);
+      script.setAttribute("data-phone", "1800 10 65 65");
+      script.setAttribute("data-email", `${this.userDetail.emailId}`);
+      script.setAttribute("data-invoicedescription", PaymentGateWayConfig.description);
 
       const shoppingDetail = document.getElementById("payment-detail");
       shoppingDetail.appendChild(script);
@@ -99,7 +110,7 @@ export class ResultComponent implements OnInit, AfterViewInit {
     this.products.forEach((product) => {
       this.totalPrice += product.productPrice;
     });
-
+    this.loadPaymentGateWay();
     this.createReceipt();
   }
 
@@ -150,4 +161,14 @@ export class ResultComponent implements OnInit, AfterViewInit {
 
 function delay(ms: number) {
   return new Promise( resolve => setTimeout(resolve, ms) );
+}
+
+function makeReceiptId(length) {
+  let result           = "";
+  const characters       = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  const charactersLength = characters.length;
+  for ( let i = 0; i < length; i++ ) {
+     result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
 }

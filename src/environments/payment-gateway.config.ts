@@ -4,4 +4,5 @@ export const PaymentGateWayConfig = {
   class: "eway-paynow-button",
   currency: "AUD",
   label: "Pay Now",
+  description: "Uclobbers Purchase"
 };
