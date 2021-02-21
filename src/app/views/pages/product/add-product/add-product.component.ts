@@ -264,6 +264,7 @@ export class AddProductComponent implements OnInit {
 
           this.productForm.disable();
           this.productImagesController.enable();
+          this.productPriceController.enable();
 
           if (this.product.productCategoryVM) {
             this.productCategoryController.setValue(
@@ -382,39 +383,13 @@ export class AddProductComponent implements OnInit {
     }
   }
 
-  createProduct(productForm: NgForm) {
-    const payload: Product = {
-      // ...productForm.value,
-      productCategory: this.selectedCategory.$key,
-      genderKey: this.selectedGend.$key,
-      gender: this.selectedGend.name,
-      materialKey: this.selectedMaterial.$key,
-      productId: "PROD_" + shortId.generate(),
-      productAdded: moment().unix(),
-      ratings: Math.floor(Math.random() * 5 + 1),
-      favourite: false,
-    };
-
-    if (productForm.value.productImageUrl === undefined) {
-      payload.productImageUrl =
-        "http://via.placeholder.com/640x360/007bff/ffffff";
-    }
-
-    this.productService.createProduct(payload, () => {
-      this.product = new Product();
-      this.product = payload;
-      // toastr.success(
-      //   "product " + payload.productName + "is added successfully",
-      //   "Product Creation"
-      // );
-    });
-  }
-
   onGenderChange() {
     this.categoryList = this.categoryMasterList.filter(
       (category) =>
         category.genderKey === this.productGenderController.value.$key
     );
+
+    this.selectedGenderKey = this.productGenderController.value.$key;
   }
 
   onCategoryChange(categoryChangeValue: Category) {
@@ -468,7 +443,7 @@ export class AddProductComponent implements OnInit {
           genderVM: this.productGenderController.value,
           productCategory: this.productCategoryController.value.$key,
           productCategoryVM: this.productCategoryController.value,
-          productPrice: this.productPriceController.value,
+          productPrice: Number(this.productPriceController.value),
           productDescription: this.productDescriptionController.value,
           productName: this.productNameController.value,
           imageList: this.fileList,
@@ -496,6 +471,7 @@ export class AddProductComponent implements OnInit {
           this.product.imageList = this.existingFileList;
         }
         this.product.productQuantity = this.productQuantityList;
+        this.product.productPrice = Number(this.productPriceController.value);
         this.productService.updateProduct(this.productKey, this.product, () => {
           toastr.success(
             "Product " + this.product.productName + " is updated successfully",

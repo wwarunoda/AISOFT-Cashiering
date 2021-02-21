@@ -28,7 +28,7 @@ import {
   Receipt,
   ReceiptProduct,
 } from "../models";
-import { firestore } from 'firebase/app';
+import { firestore } from "firebase/app";
 @Injectable()
 export class ProductService {
   products: AngularFireList<Product>;
@@ -49,7 +49,7 @@ export class ProductService {
     private authService: AuthService,
     private toastService: ToastService
   ) {
-    authService.user.subscribe(user => {
+    authService.user.subscribe((user) => {
       this.currentUserId = user.email;
     });
   }
@@ -67,7 +67,9 @@ export class ProductService {
   }
 
   addProduct(data: Product, callback: (key: string) => void) {
-    data.createdDate = data.lastUpdatedDate = firestore.Timestamp.now().toDate().toLocaleString();
+    data.createdDate = data.lastUpdatedDate = firestore.Timestamp.now()
+      .toDate()
+      .toLocaleString();
     data.createdUser = this.currentUserId;
     const pushedItem = this.products.push(data);
     callback(pushedItem.key);
@@ -145,7 +147,8 @@ export class ProductService {
   // Adding new Product to cart db if logged in else localStorage
   addToCart(data: Product, receipt: ReceiptProduct): void {
     const a: Product[] = JSON.parse(localStorage.getItem("avct_item")) || [];
-    const b: ReceiptProduct[] = JSON.parse(localStorage.getItem("avct_receiptProduct")) || [];
+    const b: ReceiptProduct[] =
+      JSON.parse(localStorage.getItem("avct_receiptProduct")) || [];
     if (data) {
       a.push(data);
     }
@@ -165,30 +168,48 @@ export class ProductService {
 
   // Removing cart from local
   removeLocalCartProduct(product: Product) {
-    const products: Product[] = JSON.parse(localStorage.getItem("avct_item"));
-    const receiptProducts: ReceiptProduct[] = JSON.parse(localStorage.getItem("avct_receiptProduct"));
+    let products: Product[] = JSON.parse(localStorage.getItem("avct_item"));
+    let receiptProducts: ReceiptProduct[] = JSON.parse(
+      localStorage.getItem("avct_receiptProduct")
+    );
 
-    for (let i = 0; i < products.length; i++) {
-      if (products[i].$key === product.$key) {
-        products.splice(i, 1);
-        break;
-      }
+    // for (let i = 0; i < products.length; i++) {
+    //   if (products[i].$key === product.$key) {
+    //     products.splice(i, 1);
+    //     break;
+    //   }
+    // }
+
+    // for (let i = 0; i < receiptProducts.length; i++) {
+    //   if (receiptProducts[i].productKey === product.$key) {
+    //     receiptProducts.splice(i, 1);
+    //     break;
+    //   }
+    // }
+
+    if (products && products.length) {
+      products = products.filter(
+        (innerProduct) => innerProduct.$key !== product.$key
+      );
     }
 
-    for (let i = 0; i < receiptProducts.length; i++) {
-      if (receiptProducts[i].productKey === product.$key) {
-        receiptProducts.splice(i, 1);
-        break;
-      }
+    if (receiptProducts && receiptProducts.length) {
+      receiptProducts = receiptProducts.filter(
+        (innerProduct) => innerProduct.productKey !== product.$key
+      );
     }
+
     // ReAdding the products after remove
     localStorage.setItem("avct_item", JSON.stringify(products));
-    localStorage.setItem("avct_receiptProduct", JSON.stringify(receiptProducts));
+    localStorage.setItem(
+      "avct_receiptProduct",
+      JSON.stringify(receiptProducts)
+    );
   }
 
   removeLocalAllProducts() {
-    localStorage.removeItem('avct_item');
-    localStorage.removeItem('avct_receiptProduct');
+    localStorage.removeItem("avct_item");
+    localStorage.removeItem("avct_receiptProduct");
   }
 
   // Fetching Locat CartsProducts

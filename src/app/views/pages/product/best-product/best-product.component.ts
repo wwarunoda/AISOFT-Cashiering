@@ -40,14 +40,17 @@ export class BestProductComponent implements OnInit {
   getAllProducts() {
     this.loading = true;
     const x = this.productService.getProducts();
+
     x.snapshotChanges()
       .pipe(map((products) => products.slice(0, 5)))
       .subscribe(
         (products) => {
           this.loading = false;
           this.bestProducts = [];
+          console.log(products.values());
           products.forEach((element) => {
-            const y = { ...element.payload.toJSON(), $key: element.key };
+            console.log(element.payload.val());
+            const y = { ...element.payload.val(), $key: element.key };
             this.bestProducts.push(y as Product);
           });
         },

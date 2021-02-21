@@ -1,3 +1,5 @@
+import { FileExt } from "./file.ext";
+
 export interface ReceiptProduct {
   $key?: string;
   productKey?: string;

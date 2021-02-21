@@ -1,6 +1,42 @@
-<div class="container mt-3">
-  <div class="col-md order-md-1">
-    <h4 class="mb-3">Payment Received</h4>
-    <h4 class="mb-3">Thank You</h4>
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="success-template">
+        <ng-container *ngIf="isSuccess">
+          <h1>Payment Success!</h1>
+          <h2>Thank You.</h2>
+        </ng-container>
+        <ng-container *ngIf="!isSuccess">
+          <h1>Payment Failed!</h1>
+          <div class="error-details">
+            Sorry, an error has occurred, Please try again!
+          </div>
+        </ng-container>
+        <div class="success-actions">
+          <div class="row">
+            <!-- <div class="col-md"></div> -->
+            <div class="col-md">
+              <a href="/" class="btn btn-default">
+                <span class="glyphicon glyphicon-home"></span>
+                Take Me Home
+              </a>
+              <a
+                *ngIf="isSuccess"
+                name=""
+                id=""
+                class="btn btn-primary"
+                href="javascript:;;"
+                role="button"
+                (click)="downloadReceipt()"
+                ><i class="fa fa-download"></i> Receipt</a
+              >
+            </div>
+          </div>
+
+          <!-- <a href="/" class="btn btn-default btn-lg">
+            <span class="glyphicon glyphicon-envelope"></span> Contact Support </a> -->
+        </div>
+      </div>
+    </div>
   </div>
 </div>
