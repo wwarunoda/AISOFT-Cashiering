@@ -2,8 +2,17 @@ import { Component, OnInit, OnDestroy } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { ProductService } from "../../../../shared/services/product.service";
 import { ToastService } from "../../../../shared/services";
-import { ProductQuantity, Product, ReceiptProduct } from "../../../../shared/models";
-import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
+import {
+  ProductQuantity,
+  Product,
+  ReceiptProduct,
+} from "../../../../shared/models";
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from "@angular/forms";
 @Component({
   selector: "app-product-detail",
   templateUrl: "./product-detail.component.html",
@@ -25,7 +34,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private productService: ProductService,
     private ToastService: ToastService,
-    private formBuilder: FormBuilder,
+    private formBuilder: FormBuilder
   ) {
     this.product = new Product();
     this.initForms();
@@ -36,13 +45,12 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
       const id = params.id; // (+) converts string 'id' to a number
       this.getProductDetail(id);
     });
-
   }
 
   private initForms() {
     this.productForm = this.formBuilder.group({
       key$: "",
-      productQuantity: ["1", Validators.required]
+      productQuantity: ["1", Validators.required],
     });
   }
   get keyController(): AbstractControl {
@@ -66,7 +74,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
               this.totalQuantity += p.productQuantity;
             }
           });
-          if(this.totalQuantity === 0) {
+          if (this.totalQuantity === 0) {
             this.productQuantityController.setValue("0");
           }
         }
@@ -89,9 +97,8 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     receiptProduct.productColour = this.selectedSize.productColor;
     receiptProduct.productImageUrl = product.productImageUrl;
     if (this.totalQuantity > 0) {
-        this.productService.addToCart(product, receiptProduct);
-      }
-    else {
+      this.productService.addToCart(product, receiptProduct);
+    } else {
       this.ToastService.error("Item not Available", "");
     }
   }
@@ -108,10 +115,14 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         this.product.productQuantity.map((quantity) => {
           if (quantity.isSelected) {
             this.totalQuantity = quantity.productQuantity;
+            this.productQuantityController.enable();
+            this.productQuantityController.setValue(1);
           }
         });
       } else {
         this.totalQuantity = 0;
+        this.productQuantityController.setValue(0);
+        this.productQuantityController.disable();
       }
     }
   }
@@ -151,11 +162,10 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     }
   }
   onQuantityChange(searchValue: string): void {
-    if(!searchValue || searchValue == "" || (Number(searchValue) <= 0))
+    if (!searchValue || searchValue == "" || Number(searchValue) <= 0)
       this.productQuantityController.setValue("1");
     else if (this.totalQuantity < Number(searchValue))
-    this.productQuantityController.setValue(this.totalQuantity + "");
-
+      this.productQuantityController.setValue(this.totalQuantity + "");
   }
   onSelectColor(color: ProductQuantity) {
     if (color && this.product.productQuantity) {

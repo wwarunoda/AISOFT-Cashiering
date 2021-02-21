@@ -1,5 +1,5 @@
-import { ToastService } from './../../../../../shared/services/toast.service';
-import { Billing } from './../../../../../shared/models/billing';
+import { ToastService } from "./../../../../../shared/services/toast.service";
+import { Billing } from "./../../../../../shared/models/billing";
 import { Product } from "../../../../../shared/models/product";
 import { ShippingService } from "../../../../../shared/services/shipping.service";
 import { UserDetail, User } from "../../../../../shared/models/user";
@@ -101,31 +101,36 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
 
   updateUserDetails() {
     if (this.validateForm()) {
-    const data: Billing = {
-      $key: "",
-      userId: 1,
-      firstName: this.firstNameController.value,
-      lastName: this.lastNameController.value,
-      emailId: this.emailController.value,
-      unitNumber: this.unitNumberController.value,
-      street: this.streetController.value,
-      country: this.countryController.value,
-      surburb: this.surburbController.value,
-      state: this.stateController.value,
-      createdDate: Date.now().toLocaleString(),
-    };
-    // this.pay(this.totalPrice);
-    this.shippingService.createshippings(data);
+      const data: Billing = {
+        $key: "",
+        userId: 1,
+        firstName: this.firstNameController.value,
+        lastName: this.lastNameController.value,
+        emailId: this.emailController.value,
+        unitNumber: this.unitNumberController.value,
+        street: this.streetController.value,
+        country: this.countryController.value,
+        surburb: this.surburbController.value,
+        state: this.stateController.value,
+        createdDate: Date.now().toLocaleString(),
+      };
 
-    setTimeout(() => {
-      this.router.navigate([
-        "checkouts",
-        { outlets: { checkOutlet: ["result"] } },
-      ]);
-    }, 1000);
-  } else {
-    this.toastService.error("Form Invalid", "All required fields has to be filled");
-  }
+      delete data.$key;
+      // this.pay(this.totalPrice);
+      this.shippingService.createshippings(data);
+
+      setTimeout(() => {
+        this.router.navigate([
+          "checkouts",
+          { outlets: { checkOutlet: ["result"] } },
+        ]);
+      }, 1000);
+    } else {
+      this.toastService.error(
+        "Form Invalid",
+        "All required fields has to be filled"
+      );
+    }
   }
 
   private calculateTotalPrice() {
@@ -138,14 +143,16 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
   }
 
   private validateForm(): boolean {
-    return  this.firstNameController.value &&
-            this.lastNameController.value &&
-            this.emailController.value &&
-            this.unitNumberController.value &&
-            this.streetController.value &&
-            this.countryController.value &&
-            this.surburbController.value &&
-            this.stateController.value;
+    return (
+      this.firstNameController.value &&
+      this.lastNameController.value &&
+      this.emailController.value &&
+      this.unitNumberController.value &&
+      this.streetController.value &&
+      this.countryController.value &&
+      this.surburbController.value &&
+      this.stateController.value
+    );
   }
   // pay(amount: number) {
 

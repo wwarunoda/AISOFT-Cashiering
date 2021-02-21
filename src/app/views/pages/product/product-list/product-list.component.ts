@@ -6,7 +6,13 @@ import {
   ProductService,
   ToastService,
 } from "../../../../shared/services/";
-import { Brand, Product, Gender, Category, Material } from "../../../../shared/models";
+import {
+  Brand,
+  Product,
+  Gender,
+  Category,
+  Material,
+} from "../../../../shared/models";
 
 @Component({
   selector: "app-product-list",
@@ -134,8 +140,9 @@ export class ProductListComponent implements OnInit {
       (material) => {
         this.materialList = [
           {
-            $key: "", name: "All"
-          }
+            $key: "",
+            name: "All",
+          },
         ];
         material.forEach((element) => {
           const y = { ...element.payload.toJSON(), $key: element.key };
@@ -165,7 +172,7 @@ export class ProductListComponent implements OnInit {
     if (this.categoryMasterList != null) {
       this.selectedCategory = this.initialCategory;
       this.categoryList = [this.initialCategory];
-      if(this.selectedGender) {
+      if (this.selectedGender) {
         this.categoryList = this.categoryList.concat(
           this.categoryMasterList.filter(
             (category) => category.genderKey === this.selectedGender.$key
