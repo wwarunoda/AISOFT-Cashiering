@@ -74,6 +74,9 @@ export class ResultComponent implements OnInit, AfterViewInit {
     this.receiptService.createReceiptId(randomId);
   }
   private loadPaymentGateWay() {
+    const totalAmount = ((this.totalPrice + this.tax) * 100).toString().split(".")[0];
+    const telephoneNumber = this.userDetail.phoneNumber.toString();
+    const email = this.shippingDetails[0].emailId;
     if (!document.getElementById("eway-payments")) {
       const script = window.document.createElement("script");
       script.id = "eway-payments";
@@ -84,13 +87,13 @@ export class ResultComponent implements OnInit, AfterViewInit {
         "data-publicapikey",
         PaymentGateWayConfig.publicApiKey
       );
-      script.setAttribute("data-amount", `${(this.totalPrice + this.tax) * 100}`);
+      script.setAttribute("data-amount", totalAmount);
       script.setAttribute("data-currency", PaymentGateWayConfig.currency);
       script.setAttribute("data-label", PaymentGateWayConfig.label);
       script.setAttribute("data-invoiceref", `${this.receiptNumber}`);
       script.setAttribute("data-resulturl", `${this.id}`);
-      script.setAttribute("data-phone", "1800 10 65 65");
-      script.setAttribute("data-email", `${this.userDetail.emailId}`);
+      script.setAttribute("data-phone", telephoneNumber);
+      script.setAttribute("data-email", email);
       script.setAttribute("data-invoicedescription", PaymentGateWayConfig.description);
 
       const shoppingDetail = document.getElementById("payment-detail");
@@ -107,8 +110,8 @@ export class ResultComponent implements OnInit, AfterViewInit {
     this.shippingDetails = await this.getShippingDetails();
 
     // Calculate total amount
-    this.products.forEach((product) => {
-      this.totalPrice += product.productPrice;
+    this.receiptProduct.forEach((receiptProduct) => {
+      this.totalPrice += (receiptProduct.productPrice * receiptProduct.productQuantity);
     });
     this.loadPaymentGateWay();
     this.createReceipt();

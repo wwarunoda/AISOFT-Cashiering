@@ -44,7 +44,6 @@ export class ProductListComponent implements OnInit {
   genderList: Gender[];
   categoryMasterList: Category[];
   categoryList: Category[];
-  selectedGender: Gender;
   activatedRouteKey: string;
   materialList: Material[];
   selectedMaterial: Material = { $key: "", name: "All" };
@@ -159,9 +158,6 @@ export class ProductListComponent implements OnInit {
     this.activatedRoute.queryParams.subscribe((queryParams) => {
       if (this.genderList != null) {
         this.activatedRouteKey = queryParams.key;
-        this.selectedGender = this.genderList.find(
-          (gender) => gender.$key === queryParams.key
-        );
         this.selectCategoryByGender();
         this.getSelectedProducts();
       }
@@ -172,10 +168,10 @@ export class ProductListComponent implements OnInit {
     if (this.categoryMasterList != null) {
       this.selectedCategory = this.initialCategory;
       this.categoryList = [this.initialCategory];
-      if (this.selectedGender) {
+      if (this.activatedRouteKey) {
         this.categoryList = this.categoryList.concat(
           this.categoryMasterList.filter(
-            (category) => category.genderKey === this.selectedGender.$key
+            (category) => category.genderKey === this.activatedRouteKey
           )
         );
       }
@@ -187,6 +183,7 @@ export class ProductListComponent implements OnInit {
     const x = this.productService.getProducts();
     x.snapshotChanges().subscribe(
       (product) => {
+        this.productList = [];
         this.loading = false;
         this.productMasterList = [];
         product.forEach((element) => {
@@ -194,9 +191,9 @@ export class ProductListComponent implements OnInit {
           this.productMasterList.push(y as Product);
         });
         let productTempList: Product[] = [];
-        if (this.selectedGender) {
+        if (this.activatedRouteKey) {
           productTempList = this.productMasterList.filter(
-            (productTemp) => productTemp.genderKey === this.selectedGender.$key
+            (productTemp) => productTemp.genderKey === this.activatedRouteKey
           );
         }
         // no need to filter product by category, Gender selection is automatically filter relevant categories
@@ -206,7 +203,6 @@ export class ProductListComponent implements OnInit {
           productTempList &&
           productTempList.length
         ) {
-          this.productList = [];
           this.categoryList.forEach((category) => {
             const productCategoryList = productTempList.filter(
               (productTemp) => productTemp.productCategory === category.$key

@@ -137,7 +137,9 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
     if (this.products && this.products.length) {
       this.totalPrice = 0;
       this.products.forEach((product) => {
-        this.totalPrice += product.productPrice;
+        product.productQuantity.forEach((quantity) => {
+          this.totalPrice += (product.productPrice * quantity.productQuantity);
+        });
       });
     }
   }
