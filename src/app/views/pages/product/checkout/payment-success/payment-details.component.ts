@@ -3,9 +3,10 @@ import {
   ReceiptService,
   ToastService,
   ProductService,
+  ShippingService
 } from "../../../../../shared/services";
 import { Receipt } from "../../../../../shared/models";
-import { ReceiptStatusEnum } from "../../../../../shared/enum";
+import { ReceiptStatusEnum, ReceiptDataEnum } from "../../../../../shared/enum";
 import { Router, ActivatedRoute, Params } from "@angular/router";
 import { first } from "rxjs/operators";
 import html2canvas from "html2canvas";
@@ -24,6 +25,7 @@ export class PaymentDetailsComponent implements OnInit {
     private receiptService: ReceiptService,
     private toastService: ToastService,
     private productService: ProductService,
+    private shippingService: ShippingService,
     private router: Router
   ) {
     /* Hiding Shipping Tab Element */
@@ -36,19 +38,26 @@ export class PaymentDetailsComponent implements OnInit {
 
       const localReceiptId = this.receiptService.getReceiptId();
       const localReceiptData = this.receiptService.getLocalReceiptDetails();
-      if (localReceiptId === receiptId) {
-        this.isSuccess = true;
-        this.toastService.success("Receipt Payment", "Payment Success");
-        this.updateReceipt(localReceiptData.receiptKey, accessCode, true);
+      if (localReceiptId && receiptId && accessCode) {
+        if (receiptId.length === ReceiptDataEnum.ReceiptIdSize &&
+            localReceiptId.length === ReceiptDataEnum.ReceiptIdSize &&
+            localReceiptId === receiptId) {
+          this.isSuccess = true;
+          this.toastService.success("Receipt Payment", "Payment Success");
+          this.updateReceipt(localReceiptData.receiptKey, accessCode, true);
+        } else {
+          this.isSuccess = false;
+          this.toastService.error("Receipt Payment", "Payment Failed. Please contact us");
+          this.updateReceipt(localReceiptData.receiptKey, accessCode, false);
+        }
       } else {
-        this.isSuccess = false;
-        this.toastService.error("Receipt Payment", "Payment Failed");
-        this.updateReceipt(localReceiptData.receiptKey, accessCode, false);
+        setTimeout(() => this.router.navigate(["/"]), 500);
       }
+      this.receiptService.removeLocalReceiptIdentification();
     });
   }
 
-  private updateReceipt(key: string, accessCode: string, isSuccess: boolean) {
+  private updateReceipt(key?: string, accessCode?: string, isSuccess?: boolean) {
     const dbReceipt = this.receiptService.getReceiptById(key);
     dbReceipt
       .snapshotChanges()
@@ -59,13 +68,18 @@ export class PaymentDetailsComponent implements OnInit {
           dbRpt.status = ReceiptStatusEnum.PaymentSuccess;
           this.receiptService.removeLocalAllReceipt();
           this.productService.removeLocalAllProducts();
-          setTimeout(() => this.router.navigate(["/"]), 1000);
+          this.shippingService.removeLocalAddresses();
+          // setTimeout(() => this.router.navigate(["/"]), 1000);
         } else {
           dbRpt.status = ReceiptStatusEnum.PaymentError;
         }
         dbRpt.accessCode = accessCode;
-        this.receiptService.deleteReceipt(key);
-        this.receiptService.createReceipt(dbRpt);
+        if (dbRpt.status === ReceiptStatusEnum.PendingPayment) {
+          this.receiptService.deleteReceipt(key);
+          this.receiptService.createReceipt(dbRpt);
+        } else {
+          this.toastService.error("Receipt Status Error", "Receipt status incorrect. Please contact us");
+        }
       });
   }
 

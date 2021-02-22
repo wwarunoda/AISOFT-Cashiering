@@ -23,36 +23,53 @@
           </div>
         </div>
         <div class="col-md-6 mb-3">
-          <label for="lastName">Last name<span class="required">*</span></label>
+          <label for="lastName">Last name</label>
           <input
             type="text"
             class="form-control"
             id="lastName"
             formControlName="lastName"
             name="lastName"
-            required
           />
           <div class="invalid-feedback">
             Valid last name is required.
           </div>
         </div>
       </div>
-
-      <div class="mb-3">
-        <label for="email"
-          >Email<span class="required">*</span>
-        </label>
-        <input
-          type="email"
-          class="form-control"
-          id="email"
-          formControlName="email"
-          name="email"
-          [disabled]="true"
-          [email]="true"
-        />
-        <div class="invalid-feedback">
-          Please enter a valid email address for shipping updates.
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label for="email"
+            >Email<span class="required">*</span>
+          </label>
+          <input
+            type="email"
+            class="form-control"
+            id="email"
+            formControlName="email"
+            name="email"
+            [disabled]="true"
+            [email]="true"
+          />
+          <div class="invalid-feedback">
+            Please enter a valid email address for shipping updates.
+          </div>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label for="telephone"
+            >Phone Number<span class="required">*</span>
+          </label>
+          <input
+            type="text"
+            maxlength="10"
+            class="form-control"
+            id="telephone"
+            formControlName="telephone"
+            name="telephone"
+            [disabled]="true"
+          />
+          <div class="invalid-feedback">
+            Please enter a valid phone number for shipping updates.
+          </div>
         </div>
       </div>
       <div class="row">
@@ -66,6 +83,7 @@
           placeholder="01"
           name="unitNumber"
           required
+          [disabled]="true"
         />
         <div class="invalid-feedback">
           Please enter your Unit Number.
@@ -83,6 +101,7 @@
           formControlName="street"
           placeholder="Lane 1"
           name="street"
+          [disabled]="true"
         />
       </div>
       </div>
@@ -97,6 +116,7 @@
           formControlName="surburb"
           placeholder="Surburb"
           name="surburb"
+          [disabled]="true"
         />
       </div>
 

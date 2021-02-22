@@ -115,6 +115,8 @@ export class ReceiptService {
   }
   removeLocalAllReceipt() {
     localStorage.removeItem("UCLReceiptDetail");
+  }
+  removeLocalReceiptIdentification() {
     localStorage.removeItem("ReceiptIdentification");
   }
 }

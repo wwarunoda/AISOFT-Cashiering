@@ -18,7 +18,7 @@ import {
 } from "../../../../../shared/services";
 import { threadId } from "worker_threads";
 import { SelectMultipleControlValueAccessor } from "@angular/forms";
-import { ReceiptStatusEnum } from "../../../../../shared/enum";
+import { ReceiptStatusEnum, ReceiptDataEnum } from "../../../../../shared/enum";
 
 declare var $: any;
 @Component({
@@ -44,6 +44,7 @@ export class ResultComponent implements OnInit, AfterViewInit {
     private toastService: ToastService,
     private receiptService: ReceiptService
   ) {
+    this.getReceiptNumber();
     /* Hiding Billing Tab Element */
     document.getElementById("productsTab").style.display = "none";
     document.getElementById("shippingTab").style.display = "none";
@@ -56,7 +57,6 @@ export class ResultComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.createReceiptIdentification();
     this.getProductsAndCustomerDetails();
-    this.getReceiptNumber();
   }
 
   ngAfterViewInit() {
@@ -82,17 +82,21 @@ export class ResultComponent implements OnInit, AfterViewInit {
     });
   }
   private createReceiptIdentification() {
-    const randomId = makeReceiptId(10);
+    const randomId = makeReceiptId(ReceiptDataEnum.ReceiptIdSize);
     this.id = "http://localhost:4200/success?ReceiptId=" + randomId;
     this.receiptService.createReceiptId(randomId);
   }
   private loadPaymentGateWay() {
+    let email;
+    let telephoneNumber;
     const totalAmount = ((this.totalPrice + this.tax) * 100)
       .toString()
       .split(".")[0];
-    const telephoneNumber = "811 11 11";
-    // const telephoneNumber = this.userDetail.phoneNumber.toString();
-    const email = this.shippingDetails[0].emailId;
+    if (this.shippingDetails) {
+      const customerDetails = this.shippingDetails[0];
+      email = customerDetails.emailId;
+      telephoneNumber = customerDetails.phoneNumber;
+    }
     if (!document.getElementById("eway-payments")) {
       const script = window.document.createElement("script");
       script.id = "eway-payments";
@@ -108,9 +112,9 @@ export class ResultComponent implements OnInit, AfterViewInit {
       script.setAttribute("data-label", PaymentGateWayConfig.label);
       script.setAttribute("data-invoiceref", `${this.receiptNumber}`);
       script.setAttribute("data-resulturl", `${this.id}`);
-      // script.setAttribute("data-phone", telephoneNumber);
-      // script.setAttribute("data-email", email);
-      // script.setAttribute("data-invoicedescription", PaymentGateWayConfig.description);
+      script.setAttribute("data-phone", telephoneNumber);
+      script.setAttribute("data-email", email);
+      script.setAttribute("data-invoicedescription", PaymentGateWayConfig.description);
 
       const shoppingDetail = document.getElementById("payment-detail");
       shoppingDetail.appendChild(script);
@@ -130,8 +134,8 @@ export class ResultComponent implements OnInit, AfterViewInit {
       this.totalPrice +=
         receiptProduct.productPrice * receiptProduct.productQuantity;
     });
-    this.loadPaymentGateWay();
     this.createReceipt();
+    setTimeout(() => this.loadPaymentGateWay(), 700);
   }
 
   private async getShippingDetails() {

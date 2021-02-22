@@ -4,6 +4,7 @@ export class Billing {
   firstName?: string;
   lastName?: string;
   emailId?: string;
+  phoneNumber?: string;
   unitNumber?: string;
   street?: string;
   country?: string;

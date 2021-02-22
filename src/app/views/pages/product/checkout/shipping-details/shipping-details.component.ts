@@ -27,7 +27,7 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
   products: Product[];
 
   constructor(
-    authService: AuthService,
+    private authService: AuthService,
     private shippingService: ShippingService,
     productService: ProductService,
     private router: Router,
@@ -50,6 +50,7 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.initForms();
+    this.getLocalReceiptDetails();
   }
 
   ngOnDestroy() {
@@ -60,8 +61,9 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
     this.shippingForm = this.formBuilder.group({
       key$: "",
       firstName: [null, Validators.required],
-      lastName: [null, Validators.required],
+      lastName: [null],
       email: [null, Validators.required],
+      telephone: [null, [Validators.maxLength(10), Validators.required]],
       unitNumber: [null, Validators.required],
       street: [null, Validators.required],
       state: [null, Validators.required],
@@ -81,7 +83,10 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
     return this.shippingForm.controls.lastName;
   }
   get emailController(): AbstractControl {
-    return this.shippingForm.controls.firstName;
+    return this.shippingForm.controls.email;
+  }
+  get phoneController(): AbstractControl {
+    return this.shippingForm.controls.telephone;
   }
   get unitNumberController(): AbstractControl {
     return this.shippingForm.controls.unitNumber;
@@ -107,6 +112,7 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
         firstName: this.firstNameController.value,
         lastName: this.lastNameController.value,
         emailId: this.emailController.value,
+        phoneNumber: this.phoneController.value,
         unitNumber: this.unitNumberController.value,
         street: this.streetController.value,
         country: this.countryController.value,
@@ -117,7 +123,7 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
 
       delete data.$key;
       // this.pay(this.totalPrice);
-      this.shippingService.createshippings(data);
+      this.shippingService.createShippings(data);
 
       setTimeout(() => {
         this.router.navigate([
@@ -131,6 +137,44 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
         "All required fields has to be filled"
       );
     }
+  }
+
+  private getLocalReceiptDetails() {
+    let customerDetails: Billing = {};
+    const localAddressArray = this.shippingService.getLocalShippings();
+    if (localAddressArray && localAddressArray.length) {
+      const localAddress = localAddressArray[0];
+      customerDetails.country = localAddress.country;
+      customerDetails.emailId = localAddress.emailId;
+      customerDetails.firstName = localAddress.firstName;
+      customerDetails.lastName = localAddress.lastName;
+      customerDetails.phoneNumber = localAddress.phoneNumber;
+      customerDetails.state = localAddress.state;
+      customerDetails.street = localAddress.street;
+      customerDetails.surburb = localAddress.surburb;
+      customerDetails.unitNumber = localAddress.unitNumber;
+      this.setCustomerDetails(customerDetails);
+    } else {
+      this.authService.user$.subscribe((user) => {
+        customerDetails.emailId = user.emailId;
+        customerDetails.firstName = user.userName;
+        customerDetails.phoneNumber = user.phoneNumber;
+        customerDetails.country = "Australia";
+        this.setCustomerDetails(customerDetails);
+      });
+    }
+  }
+
+  private setCustomerDetails(customerDetails: Billing ) {
+    this.firstNameController.setValue(customerDetails.firstName);
+    this.lastNameController.setValue(customerDetails.lastName);
+    this.emailController.setValue(customerDetails.emailId);
+    this.phoneController.setValue(customerDetails.phoneNumber);
+    this.unitNumberController.setValue(customerDetails.unitNumber);
+    this.streetController.setValue(customerDetails.street);
+    this.stateController.setValue(customerDetails.state);
+    this.surburbController.setValue(customerDetails.surburb);
+    this.countryController.setValue(customerDetails.country);
   }
 
   private calculateTotalPrice() {
@@ -147,7 +191,7 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
   private validateForm(): boolean {
     return (
       this.firstNameController.value &&
-      this.lastNameController.value &&
+      this.phoneController.value &&
       this.emailController.value &&
       this.unitNumberController.value &&
       this.streetController.value &&

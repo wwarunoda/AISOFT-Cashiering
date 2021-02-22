@@ -19,7 +19,7 @@ export class ShippingService {
     this.getShippings();
   }
 
-  createshippings(data: Billing) {
+  createShippings(data: Billing) {
     // First previous address
     this.removeLocalAddresses();
 
