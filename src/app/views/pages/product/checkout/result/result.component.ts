@@ -32,7 +32,6 @@ export class ResultComponent implements OnInit, AfterViewInit {
   receiptNumber: string;
   shippingDetails: Billing[];
   receiptProduct: ReceiptProduct[];
-  userDetail: User;
   date: number;
   totalPrice = 0;
   tax = 6.4;
@@ -44,7 +43,6 @@ export class ResultComponent implements OnInit, AfterViewInit {
     private toastService: ToastService,
     private receiptService: ReceiptService
   ) {
-    this.getReceiptNumber();
     /* Hiding Billing Tab Element */
     document.getElementById("productsTab").style.display = "none";
     document.getElementById("shippingTab").style.display = "none";
@@ -55,8 +53,8 @@ export class ResultComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.createReceiptIdentification();
     this.getProductsAndCustomerDetails();
+    this.createReceiptIdentification();
   }
 
   ngAfterViewInit() {
@@ -86,7 +84,7 @@ export class ResultComponent implements OnInit, AfterViewInit {
     this.id = "http://localhost:4200/success?ReceiptId=" + randomId;
     this.receiptService.createReceiptId(randomId);
   }
-  private loadPaymentGateWay() {
+  private loadPaymentGateWay(receiptNumber: string) {
     let email;
     let telephoneNumber;
     const totalAmount = ((this.totalPrice + this.tax) * 100)
@@ -110,7 +108,7 @@ export class ResultComponent implements OnInit, AfterViewInit {
       script.setAttribute("data-amount", totalAmount);
       script.setAttribute("data-currency", PaymentGateWayConfig.currency);
       script.setAttribute("data-label", PaymentGateWayConfig.label);
-      script.setAttribute("data-invoiceref", `${this.receiptNumber}`);
+      script.setAttribute("data-invoiceref", receiptNumber);
       script.setAttribute("data-resulturl", `${this.id}`);
       script.setAttribute("data-phone", telephoneNumber);
       script.setAttribute("data-email", email);
@@ -122,9 +120,6 @@ export class ResultComponent implements OnInit, AfterViewInit {
   }
 
   private async getProductsAndCustomerDetails() {
-    this.authService.user$.subscribe((user) => {
-      this.userDetail = user;
-    });
     this.products = this.productService.getLocalCartProducts();
     this.receiptProduct = this.productService.getLocalCartReceipt();
     this.shippingDetails = await this.getShippingDetails();
@@ -134,8 +129,7 @@ export class ResultComponent implements OnInit, AfterViewInit {
       this.totalPrice +=
         receiptProduct.productPrice * receiptProduct.productQuantity;
     });
-    this.createReceipt();
-    setTimeout(() => this.loadPaymentGateWay(), 700);
+    this.getReceiptNumber();
   }
 
   private async getShippingDetails() {
@@ -156,33 +150,14 @@ export class ResultComponent implements OnInit, AfterViewInit {
     return address;
   }
 
-  private createReceipt() {
-    const receipt: Receipt = {};
-    receipt.receiptProducts = this.receiptProduct;
-    if (this.shippingDetails) {
-      this.shippingDetails.forEach((shipping) => delete shipping.$key);
-      receipt.shippingDetails = this.shippingDetails[0];
-    }
-    receipt.userKey = this.userDetail.$key;
-    receipt.userName = this.userDetail.userName;
-    receipt.userPhoneNumber = this.userDetail.phoneNumber;
-    receipt.userEmail = this.userDetail.emailId;
-    receipt.totalAmount = this.totalPrice + this.tax;
-    // remove product keys before insert
-    receipt.receiptProducts.forEach((rpt) => delete rpt.$key);
-    receipt.status = ReceiptStatusEnum.PendingPayment;
-    // push data to database
-
-    this.receiptService.createReceipts(receipt);
-  }
-
   private getReceiptNumber() {
     this.receiptService.getReceiptNumber().subscribe((receipt) => {
-      this.receiptNumber = receipt;
+       this.receiptNumber = receipt;
+       this.loadPaymentGateWay(receipt);
     });
   }
-}
 
+}
 function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }

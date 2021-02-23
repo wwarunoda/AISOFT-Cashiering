@@ -36,6 +36,7 @@ export class CartCalculatorComponent implements OnInit, OnChanges {
 
   clearCart() {
     this.receiptService.removeLocalAllReceipt();
+    this.receiptService.resetReceiptNumber();
     this.productService.removeLocalAllProducts();
     this.shippingService.removeLocalAddresses();
   }

@@ -64,17 +64,20 @@ export class PaymentDetailsComponent implements OnInit {
       .pipe(first())
       .subscribe((rpt) => {
         const dbRpt = rpt.payload.toJSON() as Receipt;
-        if (isSuccess) {
-          dbRpt.status = ReceiptStatusEnum.PaymentSuccess;
-          this.receiptService.removeLocalAllReceipt();
-          this.productService.removeLocalAllProducts();
-          this.shippingService.removeLocalAddresses();
-          // setTimeout(() => this.router.navigate(["/"]), 1000);
-        } else {
-          dbRpt.status = ReceiptStatusEnum.PaymentError;
-        }
-        dbRpt.accessCode = accessCode;
         if (dbRpt.status === ReceiptStatusEnum.PendingPayment) {
+          if (isSuccess) {
+            dbRpt.status = ReceiptStatusEnum.PaymentSuccess;
+            this.receiptService.removeLocalAllReceipt();
+            this.receiptService.resetReceiptNumber();
+            this.productService.removeLocalAllProducts();
+            this.shippingService.removeLocalAddresses();
+            // setTimeout(() => this.router.navigate(["/"]), 1000);
+          } else {
+            dbRpt.status = ReceiptStatusEnum.PaymentError;
+          }
+          dbRpt.accessCode = accessCode;
+
+          // Update receipt status
           this.receiptService.deleteReceipt(key);
           this.receiptService.createReceipt(dbRpt);
         } else {

@@ -17,8 +17,14 @@ export class ReceiptService {
   receipts: AngularFireList<Receipt>;
   receipt: AngularFireObject<Receipt>;
   constructor(private db: AngularFireDatabase) {
+  const receipt = localStorage.getItem("ReceiptNumber");
+  if (!receipt) {
     this.receiptNumber = new BehaviorSubject<string>("00000000000");
-    this.getReceipts();
+  } else {
+
+    this.receiptNumber = new BehaviorSubject<string>(receipt);
+  }
+  this.getReceipts();
   }
 
   createReceipts(data: Receipt){
@@ -104,6 +110,12 @@ export class ReceiptService {
 
   setReceiptNumber(receiptNumber): void {
     this.receiptNumber.next(receiptNumber);
+    localStorage.setItem("ReceiptNumber", this.receiptNumber.value);
+  }
+
+  resetReceiptNumber() {
+    this.receiptNumber = new BehaviorSubject<string>("00000000000");
+    localStorage.setItem("ReceiptNumber", this.receiptNumber.value);
   }
 
   createReceiptId(id: string) {

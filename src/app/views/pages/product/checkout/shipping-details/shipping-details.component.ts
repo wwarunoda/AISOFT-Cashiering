@@ -1,10 +1,7 @@
-import { ToastService } from "./../../../../../shared/services/toast.service";
-import { Billing } from "./../../../../../shared/models/billing";
-import { Product } from "../../../../../shared/models/product";
-import { ShippingService } from "../../../../../shared/services/shipping.service";
-import { UserDetail, User } from "../../../../../shared/models/user";
-import { AuthService } from "../../../../../shared/services/auth.service";
-import { Component, OnInit, Renderer2, OnDestroy } from "@angular/core";
+import { ShippingService, ReceiptService, AuthService, ToastService } from "../../../../../shared/services";
+import { Receipt, User, ReceiptProduct, Product, Billing } from "../../../../../shared/models";
+import { ReceiptStatusEnum } from "../../../../../shared/enum";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import {
   AbstractControl,
   FormBuilder,
@@ -23,16 +20,20 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
   userDetails: User;
   shippingForm: FormGroup;
   totalPrice: number = 0;
-
+  receiptProduct: ReceiptProduct[];
+  shippingDetails: Billing;
   products: Product[];
+  userDetail: User;
+  tax = 6.4;
 
   constructor(
     private authService: AuthService,
     private shippingService: ShippingService,
-    productService: ProductService,
+    private productService: ProductService,
     private router: Router,
     private formBuilder: FormBuilder,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private receiptService: ReceiptService
   ) {
     /* Hiding products Element */
     document.getElementById("productsTab").style.display = "none";
@@ -51,6 +52,9 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.initForms();
     this.getLocalReceiptDetails();
+    this.authService.user$.subscribe((user) => {
+      this.userDetail = user;
+    });
   }
 
   ngOnDestroy() {
@@ -106,7 +110,7 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
 
   updateUserDetails() {
     if (this.validateForm()) {
-      const data: Billing = {
+      this.shippingDetails = {
         $key: "",
         userId: 1,
         firstName: this.firstNameController.value,
@@ -121,10 +125,10 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
         createdDate: Date.now().toLocaleString(),
       };
 
-      delete data.$key;
+      delete this.shippingDetails.$key;
       // this.pay(this.totalPrice);
-      this.shippingService.createShippings(data);
-
+      this.shippingService.createShippings(this.shippingDetails);
+      this.createReceipt();
       setTimeout(() => {
         this.router.navigate([
           "checkouts",
@@ -140,6 +144,7 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
   }
 
   private getLocalReceiptDetails() {
+    this.receiptProduct = this.productService.getLocalCartReceipt();
     let customerDetails: Billing = {};
     const localAddressArray = this.shippingService.getLocalShippings();
     if (localAddressArray && localAddressArray.length) {
@@ -200,48 +205,23 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
       this.stateController.value
     );
   }
-  // pay(amount: number) {
 
-  //   var handler = (<any>window).StripeCheckout.configure({
-  //     key: 'C3AB9CkGMOrkP+C8ErM3kZ/zs3mRvbMr2ZTUKCicXSWcSq4Isut48wRp4ihSCYzA7WBf8z',
-  //     locale: 'auto',
-  //     token: function (token: any) {
-  //       // You can access the token ID with `token.id`.
-  //       // Get the token ID to your server-side code for use.
-  //       console.log(token)
-  //       alert('Token Created!!');
-  //     }
-  //   });
+  // Receipt Creation
 
-  //   handler.open({
-  //     name: 'Demo Site',
-  //     description: '2 widgets',
-  //     amount
-  //   });
+  private createReceipt() {
+    const receipt: Receipt = {};
+    receipt.receiptProducts = this.receiptProduct;
+    receipt.shippingDetails = this.shippingDetails;
+    receipt.userKey = this.userDetail.$key;
+    receipt.userName = this.userDetail.userName;
+    receipt.userPhoneNumber = this.userDetail.phoneNumber;
+    receipt.userEmail = this.userDetail.emailId;
+    receipt.totalAmount = this.totalPrice + this.tax;
+    // remove product keys before insert
+    receipt.receiptProducts.forEach((rpt) => delete rpt.$key);
+    receipt.status = ReceiptStatusEnum.PendingPayment;
+    // push data to database
 
-  // }
-
-  // private checkOut() {
-  //   const client = rapid.createClient(this.key, this.password, this.endpoint);
-
-  //   client.createTransaction(rapid.Enum.Method.DIRECT, {
-  //     Customer: {
-  //       CardDetails: {
-  //         Name: "John Smith",
-  //         Number: "4444333322221111",
-  //         ExpiryMonth: "12",
-  //         ExpiryYear: "25",
-  //         CVN: "123"
-  //       }
-  //     },
-  //     Payment: {
-  //       TotalAmount: 1000
-  //     },
-  //     TransactionType: "Purchase"
-  //   }).then((response) => {
-  //     if (response.get("TransactionStatus")) {
-  //       console.log("Payment successful! ID: " + response.get("TransactionID"));
-  //     }
-  //   });
-  // }
+    this.receiptService.createReceipts(receipt);
+  }
 }
