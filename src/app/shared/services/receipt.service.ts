@@ -5,9 +5,11 @@ import {
 } from "@angular/fire/database";
 import { Injectable } from "@angular/core";
 import { ReceiptEnum, ReceiptStatusEnum } from "../enum";
-import { LocalReceipt, Receipt } from "../models";
+import { LocalReceipt, Receipt, Product } from "../models";
 import { first, map } from "rxjs/operators";
 import {BehaviorSubject, Observable} from 'rxjs';
+import { ProductService } from "./product.service";
+import { ToastService } from "./toast.service";
 
 @Injectable({
   providedIn: "root",
@@ -16,7 +18,7 @@ export class ReceiptService {
   private receiptNumber: BehaviorSubject<string>;
   receipts: AngularFireList<Receipt>;
   receipt: AngularFireObject<Receipt>;
-  constructor(private db: AngularFireDatabase) {
+  constructor(private db: AngularFireDatabase, private productService: ProductService, private toastService: ToastService) {
   const receipt = localStorage.getItem("ReceiptNumber");
   if (!receipt) {
     this.receiptNumber = new BehaviorSubject<string>("00000000000");

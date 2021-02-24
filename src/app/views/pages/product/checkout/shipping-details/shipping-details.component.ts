@@ -11,6 +11,7 @@ import {
 } from "@angular/forms";
 import { Router } from "@angular/router";
 import { ProductService } from "../../../../../shared/services/product.service";
+import { select } from "@ngrx/store";
 @Component({
   selector: "app-shipping-details",
   templateUrl: "./shipping-details.component.html",
@@ -21,8 +22,8 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
   shippingForm: FormGroup;
   totalPrice: number = 0;
   receiptProduct: ReceiptProduct[];
-  shippingDetails: Billing;
   products: Product[];
+  shippingDetails: Billing;
   userDetail: User;
   tax = 6.4;
 
@@ -40,8 +41,6 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
     document.getElementById("shippingTab").style.display = "block";
     document.getElementById("productsTab").style.display = "none";
     document.getElementById("resultTab").style.display = "none";
-
-    this.calculateTotalPrice();
     // authService.user$.pipe(
     //   map((user) => {
     //     this.userDetails = user;
@@ -51,9 +50,12 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.initForms();
+    this.getAllProducts();
     this.getLocalReceiptDetails();
     this.authService.user$.subscribe((user) => {
-      this.userDetail = user;
+      if(user.hasOwnProperty('$key')) {
+        this.userDetail = user;
+      }
     });
   }
 
@@ -129,12 +131,10 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
       // this.pay(this.totalPrice);
       this.shippingService.createShippings(this.shippingDetails);
       this.createReceipt();
-      setTimeout(() => {
         this.router.navigate([
           "checkouts",
           { outlets: { checkOutlet: ["result"] } },
         ]);
-      }, 1000);
     } else {
       this.toastService.error(
         "Form Invalid",
@@ -168,6 +168,7 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
         this.setCustomerDetails(customerDetails);
       });
     }
+    this.calculateTotalPrice();
   }
 
   private setCustomerDetails(customerDetails: Billing ) {
@@ -183,14 +184,24 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
   }
 
   private calculateTotalPrice() {
-    if (this.products && this.products.length) {
+    if (this.receiptProduct && this.receiptProduct.length) {
       this.totalPrice = 0;
-      this.products.forEach((product) => {
-        product.productQuantity.forEach((quantity) => {
-          this.totalPrice += (product.productPrice * quantity.productQuantity);
-        });
+      this.receiptProduct.forEach((product) => {
+          this.totalPrice += (product.productPrice * product.productQuantity);
       });
     }
+  }
+
+  private getAllProducts() {
+    const x = this.productService.getProducts();
+    x.snapshotChanges().subscribe(
+      (product) => {
+        this.products = [];
+        product.forEach((element) => {
+          const y = { ...element.payload.toJSON(), $key: element.key };
+          this.products.push(y as Product);
+        });
+      });
   }
 
   private validateForm(): boolean {
@@ -209,19 +220,41 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
   // Receipt Creation
 
   private createReceipt() {
-    const receipt: Receipt = {};
-    receipt.receiptProducts = this.receiptProduct;
-    receipt.shippingDetails = this.shippingDetails;
-    receipt.userKey = this.userDetail.$key;
-    receipt.userName = this.userDetail.userName;
-    receipt.userPhoneNumber = this.userDetail.phoneNumber;
-    receipt.userEmail = this.userDetail.emailId;
-    receipt.totalAmount = this.totalPrice + this.tax;
-    // remove product keys before insert
-    receipt.receiptProducts.forEach((rpt) => delete rpt.$key);
-    receipt.status = ReceiptStatusEnum.PendingPayment;
-    // push data to database
+    // if (this.validateProductQuantity()) {
+      if (true) {
+      const receipt: Receipt = {};
+      receipt.receiptProducts = this.receiptProduct;
+      receipt.shippingDetails = this.shippingDetails;
+      if (this.userDetail) {
+        receipt.userKey = this.userDetail.$key;
+        receipt.userName = this.userDetail.userName;
+        receipt.userPhoneNumber = this.userDetail.phoneNumber;
+        receipt.userEmail = this.userDetail.emailId;
+      }
+      receipt.totalAmount = this.totalPrice + this.tax;
+      // remove product keys before insert
+      receipt.receiptProducts.forEach((rpt) => delete rpt.$key);
+      receipt.status = ReceiptStatusEnum.PendingPayment;
+      // push data to database
 
-    this.receiptService.createReceipts(receipt);
+      this.receiptService.createReceipts(receipt);
+    } else {
+      this.toastService.error("Product Validation", "Selected Product not available");
+    }
   }
+
+  // private validateProductQuantity(): boolean {
+  //   this.receiptProduct.forEach(rcpt => {
+  //     const selectedProduct: Product = this.products.find(product => product.$key === rcpt.productKey);
+  //     if (selectedProduct && selectedProduct.productQuantity) {
+  //       const productQuantity: ProductQuantity[] = selectedProduct.productQuantity??[];
+  //       const selectedQuantity = productQuantity
+  //         .find((x) => x.productColor === rcpt.productColour);
+  //       if (selectedQuantity && rcpt.productQuantity > selectedQuantity.productQuantity) {
+  //         return false;
+  //       }
+  //   }
+  //   });
+  //   return true;
+  // }
 }

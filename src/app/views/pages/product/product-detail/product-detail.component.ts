@@ -6,6 +6,7 @@ import {
   ProductQuantity,
   Product,
   ReceiptProduct,
+  Receipt
 } from "../../../../shared/models";
 import {
   AbstractControl,
@@ -101,6 +102,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         : "";
     if (this.totalQuantity > 0) {
       this.productService.addToCart(product, receiptProduct);
+      this.totalQuantity -= this.productQuantityController.value;
     } else {
       this.ToastService.error("Item not Available", "");
     }
@@ -117,7 +119,11 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
       ) {
         this.product.productQuantity.map((quantity) => {
           if (quantity.isSelected) {
+            const localReceiptProduct: ReceiptProduct[] = this.productService.getLocalCartReceipt();
+            const selectedReceipt = localReceiptProduct
+              .filter(x => x.productColour === quantity.productColor && x.sizeName === quantity.productSize.name );
             this.totalQuantity = quantity.productQuantity;
+            selectedReceipt.forEach(product => this.totalQuantity -= product.productQuantity);
             this.productQuantityController.enable();
             this.productQuantityController.setValue(1);
           }
@@ -165,10 +171,12 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     }
   }
   onQuantityChange(searchValue: string): void {
-    if (!searchValue || searchValue == "" || Number(searchValue) <= 0)
+    if (!searchValue || searchValue === "" || Number(searchValue) <= 0) {
       this.productQuantityController.setValue("1");
-    else if (this.totalQuantity < Number(searchValue))
+    }
+    else if (this.totalQuantity < Number(searchValue)) {
       this.productQuantityController.setValue(this.totalQuantity + "");
+    }
   }
   onSelectColor(color: ProductQuantity) {
     if (color && this.product.productQuantity) {

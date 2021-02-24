@@ -121,7 +121,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   private checkPrivileges(): void {
     this.subSink.sink = this.authService.isAdmin$.subscribe((isAdmin) => {
       this.isAdmin = isAdmin;
-      this.activeNavItems = this.navItems.filter(
+      this.activeNavItems = this.navItems?.filter(
         (navItem) => navItem.isAdmin === this.isAdmin
       );
     });
@@ -134,7 +134,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
       .subscribe((navItems) => {
         this.navItems = navItems;
 
-        this.activeNavItems = this.navItems.filter(
+        this.activeNavItems = this.navItems?.filter(
           (navItem) => navItem.isAdmin === this.isAdmin
         );
       });

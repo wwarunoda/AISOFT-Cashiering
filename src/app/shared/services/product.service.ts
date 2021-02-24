@@ -50,7 +50,9 @@ export class ProductService {
     private toastService: ToastService
   ) {
     authService.user.subscribe((user) => {
+      if (user) {
       this.currentUserId = user.email;
+      }
     });
   }
 
@@ -220,8 +222,8 @@ export class ProductService {
     return products;
   }
 
-  getLocalCartReceipt(): Receipt[] {
-    const receipts: Receipt[] =
+  getLocalCartReceipt(): ReceiptProduct[] {
+    const receipts: ReceiptProduct[] =
       JSON.parse(localStorage.getItem("avct_receiptProduct")) || [];
 
     return receipts;
