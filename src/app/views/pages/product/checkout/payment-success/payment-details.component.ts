@@ -67,10 +67,13 @@ export class PaymentDetailsComponent implements OnInit {
         if (dbRpt.status === ReceiptStatusEnum.PendingPayment) {
           if (isSuccess) {
             dbRpt.status = ReceiptStatusEnum.PaymentSuccess;
+
+            // Update product quantity
+            this.productService.updateProductQuantity(dbRpt.receiptProducts);
+
             this.receiptService.removeLocalAllReceipt();
             this.receiptService.resetReceiptNumber();
             this.productService.removeLocalAllProducts();
-            this.shippingService.removeLocalAddresses();
             // setTimeout(() => this.router.navigate(["/"]), 1000);
           } else {
             dbRpt.status = ReceiptStatusEnum.PaymentError;

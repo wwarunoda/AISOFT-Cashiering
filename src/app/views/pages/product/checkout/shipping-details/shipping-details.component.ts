@@ -1,5 +1,5 @@
 import { ShippingService, ReceiptService, AuthService, ToastService } from "../../../../../shared/services";
-import { Receipt, User, ReceiptProduct, Product, Billing } from "../../../../../shared/models";
+import { Receipt, User, ReceiptProduct, Product, Billing, ProductQuantity } from "../../../../../shared/models";
 import { ReceiptStatusEnum } from "../../../../../shared/enum";
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import {
@@ -131,10 +131,6 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
       // this.pay(this.totalPrice);
       this.shippingService.createShippings(this.shippingDetails);
       this.createReceipt();
-        this.router.navigate([
-          "checkouts",
-          { outlets: { checkOutlet: ["result"] } },
-        ]);
     } else {
       this.toastService.error(
         "Form Invalid",
@@ -145,7 +141,7 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
 
   private getLocalReceiptDetails() {
     this.receiptProduct = this.productService.getLocalCartReceipt();
-    let customerDetails: Billing = {};
+    const customerDetails: Billing = {};
     const localAddressArray = this.shippingService.getLocalShippings();
     if (localAddressArray && localAddressArray.length) {
       const localAddress = localAddressArray[0];
@@ -220,8 +216,7 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
   // Receipt Creation
 
   private createReceipt() {
-    // if (this.validateProductQuantity()) {
-      if (true) {
+    if (this.validateProductQuantity()) {
       const receipt: Receipt = {};
       receipt.receiptProducts = this.receiptProduct;
       receipt.shippingDetails = this.shippingDetails;
@@ -238,23 +233,44 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
       // push data to database
 
       this.receiptService.createReceipts(receipt);
+      this.toastService.wait(
+        "Adding Shipping Address", "Shipping Address Added"
+      );
+      this.router.navigate([
+        "checkouts",
+        { outlets: { checkOutlet: ["result"] } },
+      ]);
     } else {
       this.toastService.error("Product Validation", "Selected Product not available");
     }
   }
 
-  // private validateProductQuantity(): boolean {
-  //   this.receiptProduct.forEach(rcpt => {
-  //     const selectedProduct: Product = this.products.find(product => product.$key === rcpt.productKey);
-  //     if (selectedProduct && selectedProduct.productQuantity) {
-  //       const productQuantity: ProductQuantity[] = selectedProduct.productQuantity??[];
-  //       const selectedQuantity = productQuantity
-  //         .find((x) => x.productColor === rcpt.productColour);
-  //       if (selectedQuantity && rcpt.productQuantity > selectedQuantity.productQuantity) {
-  //         return false;
-  //       }
-  //   }
-  //   });
-  //   return true;
-  // }
+  private validateProductQuantity(): boolean {
+    let status: boolean = true;
+    this.receiptProduct.forEach(rcpt => {
+      let quantity: number = 0;
+      if (status) {
+      const selectedProduct: Product = this.products.find(product => product.$key === rcpt.productKey);
+      if (selectedProduct && selectedProduct.productQuantity) {
+        const productQuantities: ProductQuantity[] = [];
+        for (const prd of Object.keys(selectedProduct.productQuantity)) {
+          productQuantities.push(selectedProduct.productQuantity[prd]);
+        }
+        const selectedQuantity = productQuantities
+          .find((x) => x.productColor === rcpt.productColour);
+        const tempProduct = this.receiptProduct
+          .filter(x => x.productKey === rcpt.productKey && x.productColour === rcpt.productColour && x.sizeName === rcpt.sizeName);
+        tempProduct.forEach(y => quantity += y.productQuantity);
+        if (selectedQuantity && quantity > selectedQuantity.productQuantity) {
+          status = false;
+        }
+    }
+    }});
+    return status;
+  }
+
+  addressReset() {
+    this.shippingService.removeLocalAddresses();
+    this.getLocalReceiptDetails();
+  }
 }

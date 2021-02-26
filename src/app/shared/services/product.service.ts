@@ -29,6 +29,7 @@ import {
   ReceiptProduct,
 } from "../models";
 import { firestore } from "firebase/app";
+import { take } from "rxjs/operators";
 @Injectable()
 export class ProductService {
   products: AngularFireList<Product>;
@@ -83,12 +84,29 @@ export class ProductService {
   }
 
   updateProduct(key: string, data: Product, callback: () => void) {
+    this.getProducts();
     this.products.update(key, data);
     callback();
   }
 
   deleteProduct(key: string) {
     this.products.remove(key);
+  }
+
+  updateProductQuantity(receiptProducts: any) {
+    for (const receipt of Object.keys(receiptProducts)) {
+      const selectedProduct = this.getProductById(receiptProducts[receipt].productKey);
+      if (selectedProduct) {
+        selectedProduct.valueChanges().pipe(take(1))
+        .subscribe((product) => {
+          product.productQuantity
+            .find(x => x.productSize.name === receiptProducts[receipt].sizeName &&
+              x.productColor === receiptProducts[receipt].productColour).productQuantity
+            -= receiptProducts[receipt].productQuantity;
+          this.updateProduct(receiptProducts[receipt].productKey, product, () => { });
+          });
+      }
+    }
   }
 
   /*

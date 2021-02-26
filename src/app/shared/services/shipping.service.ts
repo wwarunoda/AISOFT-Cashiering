@@ -27,9 +27,6 @@ export class ShippingService {
     if (data) {
       a.push(data);
     }
-    this.toastService.wait(
-      "Adding Shipping Address", "Shipping Address Added"
-    );
     setTimeout(() => {
       localStorage.setItem("avct_shipping", JSON.stringify(a));
     }, 500);
