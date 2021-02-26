@@ -3,14 +3,24 @@ export class User {
   userName?: string;
   emailId?: string;
   password?: string;
-  location?: {
-    lat: number;
-    lon: number;
-  };
   phoneNumber?: string;
   createdOn?: string;
   isAdmin?: boolean;
   avatar?: string;
+  firstName?: string;
+  lastName?: string;
+  unitNumber?: string;
+  street?: string;
+  country?: string;
+  surburb?: string;
+  state?: string;
+  roles?: Roles;
+}
+
+export interface Roles {
+  subscriber?: boolean;
+  editor?: boolean;
+  admin?: boolean;
 }
 
 export class UserDetail {
@@ -18,6 +28,7 @@ export class UserDetail {
   firstName: string;
   lastName: string;
   userName: string;
+  phoneNumber?: string;
   emailId: string;
   address1: string;
   address2: string;

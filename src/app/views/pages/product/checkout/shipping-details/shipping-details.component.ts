@@ -222,7 +222,7 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
       receipt.shippingDetails = this.shippingDetails;
       if (this.userDetail) {
         receipt.userKey = this.userDetail.$key;
-        receipt.userName = this.userDetail.userName;
+        receipt.userName = this.userDetail.firstName + " " + this.userDetail.lastName;
         receipt.userPhoneNumber = this.userDetail.phoneNumber;
         receipt.userEmail = this.userDetail.emailId;
       }

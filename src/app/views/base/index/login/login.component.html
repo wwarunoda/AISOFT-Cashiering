@@ -102,6 +102,31 @@
               {{ errorMessage.message }}
             </div>
             <div class="form-group form-sm">
+              <label for="firstNameId">First Name</label>
+              <input
+                mdbActive
+                type="text"
+                id="firstNameId"
+                class="form-control"
+                name="firstNameId"
+                [(ngModel)]="createUser.firstNameId"
+                placeholder="Enter First Name"
+                mdbInputValidate
+              />
+            </div>
+            <div class="form-group form-sm">
+              <label for="lastNameId">Last Name</label>
+              <input
+                mdbActive
+                type="text"
+                id="lastNameId"
+                class="form-control"
+                name="lastNameId"
+                [(ngModel)]="createUser.lastNameId"
+                placeholder="Enter Last Name"
+              />
+            </div>
+            <div class="form-group form-sm">
               <label for="emailId">Your email</label>
               <input
                 mdbActive
@@ -114,6 +139,18 @@
                 mdbInputValidate
                 [email]="true"
                 autocomplete="email"
+              />
+            </div>
+            <div class="form-group form-sm">
+              <label for="phoneNumberId">Phone Number</label>
+              <input
+                mdbActive
+                type="text"
+                id="phoneNumberId"
+                class="form-control"
+                name="phoneNumberId"
+                [(ngModel)]="createUser.phoneNumberId"
+                placeholder="Enter Phone Number"
               />
             </div>
             <div class="form-group form-sm">
