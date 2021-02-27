@@ -15,6 +15,10 @@ export class User {
   surburb?: string;
   state?: string;
   roles?: Roles;
+  location?: {
+    lat: number;
+    lon: number;
+  };
 }
 
 export interface Roles {

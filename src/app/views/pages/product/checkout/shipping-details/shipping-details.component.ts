@@ -158,7 +158,8 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
     } else {
       this.authService.user$.subscribe((user) => {
         customerDetails.emailId = user.emailId;
-        customerDetails.firstName = user.userName;
+        customerDetails.firstName = user.firstName;
+        customerDetails.lastName = user.lastName;
         customerDetails.phoneNumber = user.phoneNumber;
         customerDetails.country = "Australia";
         this.setCustomerDetails(customerDetails);

@@ -44,13 +44,13 @@ export class LoginComponent implements OnInit {
       .then((res) => {
         const user = {
           email: res.user.email,
-          famil_name: this.createUser.firstNameId + " "+ this.createUser.lastNameId,
+          famil_name: res.user.displayName,
           uid: res.user.uid,
           verified_email: res.user.emailVerified,
-          phoneNumber: this.createUser.phoneNumberId,
+          phoneNumber: res.user.phoneNumber,
           picture: res.user.photoURL,
-          firstName: this.createUser.firstNameId,
-          lastName: this.createUser.lastNameId,
+          // firstName: this.createUser.firstNameId,
+          // lastName: this.createUser.lastNameId,
         };
 
         this.userService.createUser(user);

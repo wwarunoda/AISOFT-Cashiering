@@ -5,7 +5,7 @@ import * as firebase from "firebase/app";
 import { BehaviorSubject, Observable } from "rxjs";
 import { filter, map } from "rxjs/operators";
 
-import { User } from "../models";
+import { User } from "../models/user";
 import { UserService } from "./user.service";
 
 export const ANONYMOUS_USER: User = new User();
