@@ -34,7 +34,7 @@ import { CartCalculatorComponent } from "./cart-calculator/cart-calculator.compo
     ProductDetailComponent,
     FavouriteProductsComponent,
     CartProductsComponent,
-    CartCalculatorComponent,
+    CartCalculatorComponent
   ],
   exports: [BestProductComponent],
 })

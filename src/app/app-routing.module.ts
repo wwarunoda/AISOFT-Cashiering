@@ -1,3 +1,5 @@
+import { PrivacyPolicyComponent } from './views/pages/about/privacy-policy/privacy-policy.component';
+import { AboutUsComponent } from './views/pages/about/about-us/about-us.component';
 import { PageNotFoundComponent } from "./shared/components/page-not-found/page-not-found.component";
 import { NoAccessComponent } from "./shared/components/no-access/no-access.component";
 import { NgModule } from "@angular/core";
@@ -32,6 +34,14 @@ const routes: Routes = [
           ),
       },
     ],
+  },
+  {
+    path: "about-us",
+    component: AboutUsComponent,
+  },
+  {
+    path: "privacy-policy",
+    component: PrivacyPolicyComponent,
   },
   { path: "no-access", component: NoAccessComponent },
   { path: "**", component: PageNotFoundComponent },

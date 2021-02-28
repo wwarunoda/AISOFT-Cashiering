@@ -1,3 +1,5 @@
+import { PrivacyPolicyComponent } from './views/pages/about/privacy-policy/privacy-policy.component';
+import { AboutUsComponent } from './views/pages/about/about-us/about-us.component';
 import { BrowserModule } from "@angular/platform-browser";
 import { NgModule, NO_ERRORS_SCHEMA, APP_INITIALIZER } from "@angular/core";
 
@@ -20,7 +22,7 @@ export function setupTranslateFactory(service: TranslateService) {
   return () => service.use("en");
 }
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, AboutUsComponent, PrivacyPolicyComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
