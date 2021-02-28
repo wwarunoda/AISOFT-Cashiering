@@ -1,3 +1,4 @@
+import { AddressState } from './addressState';
 export class Billing {
   $key?: string;
   userId?: number;
@@ -9,6 +10,6 @@ export class Billing {
   street?: string;
   country?: string;
   surburb?: string;
-  state?: string;
+  state?: AddressState;
   createdDate?: string;
 }

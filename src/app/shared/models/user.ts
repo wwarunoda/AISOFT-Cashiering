@@ -1,8 +1,10 @@
+import { AddressState } from './addressState';
 export class User {
   $key?: string;
   userName?: string;
   emailId?: string;
   password?: string;
+  confirmPassword?: string;
   phoneNumber?: string;
   createdOn?: string;
   isAdmin?: boolean;
@@ -13,7 +15,7 @@ export class User {
   street?: string;
   country?: string;
   surburb?: string;
-  state?: string;
+  state?: AddressState;
   roles?: Roles;
   location?: {
     lat: number;
@@ -37,6 +39,6 @@ export class UserDetail {
   address1: string;
   address2: string;
   country: string;
-  state: string;
+  state: AddressState;
   zip: number;
 }

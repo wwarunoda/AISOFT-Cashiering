@@ -1,5 +1,5 @@
 import { ShippingService, ReceiptService, AuthService, ToastService } from "../../../../../shared/services";
-import { Receipt, User, ReceiptProduct, Product, Billing, ProductQuantity } from "../../../../../shared/models";
+import { Receipt, User, ReceiptProduct, Product, Billing, ProductQuantity, AddressState } from "../../../../../shared/models";
 import { ReceiptStatusEnum } from "../../../../../shared/enum";
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import {
@@ -25,6 +25,7 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
   products: Product[];
   shippingDetails: Billing;
   userDetail: User;
+  addressState: AddressState[];
   tax = 6.4;
 
   constructor(
@@ -50,13 +51,9 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.initForms();
+    this.getMasterData();
     this.getAllProducts();
     this.getLocalReceiptDetails();
-    this.authService.user$.subscribe((user) => {
-      if(user.hasOwnProperty('$key')) {
-        this.userDetail = user;
-      }
-    });
   }
 
   ngOnDestroy() {
@@ -72,7 +69,7 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
       telephone: [null, [Validators.maxLength(10), Validators.required]],
       unitNumber: [null, Validators.required],
       street: [null, Validators.required],
-      state: [null, Validators.required],
+      state: [0, Validators.required],
       surburb: [null, Validators.required],
       country: [0, Validators.required],
     });
@@ -138,6 +135,17 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
       );
     }
   }
+  private getMasterData() {
+    const states = this.shippingService.getStates();
+    states.snapshotChanges().subscribe(
+      (state) => {
+        this.addressState = [];
+        state.forEach((element) => {
+          const y = { ...element.payload.toJSON(), $key: element.key };
+          this.addressState.push(y as AddressState);
+        });
+      });
+  }
 
   private getLocalReceiptDetails() {
     this.receiptProduct = this.productService.getLocalCartReceipt();
@@ -154,15 +162,25 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
       customerDetails.street = localAddress.street;
       customerDetails.surburb = localAddress.surburb;
       customerDetails.unitNumber = localAddress.unitNumber;
+      this.userDetail = customerDetails;
       this.setCustomerDetails(customerDetails);
+      this.shippingService.createShippings(customerDetails);
     } else {
       this.authService.user$.subscribe((user) => {
-        customerDetails.emailId = user.emailId;
-        customerDetails.firstName = user.firstName;
-        customerDetails.lastName = user.lastName;
-        customerDetails.phoneNumber = user.phoneNumber;
-        customerDetails.country = "Australia";
+        if (user.hasOwnProperty('$key')) {
+          this.userDetail = user;
+          customerDetails.emailId = user.emailId;
+          customerDetails.firstName = user.firstName;
+          customerDetails.lastName = user.lastName;
+          customerDetails.phoneNumber = user.phoneNumber;
+          customerDetails.country = "Australia";
+          customerDetails.state = user.state;
+          customerDetails.street = user.street;
+          customerDetails.surburb = user.surburb;
+          customerDetails.unitNumber = user.unitNumber;
+        }
         this.setCustomerDetails(customerDetails);
+        this.shippingService.createShippings(customerDetails);
       });
     }
     this.calculateTotalPrice();
@@ -272,6 +290,6 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
 
   addressReset() {
     this.shippingService.removeLocalAddresses();
-    this.getLocalReceiptDetails();
+    this.setCustomerDetails({});
   }
 }

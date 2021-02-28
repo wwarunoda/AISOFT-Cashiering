@@ -16,3 +16,4 @@ export * from "./file";
 export * from "./receipt";
 export * from "./receiptProduct";
 export * from "./localReceipt";
+export * from "./addressState";

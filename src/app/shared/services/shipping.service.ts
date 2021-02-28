@@ -3,9 +3,9 @@ import {
   AngularFireObject,
   AngularFireDatabase,
 } from "@angular/fire/database";
-import { Billing } from "./../models/billing";
+import { Billing, AddressState } from "./../models";
 import { Injectable } from "@angular/core";
-import { ShippingsProductsEnum, ProductsEnum } from "../enum";
+import { ShippingsProductsEnum, ProductsEnum, AddressStateEnum } from "../enum";
 import { ToastService } from "./toast.service";
 
 @Injectable({
@@ -13,6 +13,7 @@ import { ToastService } from "./toast.service";
 })
 export class ShippingService {
   shippings: AngularFireList<Billing>;
+  addressStates: AngularFireList<AddressState>;
   shipping: AngularFireObject<Billing>;
   constructor(private db: AngularFireDatabase,
               private toastService: ToastService) {
@@ -60,5 +61,10 @@ export class ShippingService {
 
   deleteshipping(key: string) {
     this.shippings.remove(key);
+  }
+
+  getStates() {
+    this.addressStates = this.db.list(AddressStateEnum.TableName);
+    return this.addressStates;
   }
 }

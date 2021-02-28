@@ -152,13 +152,7 @@
             formControlName="state"
             required
           >
-            <option value="">Choose...</option>
-            <option>New South Wales</option>
-            <option>Queensland</option>
-            <option>South Australia</option>
-            <option>Tasmania</option>
-            <option>Victoria</option>
-            <option>Western Australia</option>
+            <option *ngFor="let state of addressState" [value]="state">{{state.name}}</option>
           </select>
           <div class="invalid-feedback">
             Please provide a valid state.

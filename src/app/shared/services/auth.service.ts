@@ -46,14 +46,20 @@ export class AuthService {
           .snapshotChanges()
           .subscribe((data) => {
             data.forEach((el) => {
-              const y: any = el.payload.toJSON();
+              const y: User = el.payload.toJSON();
               this.subject.next({
-                $key: y.uid,
-                userName: user.displayName || "Anonymous User",
-                emailId: y.email,
-                phoneNumber: user.phoneNumber,
+                $key: user.uid,
+                userName: user.email || "Anonymous User",
+                emailId:  user.email,
+                phoneNumber: y.phoneNumber,
                 avatar: user.photoURL,
                 isAdmin: y.isAdmin,
+                firstName: y.firstName,
+                lastName: y.lastName,
+                unitNumber: y.unitNumber,
+                street: y.street,
+                surburb: y.surburb,
+                state: y.state
               });
             });
           });

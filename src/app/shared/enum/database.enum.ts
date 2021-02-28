@@ -67,3 +67,8 @@ export enum ReceiptEnum {
   Name = "name"
 }
 
+export enum AddressStateEnum {
+  TableName = "addressState",
+  Name = "name"
+}
+
