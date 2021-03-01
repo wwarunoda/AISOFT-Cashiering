@@ -1,9 +1,4 @@
-.page-footer {
-  bottom: 0;
-  .footer-copyright {
-    background-color: transparent;
-    a {
-      color: #656565;
-    }
-  }
+.center {
+  display: flex;
+  justify-content: center;
 }
