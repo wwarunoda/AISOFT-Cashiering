@@ -16,4 +16,6 @@ export * from "./file";
 export * from "./receipt";
 export * from "./receiptProduct";
 export * from "./localReceipt";
+export * from "./task";
+export * from "./drag.drop";
 export * from "./addressState";

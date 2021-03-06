@@ -14,7 +14,7 @@ import * as _ from "lodash";
 export class TaskBoardComponent implements OnInit {
   kanbanContainers = [
     {
-      title: "Todo",
+      title: "Pending",
       id: "todoList",
       connectedTo: ["inProgressList"],
       item: _.sortBy(
@@ -63,6 +63,7 @@ export class TaskBoardComponent implements OnInit {
       );
     }
   }
+
   onSelect(event) {
     console.log(event);
   }
