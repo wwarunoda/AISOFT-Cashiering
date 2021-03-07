@@ -15,6 +15,7 @@ import {
   SizeEnum,
   SizeTypeEnum,
   MaterialEnum,
+  ClientsEnum
 } from "../enum";
 import {
   FavouriteProduct,
@@ -27,12 +28,15 @@ import {
   Material,
   Receipt,
   ReceiptProduct,
+  CustomUser,
+  ProductQuantity
 } from "../models";
 import { firestore } from "firebase/app";
 import { take } from "rxjs/operators";
 @Injectable()
 export class ProductService {
   products: AngularFireList<Product>;
+  productQuantities: AngularFireList<ProductQuantity>;
   product: AngularFireObject<Product>;
   brands: AngularFireList<any>;
   genders: AngularFireList<Gender>;
@@ -43,6 +47,8 @@ export class ProductService {
   // favouriteProducts
   favouriteProducts: AngularFireList<FavouriteProduct>;
   cartProducts: AngularFireList<FavouriteProduct>;
+  clientsDB: AngularFireList<CustomUser>;
+  clients: CustomUser[] = [];
   currentDate: Date;
   currentUserId: string;
   constructor(
@@ -50,11 +56,8 @@ export class ProductService {
     private authService: AuthService,
     private toastService: ToastService
   ) {
-    authService.user.subscribe((user) => {
-      if (user) {
-      this.currentUserId = user.email;
-      }
-    });
+    this.getClients();
+    this.getActiveUsers();
   }
 
   //#region old services
@@ -64,12 +67,39 @@ export class ProductService {
     return this.products;
   }
 
+  getActiveProductsQuantities(productKey: string) {
+    this.productQuantities = this.db.list(ProductsEnum.TableName+ "/" + productKey+"/productQuantity");
+    return this.productQuantities;
+  }
+
+  getClients() {
+    this.clientsDB = this.db.list(ClientsEnum.TableName);
+
+    this.clientsDB.snapshotChanges().subscribe(client => {
+      client.forEach((element) => {
+        console.log(element.payload.val());
+        const y = { ...element.payload.val(), $key: element.key };
+        this.clients.push(y as CustomUser);
+      });
+    });
+    return this.clientsDB;
+  }
+
+  getActiveUsers() {
+    this.authService.user.subscribe((user) => {
+      if (user) {
+      this.currentUserId = user.uid;
+      }
+    });
+  }
+
   createProduct(data: Product, callback: () => void) {
     this.products.push(data);
     callback();
   }
 
   addProduct(data: Product, callback: (key: string) => void) {
+
     data.createdDate = data.lastUpdatedDate = firestore.Timestamp.now()
       .toDate()
       .toLocaleString();
@@ -89,6 +119,16 @@ export class ProductService {
     callback();
   }
 
+  updateDBProductQuantity(key: string, data: Product, callback: () => void) {
+    this.getActiveProductsQuantities(key);
+    let i: number = 0;
+    data.productQuantity.forEach(x => {
+      this.productQuantities.update(i.toString(), x);
+      i++;
+    });
+    callback();
+  }
+
   deleteProduct(key: string) {
     this.products.remove(key);
   }
@@ -103,7 +143,7 @@ export class ProductService {
             .find(x => x.productSize.name === receiptProducts[receipt].sizeName &&
               x.productColor === receiptProducts[receipt].productColour).productQuantity
             -= receiptProducts[receipt].productQuantity;
-          this.updateProduct(receiptProducts[receipt].productKey, product, () => { });
+          this.updateDBProductQuantity(receiptProducts[receipt].productKey, product, () => { });
           });
       }
     }

@@ -42,3 +42,8 @@ export class UserDetail {
   state: AddressState;
   zip: number;
 }
+
+export interface CustomUser {
+  $key: string;
+  uid: string;
+}

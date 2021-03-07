@@ -12,4 +12,5 @@ export class Billing {
   surburb?: string;
   state?: AddressState;
   createdDate?: string;
+  userKey?: string;
 }

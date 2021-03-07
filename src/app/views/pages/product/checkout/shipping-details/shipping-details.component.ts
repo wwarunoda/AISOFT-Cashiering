@@ -25,6 +25,7 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
   products: Product[];
   shippingDetails: Billing;
   userDetail: User;
+  tempUser: User;
   addressState: AddressState[];
   tax = 6.4;
 
@@ -109,6 +110,13 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
 
   updateUserDetails() {
     if (this.validateForm()) {
+      if (this.userDetail && !this.userDetail.$key && this.tempUser && this.tempUser.$key) {
+        this.userDetail.$key = this.tempUser.$key;
+      } else if (this.userDetail && !this.userDetail.$key){
+        this.userDetail.$key = "anonymous";
+      } else if (!this.userDetail) {
+        this.userDetail.$key = "anonymous";
+      }
       this.shippingDetails = {
         $key: "",
         userId: 1,
@@ -121,6 +129,7 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
         country: this.countryController.value,
         surburb: this.surburbController.value,
         state: this.stateController.value,
+        userKey: this.userDetail.$key,
         createdDate: Date.now().toLocaleString(),
       };
 
@@ -145,6 +154,11 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
           this.addressState.push(y as AddressState);
         });
       });
+    this.authService.user$.subscribe((user) => {
+        if (user.hasOwnProperty('$key')) {
+          this.tempUser = user;
+        }
+      });
   }
 
   private getLocalReceiptDetails() {
@@ -162,6 +176,7 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
       customerDetails.street = localAddress.street;
       customerDetails.surburb = localAddress.surburb;
       customerDetails.unitNumber = localAddress.unitNumber;
+      customerDetails.userKey = localAddress.userKey;
       this.userDetail = customerDetails;
       this.setCustomerDetails(customerDetails);
       this.shippingService.createShippings(customerDetails);
@@ -178,6 +193,7 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
           customerDetails.street = user.street;
           customerDetails.surburb = user.surburb;
           customerDetails.unitNumber = user.unitNumber;
+          customerDetails.userKey = user.$key;
         }
         this.setCustomerDetails(customerDetails);
         this.shippingService.createShippings(customerDetails);
@@ -240,9 +256,14 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
       receipt.receiptProducts = this.receiptProduct;
       receipt.shippingDetails = this.shippingDetails;
       if (this.userDetail) {
+        if (!this.userDetail.$key && this.tempUser && this.tempUser.$key) {
+          this.userDetail.$key = this.tempUser.$key;
+        } else if (!this.userDetail.$key){
+          this.userDetail.$key = "anonymous";
+        }
         receipt.userKey = this.userDetail.$key;
         receipt.userName = this.userDetail.firstName + " " + this.userDetail.lastName;
-        receipt.userPhoneNumber = this.userDetail.phoneNumber;
+        receipt.userPhoneNumber = this.userDetail?.phoneNumber??"0000000000";
         receipt.userEmail = this.userDetail.emailId;
       }
       receipt.totalAmount = this.totalPrice + this.tax;

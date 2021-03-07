@@ -23,6 +23,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { ProductsEnum } from "../../../../shared/enum";
 import { FirebaseApp } from "@angular/fire";
 import { DomSanitizer } from "@angular/platform-browser";
+import { first, map } from "rxjs/operators";
 
 declare var $: any;
 declare var require: any;
@@ -132,11 +133,11 @@ export class AddProductComponent implements OnInit {
   private initForms() {
     this.productForm = this.formBuilder.group({
       key$: "",
-      productGender: [null, Validators.required],
-      productBrand: [null, Validators.required],
+      productGender: [0, Validators.required],
+      productBrand: [0, Validators.required],
       productName: [null, Validators.required],
-      productCategory: [null, Validators.required],
-      productMaterial: [null, Validators.required],
+      productCategory: [0, Validators.required],
+      productMaterial: [0, Validators.required],
       productPrice: [0, Validators.required],
       productDescription: null,
       productImages: null,
@@ -144,7 +145,7 @@ export class AddProductComponent implements OnInit {
 
     this.productFormExt = this.formBuilder.group({
       key$: "",
-      productSize: [null, Validators.required],
+      productSize: [0, Validators.required],
       productColor: ["#ffffff", Validators.required],
       productColorDescription: [null, Validators.required],
       productQuantity: [0, Validators.required],
@@ -162,6 +163,9 @@ export class AddProductComponent implements OnInit {
           const y = { ...element.payload.toJSON(), $key: element.key };
           this.brandsList.push(y as Brand);
         });
+        if (this.brandsList && this.brandsList.length) {
+          this.productBrandController.setValue(this.brandsList[0]);
+        }
       },
       (err) => {
         this.toastService.error("Error while fetching Brands", err);
@@ -180,6 +184,10 @@ export class AddProductComponent implements OnInit {
           this.selectedGend = this.genderList.find(
             (activeGender) => activeGender.$key === this.selectedGenderKey
           );
+          if (this.genderList.length) {
+            this.productGenderController.setValue(this.genderList[0]);
+            this.onGenderChange();
+          }
         }
       },
       (err) => {
@@ -197,6 +205,7 @@ export class AddProductComponent implements OnInit {
           this.categoryMasterList.push(y as Category);
         });
         this.selectCategoryByGender();
+        this.onGenderChange();
       },
       (err) => {
         this.toastService.error("Error while fetching Category", err);
@@ -210,7 +219,7 @@ export class AddProductComponent implements OnInit {
           (gender) => gender.$key === queryParams.key
         );
         this.categoryList = this.categoryMasterList.filter(
-          (category) => category.genderKey === this.selectedGend.$key
+          (category) => category.genderKey === this.selectedGend?.$key
         );
         if (this.categoryList != null) {
           this.selectedCategory = this.categoryList[0];
@@ -302,9 +311,9 @@ export class AddProductComponent implements OnInit {
   private selectCategoryByGender() {
     if (this.categoryMasterList != null) {
       this.categoryList = [];
-      if (this.getMasterData != null && this.selectedGend != null) {
+      if (this.selectedGend != null) {
         this.categoryList = this.categoryMasterList.filter(
-          (category) => category.genderKey == this.selectedGend.$key
+          (category) => category.genderKey === this.selectedGend.$key
         );
         if (this.categoryList != null) {
           this.selectedCategory = this.categoryList[0];
@@ -327,6 +336,9 @@ export class AddProductComponent implements OnInit {
           this.sizeList = this.sizeMasterList.filter(
             (size) => size.sizeTypeKey == categorySelected.sizeTypeKey
           );
+          if (this.sizeList && this.sizeList.length) {
+            this.productSizeController.setValue(this.sizeList[0]);
+          }
         },
         (err) => {
           this.toastService.error("Error while fetching Size", err);
@@ -384,19 +396,21 @@ export class AddProductComponent implements OnInit {
   }
 
   onGenderChange() {
-    this.categoryList = this.categoryMasterList.filter(
+    this.categoryList = this.categoryMasterList?.filter(
       (category) =>
         category.genderKey === this.productGenderController.value.$key
     );
-
+    if (this.categoryList && this.categoryList.length) {
+      this.productCategoryController.setValue(this.categoryList[0]);
+    }
     this.selectedGenderKey = this.productGenderController.value.$key;
-  }
+  }s
 
   onCategoryChange(categoryChangeValue: Category) {
     this.selectedCategory = categoryChangeValue;
     if (this.sizeMasterList) {
       this.sizeList = this.sizeMasterList.filter(
-        (size) => size.sizeTypeKey === categoryChangeValue.sizeTypeKey
+        (size) => size?.sizeTypeKey === categoryChangeValue?.sizeTypeKey
       );
     }
   }
@@ -480,6 +494,8 @@ export class AddProductComponent implements OnInit {
           this.isSavedSuccessfully = true;
         });
       }
+      this.resetProductForm();
+      this.getMasterData();
     }
   }
 

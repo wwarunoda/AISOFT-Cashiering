@@ -394,7 +394,7 @@
 
       <div class="row mb-2 px-3">
         <div class="col-12">
-          <ng-container *ngIf="!isSavedSuccessfully">
+          <ng-container >
             <button
               class="btn btn-sm btn-default pull-right spacer"
               (click)="resetProductForm()"
@@ -402,12 +402,11 @@
               Reset
             </button>
             <button
-              [disabled]="
-                productForm?.invalid ||
-                !productQuantityList?.length ||
-                !(fileList?.length || existingFileList?.length) ||
-                isAttachmentUploading
-              "
+            [disabled]="
+            productForm?.invalid ||
+            !productQuantityList?.length ||
+            !(fileList?.length || existingFileList?.length) ||
+            isAttachmentUploading"
               class="btn btn-sm pull-right spacer"
               [ngClass]="isUpdate ? 'btn-warning' : 'btn-primary'"
               (click)="addProduct()"
@@ -419,14 +418,14 @@
               Please wait...
             </span>
           </ng-container>
-          <ng-container *ngIf="isSavedSuccessfully">
+          <!-- <ng-container *ngIf="isSavedSuccessfully">
             <button
               class="btn btn-sm btn-success pull-right spacer"
               (click)="closeDialog()"
             >
               Close
             </button>
-          </ng-container>
+          </ng-container> -->
         </div>
       </div>
     </div>

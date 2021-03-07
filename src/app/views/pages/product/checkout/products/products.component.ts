@@ -31,11 +31,9 @@ export class ProductsComponent implements OnInit {
     this.checkoutProducts = products;
 
     this.receiptProduct = this.productService.getLocalCartReceipt();
-
-    products.forEach((product) => {
-        product.productQuantity.forEach((quantity) => {
-        this.totalPrice += (product.productPrice * quantity.productQuantity);
-      });
+    this.totalPrice = 0;
+    this.receiptProduct.forEach((product) => {
+      this.totalPrice += (product.productPrice * product.productQuantity);
     });
   }
 }

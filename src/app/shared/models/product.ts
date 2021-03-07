@@ -37,4 +37,5 @@ export class Product {
   isActive?: boolean;
   materialKey?: string;
   selectedProductQuantityKey?: string;
+  createUserKey?: string;
 }
