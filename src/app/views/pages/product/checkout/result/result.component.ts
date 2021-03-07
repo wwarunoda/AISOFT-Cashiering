@@ -36,6 +36,9 @@ export class ResultComponent implements OnInit, AfterViewInit {
   totalPrice = 0;
   tax = 6.4;
   isAddressFound: boolean = false;
+  config: any;
+  collection = { count: 5, data: [] };
+  isPolicyAgree: boolean = false;
   constructor(
     private productService: ProductService,
     private authService: AuthService,
@@ -55,12 +58,26 @@ export class ResultComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.getProductsAndCustomerDetails();
     this.createReceiptIdentification();
+
+    for (let i = 1; i <= 5; i++) {
+      this.collection.data.push(
+        i
+      );
+    }
+
+    this.config = {
+      itemsPerPage: 1,
+      currentPage: 1,
+      totalItems: this.collection.count
+    };
   }
 
   ngAfterViewInit() {
     // this.loadPaymentGateWay();
   }
-
+  pageChanged(event){
+    this.config.currentPage = event;
+  }
   downloadReceipt() {
     const data = document.getElementById("receipt");
     // console.log(data);
