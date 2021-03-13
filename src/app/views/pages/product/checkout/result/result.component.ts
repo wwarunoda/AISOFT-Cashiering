@@ -119,8 +119,8 @@ export class ResultComponent implements OnInit, AfterViewInit {
   }
   private createReceiptIdentification() {
     const randomId = makeReceiptId(ReceiptDataEnum.ReceiptIdSize);
-    // this.id = "http://localhost:4200/success?ReceiptId=" + randomId;
-    this.id = "https://uclobbers-smart-shopping-de515.web.app/success?ReceiptId=" + randomId;
+    this.id = "http://localhost:4200/success?ReceiptId=" + randomId;
+    // this.id = "https://uclobbers-smart-shopping-de515.web.app/success?ReceiptId=" + randomId;
     this.receiptService.createReceiptId(randomId);
   }
   public loadPaymentGateWay(receiptNumber: string) {
