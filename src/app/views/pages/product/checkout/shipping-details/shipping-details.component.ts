@@ -115,7 +115,18 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
       } else if (this.userDetail && !this.userDetail.$key){
         this.userDetail.$key = "anonymous";
       } else if (!this.userDetail) {
-        this.userDetail.$key = "anonymous";
+        this.userDetail = {
+          firstName: this.firstNameController.value,
+          lastName: this.lastNameController.value,
+          phoneNumber: this.phoneController.value,
+          emailId: this.emailController.value,
+          unitNumber: this.unitNumberController.value,
+          street: this.stateController.value,
+          surburb: this.surburbController.value,
+          country: this.countryController.value,
+          state: this.stateController.value,
+          $key: "anonymous"
+        };
       }
       this.shippingDetails = {
         $key: "",
@@ -263,7 +274,7 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
         }
         receipt.userKey = this.userDetail.$key;
         receipt.userName = this.userDetail.firstName + " " + this.userDetail.lastName;
-        receipt.userPhoneNumber = this.userDetail?.phoneNumber??"0000000000";
+        receipt.userPhoneNumber = this.userDetail?.phoneNumber ?? "0000000000";
         receipt.userEmail = this.userDetail.emailId;
       }
       receipt.totalAmount = this.totalPrice + this.tax;
