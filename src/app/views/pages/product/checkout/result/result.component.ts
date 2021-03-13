@@ -19,6 +19,9 @@ import {
 import { threadId } from "worker_threads";
 import { SelectMultipleControlValueAccessor } from "@angular/forms";
 import { ReceiptStatusEnum, ReceiptDataEnum } from "../../../../../shared/enum";
+import { BehaviorSubject } from "rxjs/internal/BehaviorSubject";
+import { Observable } from "rxjs/internal/Observable";
+import { FLAG_UNRESTRICTED } from "html2canvas/dist/types/css/syntax/tokenizer";
 
 declare var $: any;
 @Component({
@@ -39,6 +42,8 @@ export class ResultComponent implements OnInit, AfterViewInit {
   config: any;
   collection = { count: 5, data: [] };
   isPolicyAgree: boolean = false;
+  isPaymentLoad: boolean = false;
+  private privacyPolicyInfo: BehaviorSubject<boolean>;
   constructor(
     private productService: ProductService,
     private authService: AuthService,
@@ -46,6 +51,7 @@ export class ResultComponent implements OnInit, AfterViewInit {
     private toastService: ToastService,
     private receiptService: ReceiptService
   ) {
+    this.privacyPolicyInfo = new BehaviorSubject<boolean>(false);
     /* Hiding Billing Tab Element */
     document.getElementById("productsTab").style.display = "none";
     document.getElementById("shippingTab").style.display = "none";
@@ -70,6 +76,21 @@ export class ResultComponent implements OnInit, AfterViewInit {
       currentPage: 1,
       totalItems: this.collection.count
     };
+
+    this.getValue().subscribe(x => {
+      if (x) {
+        this.loadPaymentGateWay(this.receiptNumber);
+      }
+    });
+  }
+  setValue(): void {
+    if (!this.isPaymentLoad) {
+      this.isPolicyAgree = false;
+    }
+    this.privacyPolicyInfo.next(this.isPolicyAgree && this.isPaymentLoad);
+  }
+  getValue(): Observable<boolean> {
+    return this.privacyPolicyInfo.asObservable();
   }
 
   ngAfterViewInit() {
@@ -101,7 +122,7 @@ export class ResultComponent implements OnInit, AfterViewInit {
     this.id = "http://localhost:4200/success?ReceiptId=" + randomId;
     this.receiptService.createReceiptId(randomId);
   }
-  private loadPaymentGateWay(receiptNumber: string) {
+  public loadPaymentGateWay(receiptNumber: string) {
     let email;
     let telephoneNumber;
     const totalAmount = ((this.totalPrice + this.tax) * 100)
@@ -170,7 +191,7 @@ export class ResultComponent implements OnInit, AfterViewInit {
   private getReceiptNumber() {
     this.receiptService.getReceiptNumber().subscribe((receipt) => {
        this.receiptNumber = receipt;
-       this.loadPaymentGateWay(receipt);
+       this.isPaymentLoad = true;
     });
   }
 
