@@ -1,85 +1,78 @@
 <br />
+<main class="mt-5">
 <div class="container" *ngIf="cartProducts.length > 0">
   <div class="row">
     <!-- List of Products -->
-    <div class="col-8">
-      <div class="row">
-        <div class="col-4" *ngFor="let product of cartProducts">
-          <div class="item">
-            <div class="mb-r">
-              <!--Card-->
-              <div class="card card-cascade wider">
+    <div class="col-lg-8 col-md-12 mb-4">
+        <div class="row">
+        <div class="col-lg-4 col-md-12 mb-4" *ngFor="let product of cartProducts">
+          <div class="view overlay z-depth-1-half">
                 <!--Card image-->
-                <a [routerLink]="['/products/product', product.$key]">
-                  <div class="view overlay hm-white-slight">
+                <a [routerLink]="['/products/product', product.productKey]">
                     <img
                       *ngIf="product?.imageList?.length"
                       [src]="(product?.imageList)[0]?.downloadedUrl"
-                      class="img-fluid"
+                      class="card-img-top"
                       alt=""
-                      width="360px"
-                      height="640px"
                     />
                     <a>
                       <div
-                        class="mask waves-effect waves-light"
-                        mdbRippleRadius
+                        class="mask rgba-white-light"
                       ></div>
                     </a>
-                  </div>
                 </a>
-
                 <!--/.Card image-->
 
                 <!--Card content-->
                 <div class="card-body text-center no-padding">
-                  <!--Category & Title-->
-                  <a class="text-muted">
-                    <h5>{{ product.productCategory }}</h5>
-                  </a>
-                  <h5 class="card-title">
-                    <strong>
-                      <a [routerLink]="['/products/product', product.$key]">{{
-                        product.productName
-                      }}</a>
-                    </strong>
-                  </h5>
-
+                  <div class="row">
+                    <div class="col-md-12">{{ product.productBrand.name }}</div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12">{{product.productName}}</div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12">{{ product.productColour }} - {{ product.sizeName }}</div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12">{{product.productQuantity}} <span>&#215;</span> {{ product.productPrice | currency:'AUD':'symbol'}}</div>
+                  </div>
                   <!--Description-->
-                  <p class="card-text">{{ product.productDescription }}</p>
+                  <!-- <p class="card-text">{{ product.productDescription }}</p> -->
 
                   <!--Card footer-->
                   <div class="card-footer">
-                    <span class="left">AUD {{ product.productPrice }}</span>
-                    <span class="right">
-                      <a
-                        placement="top"
-                        mdbTooltip="Quick Look"
-                        container="body"
-                        [routerLink]="['/products/product', product.$key]"
-                      >
-                        <i class="fa fa-eye"></i>
-                      </a>
-                      <a
-                        placement="top"
-                        mdbTooltip="Remove Product"
-                        container="body"
-                        (click)="removeCartProduct(product)"
-                      >
-                        <i class="fa fa-trash"></i>
-                      </a>
-                    </span>
+                    <div class="d-flex justify-content-end">
+                        <div class="mr-auto p-1">{{ product.productPrice * product.productQuantity | currency:'AUD':'symbol'}}</div>
+                        <div class="p-1">
+                          <a
+                            placement="top"
+                            mdbTooltip="Quick Look"
+                            container="body"
+                            [routerLink]="['/products/product', product.$key]"
+                          >
+                            <i class="fa fa-eye"></i>
+                          </a>
+                        </div>
+                        <div class="p-1">
+                          <a
+                            placement="top"
+                            mdbTooltip="Remove Product"
+                            container="body"
+                            (click)="removeCartProduct(product)"
+                          >
+                            <i class="fa fa-trash"></i>
+                          </a>
+                        </div>
+                      </div>
                   </div>
                 </div>
                 <!--/.Card content-->
-              </div>
-              <!--/.Card-->
-            </div>
-          </div>
         </div>
       </div>
     </div>
-    <div class="col-4">
+  </div>
+    <div class="col-lg-4 col-md-12 mb-4">
       <app-cart-calculator [products]="cartProducts"></app-cart-calculator>
     </div>
   </div>
@@ -90,3 +83,4 @@
     [description]="messageDescription"
   ></app-no-products-found>
 </div>
+</main>

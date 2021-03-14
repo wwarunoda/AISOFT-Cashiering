@@ -89,6 +89,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   addToCart(product: Product) {
     let receiptProduct: ReceiptProduct = {};
     receiptProduct.productBrandKey = product.productBrandKey;
+    receiptProduct.productBrand = product.productBrandVM;
     receiptProduct.productKey = product.$key;
     receiptProduct.productName = product.productName;
     receiptProduct.productPrice = product.productPrice;
@@ -96,10 +97,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     receiptProduct.sizeKey = this.selectedSize.productSize.$key;
     receiptProduct.sizeName = this.selectedSize.productSize.name;
     receiptProduct.productColour = this.selectedSize.productColor;
-    receiptProduct.productImageUrl =
-      product.imageList && product.imageList.length
-        ? product.imageList[0].downloadedUrl
-        : "";
+    receiptProduct.imageList = product.imageList;
     if (this.totalQuantity > 0) {
       this.productService.addToCart(product, receiptProduct);
       this.totalQuantity -= this.productQuantityController.value;

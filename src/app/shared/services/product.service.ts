@@ -276,7 +276,6 @@ export class ProductService {
   getLocalCartProducts(): Product[] {
     const products: Product[] =
       JSON.parse(localStorage.getItem("avct_item")) || [];
-
     return products;
   }
 
@@ -285,6 +284,22 @@ export class ProductService {
       JSON.parse(localStorage.getItem("avct_receiptProduct")) || [];
 
     return receipts;
+  }
+
+  removeLocalCartReceipt(product: ReceiptProduct) {
+    let receiptProducts: ReceiptProduct[] = JSON.parse(
+      localStorage.getItem("avct_receiptProduct")
+    );
+
+    if (receiptProducts && receiptProducts.length) {
+      receiptProducts = receiptProducts.filter(
+        (innerProduct) => innerProduct.$key !== product.$key
+      );
+    }
+    localStorage.setItem(
+      "avct_receiptProduct",
+      JSON.stringify(receiptProducts)
+    );
   }
   //#endregion
 

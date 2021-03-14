@@ -1,3 +1,4 @@
+import { Brand } from "./brand";
 import { FileExt } from "./file.ext";
 
 export interface ReceiptProduct {
@@ -7,8 +8,9 @@ export interface ReceiptProduct {
   sizeKey?: string;
   sizeName?: string;
   productBrandKey?: string;
+  productBrand?: Brand;
   productQuantity?: number;
   productPrice?: number;
   productColour?: string;
-  productImageUrl?: string;
+  imageList?: FileExt[];
 }
