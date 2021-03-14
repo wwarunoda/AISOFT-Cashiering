@@ -37,11 +37,10 @@
                   <div class="row">
                     <div class="col-md-12">{{product.productQuantity}} <span>&#215;</span> {{ product.productPrice | currency:'AUD':'symbol'}}</div>
                   </div>
-                  <!--Description-->
-                  <!-- <p class="card-text">{{ product.productDescription }}</p> -->
-
+                </div>
+              </div>
                   <!--Card footer-->
-                  <div class="card-footer">
+                  <div class="card-footer no-padding">
                     <div class="d-flex justify-content-end">
                         <div class="mr-auto p-1">{{ product.productPrice * product.productQuantity | currency:'AUD':'symbol'}}</div>
                         <div class="p-1">
@@ -54,6 +53,7 @@
                             <i class="fa fa-eye"></i>
                           </a>
                         </div>
+                        <div></div>
                         <div class="p-1">
                           <a
                             placement="top"
@@ -66,9 +66,6 @@
                         </div>
                       </div>
                   </div>
-                </div>
-                <!--/.Card content-->
-        </div>
       </div>
     </div>
   </div>
