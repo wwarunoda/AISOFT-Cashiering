@@ -36,10 +36,11 @@ export class ProductListComponent implements OnInit {
   selectedBrand: Brand = {
     $key: "",
     name: "All",
-    description: "",
+    description: "All Brands",
     id: 0,
     index: 1,
   };
+  selectedGender: string;
   selectedCategory: Category = this.initialCategory;
   genderList: Gender[];
   categoryMasterList: Category[];
@@ -62,6 +63,10 @@ export class ProductListComponent implements OnInit {
 
   selectCategory(category: Category) {
     this.selectedCategory = category;
+  }
+
+  selectBrand(brand: Brand) {
+    this.selectedBrand = brand;
   }
 
   removeProduct(key: string) {
@@ -90,7 +95,7 @@ export class ProductListComponent implements OnInit {
             $key: "",
             id: 0,
             name: "All",
-            description: "",
+            description: "All Brands",
             index: 1,
           },
         ];
@@ -158,6 +163,7 @@ export class ProductListComponent implements OnInit {
     this.activatedRoute.queryParams.subscribe((queryParams) => {
       if (this.genderList != null) {
         this.activatedRouteKey = queryParams.key;
+        this.selectedGender = this.genderList.find(x => x.$key === this.activatedRouteKey).name;
         this.selectCategoryByGender();
         this.getSelectedProducts();
       }
