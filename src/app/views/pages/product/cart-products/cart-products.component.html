@@ -17,19 +17,20 @@
               </a>
               <!--Card content-->
               <div class="card-body text-center no-padding">
-                <div class="row">
-                  <div class="col-md-12">{{ product.productBrand.name }}</div>
-                </div>
-                <div class="row">
-                  <div class="col-md-12">{{product.productName}}</div>
-                </div>
-                <div class="row">
-                  <div class="col-md-12">{{ product.productColour }} - {{ product.sizeName }}</div>
-                </div>
-                <div class="row">
-                  <div class="col-md-12">{{product.productQuantity}} <span>&#215;</span> {{ product.productPrice |
-                    currency:'AUD':'symbol'}}</div>
-                </div>
+                <a [routerLink]="['/products/product', product.productKey]">
+                  <div class="row">
+                    <div class="col-md-12">{{ product.productBrand.name }}</div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12">{{product.productName}}</div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12">{{ product.productColour }} - {{ product.sizeName }}</div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12">{{product.productQuantity}} <span>&#215;</span> {{ product.productPrice | currency:'AUD':'symbol'}}</div>
+                  </div>
+                </a>
               </div>
             </div>
             <!--Card footer-->

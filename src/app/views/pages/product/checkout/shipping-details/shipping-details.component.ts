@@ -273,9 +273,13 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
           this.userDetail.$key = "anonymous";
         }
         receipt.userKey = this.userDetail.$key;
-        receipt.userName = this.userDetail.firstName + " " + this.userDetail.lastName;
-        receipt.userPhoneNumber = this.userDetail?.phoneNumber ?? "0000000000";
-        receipt.userEmail = this.userDetail.emailId;
+        if (this.userDetail.firstName) {
+          receipt.userName = this.userDetail.firstName + " " + this.userDetail.lastName;
+        } else {
+          receipt.userName = this.firstNameController.value + " " + this.lastNameController.value;
+        }
+        receipt.userPhoneNumber = this.userDetail?.phoneNumber ?? this.phoneController.value;
+        receipt.userEmail = this.userDetail.emailId ?? this.emailController.value;
       }
       receipt.totalAmount = this.totalPrice + this.tax;
       // remove product keys before insert

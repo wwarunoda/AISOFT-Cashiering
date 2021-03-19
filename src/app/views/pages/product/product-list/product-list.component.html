@@ -50,17 +50,19 @@
               </a>
               <!--Card content-->
               <div class="card-body text-center no-padding">
-                <div class="row">
-                  <div class="col-md-12">{{ product.productCategory
-                    | getCategoryByCategoryKey
-                    | async }} </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-12">{{ product.productName }}</div>
-                </div>
-                <div class="row">
-                  <div class="col-md-12">{{ product.productDescription }}</div>
-                </div>
+                <a [routerLink]="['/products/product', product.$key]">
+                  <div class="row">
+                    <div class="col-md-12">{{ product.productCategory
+                      | getCategoryByCategoryKey
+                      | async }} </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12">{{ product.productName }}</div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12">{{ product.productDescription }}</div>
+                  </div>
+                </a>
               </div>
             </div>
             <!--Card footer-->

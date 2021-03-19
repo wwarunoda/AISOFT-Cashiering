@@ -1,11 +1,11 @@
 <div id="shopping-detail" class="container mt-3" style="margin-bottom: 1em;">
   <div class="col-md order-md-1">
-    <div class="row mb-12">
+    <div class="row">
       <div class="col-md-10">
         <h4 class="mb-3">Shipping Address</h4>
       </div>
-      <div class="col-md-2">
-        <a class="btn btn-primary" (click) = "addressReset()">Reset Details</a>
+      <div class="col-md-2 text-right">
+        <a class="btn btn-light" (click) = "addressReset()">Reset</a>
       </div>
     </div>
     <form
@@ -161,7 +161,7 @@
       </div>
       <br />
       <!-- <hr class="mb-3" /> -->
-      <button [disabled] = " shippingForm?.invalid" class="btn btn-primary btn-lg btn-block" type="submit">
+      <button [disabled] = " shippingForm?.invalid" class="btn btn-success btn-lg btn-block" type="submit">
         Continue to checkout
       </button>
       <br />
