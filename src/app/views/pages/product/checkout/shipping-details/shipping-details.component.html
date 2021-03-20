@@ -1,170 +1,165 @@
-<div id="shopping-detail" class="container mt-3" style="margin-bottom: 1em;">
-  <div class="col-md order-md-1">
+  <div class="container">
     <div class="row">
-      <div class="col-md-10">
-        <h4 class="mb-3">Shipping Address</h4>
-      </div>
-      <div class="col-md-2 text-right">
-        <a class="btn btn-light" (click) = "addressReset()">Reset</a>
-      </div>
+      <h4 class="mb-3">Shipping Address</h4>
     </div>
-    <form
-      class="needs-validation"
-      (ngSubmit)="updateUserDetails()"
-      [formGroup]="shippingForm"
-      autocomplete="off"
-    >
-      <div class="row">
-        <div class="col-md-6 mb-3">
-          <label for="firstName">First name<span class="required">*</span></label>
-          <input
-            type="text"
-            class="form-control"
-            id="firstName"
-            formControlName="firstName"
-            name="firstName"
-            required
-          />
-          <div class="invalid-feedback">
-            Valid first name is required.
+        <form
+          class="needs-validation"
+          (ngSubmit)="updateUserDetails()"
+          [formGroup]="shippingForm"
+          autocomplete="off"
+        >
+        <div class="row">
+          <div class="col-md-6 col-12 mb-2">
+            <label for="firstName">First name<span class="required">*</span></label>
+            <input
+              type="text"
+              class="form-control"
+              id="firstName"
+              formControlName="firstName"
+              name="firstName"
+              required
+            />
+            <div class="invalid-feedback">
+              Valid first name is required.
+            </div>
+          </div>
+          <div class="col-md-6 col-12 mb-2">
+            <label for="lastName">Last name</label>
+            <input
+              type="text"
+              class="form-control"
+              id="lastName"
+              formControlName="lastName"
+              name="lastName"
+            />
+            <div class="invalid-feedback">
+              Valid last name is required.
+            </div>
+          </div>
+          <div class="col-md-6 col-6 mb-2">
+            <label for="email"
+              >Email<span class="required">*</span>
+            </label>
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              formControlName="email"
+              name="email"
+              [disabled]="true"
+              [email]="true"
+            />
+            <div class="invalid-feedback">
+              Please enter a valid email address for shipping updates.
+            </div>
+          </div>
+          <div class="col-md-6 col-6 mb-2">
+            <label for="telephone"
+              >Phone Number<span class="required">*</span>
+            </label>
+            <input
+              type="text"
+              maxlength="10"
+              class="form-control"
+              id="telephone"
+              formControlName="telephone"
+              name="telephone"
+              [disabled]="true"
+            />
+            <div class="invalid-feedback">
+              Please enter a valid phone number for shipping updates.
+            </div>
+          </div>
+          <div class="col-md-4 col-6 mb-2">
+            <label for="unitNumber">Unit Number<span class="required">*</span></label>
+            <input
+              type="text"
+              class="form-control"
+              id="unitNumber"
+              formControlName="unitNumber"
+              placeholder="01"
+              name="unitNumber"
+              required
+              [disabled]="true"
+            />
+            <div class="invalid-feedback">
+              Please enter your Unit Number.
+            </div>
+          </div>
+          <div class="col-md-4 col-6 mb-2">
+            <label for="street"
+              >Street<span class="required">*</span>
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              id="street"
+              formControlName="street"
+              placeholder="Lane 1"
+              name="street"
+              [disabled]="true"
+            />
+          </div>
+          <div class="col-md-4 col-12 mb-2">
+            <label for="surburb"
+              >Surburb<span class="required">*</span>
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              id="surburb"
+              formControlName="surburb"
+              placeholder="Surburb"
+              name="surburb"
+              [disabled]="true"
+            />
+          </div>
+          <div class="col-md-6 col-6 mb-2">
+            <label for="country">Country</label>
+            <select
+              class="custom-select d-block w-100"
+              id="country"
+              required
+              formControlName="country"
+              name="country"
+            >
+              <option>Australia</option>
+            </select>
+            <div class="invalid-feedback">
+              Please select a valid country.
+            </div>
+          </div>
+          <div class="col-md-6 col-6 mb-2">
+              <label for="state">State<span class="required">*</span></label>
+              <select
+                class="custom-select d-block w-100"
+                id="state"
+                name="state"
+                formControlName="state"
+                required
+              >
+                <option *ngFor="let state of addressState" [value]="state">{{state.name}}</option>
+              </select>
+              <div class="invalid-feedback">
+                Please provide a valid state.
+              </div>
           </div>
         </div>
-        <div class="col-md-6 mb-3">
-          <label for="lastName">Last name</label>
-          <input
-            type="text"
-            class="form-control"
-            id="lastName"
-            formControlName="lastName"
-            name="lastName"
-          />
-          <div class="invalid-feedback">
-            Valid last name is required.
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-6 mb-3">
-          <label for="email"
-            >Email<span class="required">*</span>
-          </label>
-          <input
-            type="email"
-            class="form-control"
-            id="email"
-            formControlName="email"
-            name="email"
-            [disabled]="true"
-            [email]="true"
-          />
-          <div class="invalid-feedback">
-            Please enter a valid email address for shipping updates.
-          </div>
-        </div>
-        <div class="col-md-6 mb-3">
-          <label for="telephone"
-            >Phone Number<span class="required">*</span>
-          </label>
-          <input
-            type="text"
-            maxlength="10"
-            class="form-control"
-            id="telephone"
-            formControlName="telephone"
-            name="telephone"
-            [disabled]="true"
-          />
-          <div class="invalid-feedback">
-            Please enter a valid phone number for shipping updates.
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-6 mb-3">
-        <label for="unitNumber">Unit Number<span class="required">*</span></label>
-        <input
-          type="text"
-          class="form-control"
-          id="unitNumber"
-          formControlName="unitNumber"
-          placeholder="01"
-          name="unitNumber"
-          required
-          [disabled]="true"
-        />
-        <div class="invalid-feedback">
-          Please enter your Unit Number.
-        </div>
-      </div>
-
-      <div class="col-md-6 mb-3">
-        <label for="street"
-          >Street<span class="required">*</span>
-        </label>
-        <input
-          type="text"
-          class="form-control"
-          id="street"
-          formControlName="street"
-          placeholder="Lane 1"
-          name="street"
-          [disabled]="true"
-        />
-      </div>
-      </div>
-      <div class="mb-3">
-        <label for="address2"
-          >Surburb<span class="required">*</span>
-        </label>
-        <input
-          type="text"
-          class="form-control"
-          id="surburb"
-          formControlName="surburb"
-          placeholder="Surburb"
-          name="surburb"
-          [disabled]="true"
-        />
-      </div>
-
-      <div class="row">
-        <div class="col-md-6 mb-3">
-          <label for="country">Country</label>
-          <select
-            class="custom-select d-block w-100"
-            id="country"
-            required
-            formControlName="country"
-            name="country"
-          >
-            <option>Australia</option>
-          </select>
-          <div class="invalid-feedback">
-            Please select a valid country.
-          </div>
-        </div>
-        <div class="col-md-6 mb-3">
-          <label for="state">State<span class="required">*</span></label>
-          <select
-            class="custom-select d-block w-100"
-            id="state"
-            name="state"
-            formControlName="state"
-            required
-          >
-            <option *ngFor="let state of addressState" [value]="state">{{state.name}}</option>
-          </select>
-          <div class="invalid-feedback">
-            Please provide a valid state.
-          </div>
-        </div>
-      </div>
       <br />
-      <!-- <hr class="mb-3" /> -->
-      <button [disabled] = " shippingForm?.invalid" class="btn btn-success btn-lg btn-block" type="submit">
-        Continue to checkout
-      </button>
+      <div class="row">
+        <div class="col-md-6 col-0"></div>
+        <div class="col-md-3 col-6">
+          <a class="btn btn-light w-100 p-1" (click) = "addressReset()">Reset</a>
+        </div>
+        <div class="col-md-3 col-6">
+          <button [disabled] = "shippingForm?.invalid" class="btn btn-success w-100 p-1 d-none d-lg-block" type="submit">
+            Continue to checkout
+          </button>
+          <button [disabled] = "shippingForm?.invalid" class="btn btn-success w-100 p-1 d-lg-none" type="submit">
+            Continue
+          </button>
+        </div>
+      </div>
       <br />
     </form>
   </div>
-</div>

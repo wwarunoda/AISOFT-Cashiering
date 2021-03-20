@@ -28,7 +28,7 @@
                     <div class="col-md-12">{{ product.productColour }} - {{ product.sizeName }}</div>
                   </div>
                   <div class="row">
-                    <div class="col-md-12">{{product.productQuantity}} <span>&#215;</span> {{ product.productPrice | currency:'AUD':'symbol'}}</div>
+                    <div class="col-md-12">{{ product.productPrice | currency:'AUD':'symbol'}} <span>&#215;</span> {{product.productQuantity}}</div>
                   </div>
                 </a>
               </div>

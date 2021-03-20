@@ -1,21 +1,34 @@
 <!--Navbar-->
 <nav class="navbar navbar-expand-lg navbar-dark">
+  <div class="container-fluid">
   <!-- Navbar brand -->
-  <a class="navbar-brand" href="javascript:;;">Uclobbers</a>
-
+  <a class="navbar-brand" href="javascript:;;" [routerLink]="['/']">Uclobbers</a>
   <!-- Collapse button -->
-  <button
-    class="navbar-toggler"
-    type="button"
-    data-toggle="collapse"
-    data-target="#basicExampleNav"
-    aria-controls="basicExampleNav"
-    aria-expanded="false"
-    aria-label="Toggle navigation"
-  >
-    <span class="navbar-toggler-icon"></span>
-  </button>
-
+  <form class="form-inline my-2 my-lg-0 ml-auto">
+    <a class="nav-link navbar-toggler p-2 d-md-none" href="javascript:;;" [routerLink]="['/products/favorite-products']">
+      <i class="fa fa-heart">
+        <span class="mt-2">{{ productService.getLocalFavouriteProducts().length }}</span>
+      </i>
+    </a>
+    <div>
+      <a class="nav-link navbar-toggler p-2 d-md-none" href="javascript:;;" [routerLink]="['/products/cart-items']">
+        <i class="fa fa-shopping-cart">
+          <span class="mt-2">{{ productService.getLocalCartProducts().length }}</span>
+        </i>
+      </a>
+    </div>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#basicExampleNav"
+      aria-controls="basicExampleNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </form>
   <!-- Collapsible content -->
   <div class="collapse navbar-collapse" id="basicExampleNav">
     <!-- Links -->
@@ -89,7 +102,7 @@
     <!-- Links -->
 
     <ul class="navbar-nav ml-auto">
-      <li class="nav-item">
+      <li class="nav-item d-none d-lg-block">
         <div>
           <a
             class="nav-link"
@@ -104,7 +117,7 @@
           </a>
         </div>
       </li>
-      <li class="nav-item">
+      <li class="nav-item d-none d-lg-block">
         <div>
           <a
             class="nav-link"
@@ -189,6 +202,7 @@
     </ul>
   </div>
   <!-- Collapsible content -->
+</div>
 </nav>
 <!--/.Navbar-->
 
