@@ -66,7 +66,6 @@
     "ngx-dropzone": "^3.0.0",
     "ngx-owl-carousel": "^2.0.7",
     "ngx-pagination": "^5.0.0",
-    "nodemailer": "^6.5.0",
     "owl.carousel": "^2.3.4",
     "popper": "^1.0.1",
     "rxjs": "~6.6.0",

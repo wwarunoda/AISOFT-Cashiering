@@ -106,7 +106,7 @@ export class ResultComponent implements OnInit, AfterViewInit {
     html2canvas(data).then((canvas) => {
       // Few necessary setting options
       const imgWidth = 208;
-      const pageHeight = 295;
+      const pageHeight = 350;
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
       const heightLeft = imgHeight;
 

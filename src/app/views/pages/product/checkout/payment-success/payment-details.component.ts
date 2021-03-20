@@ -5,13 +5,12 @@ import {
   ProductService,
   ShippingService
 } from "../../../../../shared/services";
-import { Receipt } from "../../../../../shared/models";
+import { Receipt, ReceiptProduct } from "../../../../../shared/models";
 import { ReceiptStatusEnum, ReceiptDataEnum } from "../../../../../shared/enum";
 import { Router, ActivatedRoute, Params } from "@angular/router";
 import { first } from "rxjs/operators";
 import html2canvas from "html2canvas";
 import * as jspdf from "jspdf";
-
 @Component({
   selector: "app-payment-details",
   templateUrl: "./payment-details.component.html",
@@ -19,7 +18,11 @@ import * as jspdf from "jspdf";
 })
 export class PaymentDetailsComponent implements OnInit {
   isSuccess = false;
-
+  receiptProduct: ReceiptProduct[];
+  totalPrice = 0;
+  tax = 6.4;
+  date: number;
+  receiptNumber: string;
   constructor(
     private activatedRoute: ActivatedRoute,
     private receiptService: ReceiptService,
@@ -32,6 +35,17 @@ export class PaymentDetailsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.date = Date.now();
+    this.receiptProduct = this.productService.getLocalCartReceipt();
+    this.receiptService.getReceiptNumber().subscribe((receipt) => {
+      this.receiptNumber = receipt;
+   });
+    // Calculate total amount
+    this.receiptProduct.forEach((receiptProduct) => {
+      this.totalPrice +=
+        receiptProduct.productPrice * receiptProduct.productQuantity;
+    });
+
     this.activatedRoute.queryParams.subscribe((params) => {
       const receiptId = params["ReceiptId"];
       const accessCode = params["AccessCode"];
@@ -40,10 +54,11 @@ export class PaymentDetailsComponent implements OnInit {
       const localReceiptData = this.receiptService.getLocalReceiptDetails();
       if (localReceiptId && receiptId && accessCode) {
         if (receiptId.length === ReceiptDataEnum.ReceiptIdSize &&
-            localReceiptId.length === ReceiptDataEnum.ReceiptIdSize &&
-            localReceiptId === receiptId) {
+          localReceiptId.length === ReceiptDataEnum.ReceiptIdSize &&
+          localReceiptId === receiptId) {
           this.isSuccess = true;
           this.toastService.success("Receipt Payment", "Payment Success");
+          this.sendEmail();
           this.updateReceipt(localReceiptData.receiptKey, accessCode, true);
         } else {
           this.isSuccess = false;
@@ -88,26 +103,24 @@ export class PaymentDetailsComponent implements OnInit {
         }
       });
   }
+  private sendEmail() {
+
+  }
 
   downloadReceipt() {
-    if (this.isSuccess) {
-      const data = document.getElementById("receipt");
-      // console.log(data);
-      if (data) {
-        html2canvas(data).then((canvas) => {
-          // Few necessary setting options
-          const imgWidth = 208;
-          const pageHeight = 295;
-          const imgHeight = (canvas.height * imgWidth) / canvas.width;
-          const heightLeft = imgHeight;
+    const data = document.getElementById("paymentSuccess");
+    // console.log(data);
 
-          const contentDataURL = canvas.toDataURL("image/png");
-          const pdf = new jspdf("p", "mm", "a4"); // A4 size page of PDF
-          const position = 0;
-          pdf.addImage(contentDataURL, "PNG", 0, position, imgWidth, imgHeight);
-          pdf.save("uclobbers.pdf"); // Generated PDF
-        });
-      }
-    }
+    html2canvas(data).then((canvas) => {
+      // Few necessary setting options
+      const imgWidth = 208;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      const contentDataURL = canvas.toDataURL("image/png");
+      const pdf = new jspdf("p", "mm", "a4"); // A4 size page of PDF
+      const position = 0;
+      pdf.addImage(contentDataURL, "PNG", 0, position, imgWidth, imgHeight);
+      pdf.save("UB-Receipt-" + this.receiptNumber + ".pdf"); // Generated PDF
+    });
   }
 }
