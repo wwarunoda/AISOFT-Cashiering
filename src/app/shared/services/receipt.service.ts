@@ -56,6 +56,7 @@ export class ReceiptService {
   private uploadReceipt(data: Receipt, generatedReceiptNumber: string, receiptKey: string) {
     localStorage.removeItem("UCLReceiptDetail");
     data.receiptNumber = generatedReceiptNumber;
+    data.lastUpdatedDate = new Date().toString();
     this.createReceipt(data).then(rpt => {
         receiptKey = rpt.key;
         const rptObject: LocalReceipt = { receiptNumber: generatedReceiptNumber, receiptKey };
@@ -69,6 +70,8 @@ export class ReceiptService {
     return JSON.parse(localReceiptNumber);
   }
   createReceipt(data: Receipt) {
+    data.createdDate = new Date().toString();
+    data.lastUpdatedDate = new Date().toString();
     return this.receipts.push(data);
   }
 
@@ -83,6 +86,8 @@ export class ReceiptService {
   }
 
   updateReceipt(key: string, data: Receipt) {
+    data.lastUpdatedDate = new Date().toString();
+    delete data.$key;
     this.receipts.update(key, data);
   }
 

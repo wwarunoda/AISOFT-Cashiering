@@ -47,7 +47,6 @@ export class BestProductComponent implements OnInit {
         (products) => {
           this.loading = false;
           this.bestProducts = [];
-          console.log(products.values());
           products.forEach((element) => {
             console.log(element.payload.val());
             const y = { ...element.payload.val(), $key: element.key };

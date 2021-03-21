@@ -263,7 +263,7 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
 
   private createReceipt() {
     if (this.validateProductQuantity()) {
-      const receipt: Receipt = {};
+      const receipt: Receipt = {createdDate: new Date().toString(), lastUpdatedDate: new Date().toString()};
       receipt.receiptProducts = this.receiptProduct;
       receipt.shippingDetails = this.shippingDetails;
       if (this.userDetail) {

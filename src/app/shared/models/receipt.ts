@@ -11,4 +11,6 @@ export class Receipt {
   userPhoneNumber?: string;
   status?: number;
   accessCode?: string;
+  createdDate: string;
+  lastUpdatedDate: string;
 }
