@@ -149,6 +149,22 @@ export class ProductService {
     }
   }
 
+  updateProductQuantityByReceipt(receiptProducts: ReceiptProduct[]) {
+    receiptProducts.forEach(receipt => {
+      const selectedProduct = this.getProductById(receipt.productKey);
+      if (selectedProduct) {
+        selectedProduct.valueChanges().pipe(take(1))
+        .subscribe((product) => {
+          product.productQuantity
+            .find(x => x.productSize.data === receipt.sizeData &&
+              x.productColor === receipt.productColourCode).productQuantity
+            -= receipt.productQuantity;
+          this.updateDBProductQuantity(receipt.productKey, product, () => { });
+          });
+      }
+    });
+  }
+
   /*
    ----------  Favourite Product Function  ----------
   */

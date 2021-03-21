@@ -40,7 +40,7 @@ export class ResultComponent implements OnInit, AfterViewInit {
   tax = 6.4;
   isAddressFound: boolean = false;
   config: any;
-  collection = { count: 5, data: [] };
+  collection = { count: 4, data: [] };
   isPolicyAgree: boolean = false;
   isPaymentLoad: boolean = false;
   private privacyPolicyInfo: BehaviorSubject<boolean>;
@@ -65,7 +65,7 @@ export class ResultComponent implements OnInit, AfterViewInit {
     this.getProductsAndCustomerDetails();
     this.createReceiptIdentification();
 
-    for (let i = 1; i <= 5; i++) {
+    for (let i = 1; i <= 4; i++) {
       this.collection.data.push(
         i
       );

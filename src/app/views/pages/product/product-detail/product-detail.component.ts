@@ -94,9 +94,10 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     receiptProduct.productName = product.productName;
     receiptProduct.productPrice = product.productPrice;
     receiptProduct.productQuantity = this.productQuantityController.value;
-    receiptProduct.sizeKey = this.selectedSize.productSize.$key;
+    receiptProduct.sizeData = this.selectedSize.productSize.data;
     receiptProduct.sizeName = this.selectedSize.productSize.name;
     receiptProduct.productColour = this.selectedSize.productColorDescription;
+    receiptProduct.productColourCode = this.selectedSize.productColor;
     receiptProduct.imageList = product.imageList;
     if (this.totalQuantity > 0) {
       this.productService.addToCart(product, receiptProduct);

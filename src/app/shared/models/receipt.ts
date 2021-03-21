@@ -2,7 +2,7 @@ import { Billing, User, ReceiptProduct } from "./.";
 export class Receipt {
   $key?: string;
   receiptNumber?: string;
-  receiptProducts?: ReceiptProduct[];
+  receiptProducts?: any;
   totalAmount?: number;
   shippingDetails?: Billing;
   userKey?: string;

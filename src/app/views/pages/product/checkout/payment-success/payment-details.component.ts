@@ -58,7 +58,6 @@ export class PaymentDetailsComponent implements OnInit {
           localReceiptId === receiptId) {
           this.isSuccess = true;
           this.toastService.success("Receipt Payment", "Payment Success");
-          this.sendEmail();
           this.updateReceipt(localReceiptData.receiptKey, accessCode, true);
         } else {
           this.isSuccess = false;
@@ -75,52 +74,59 @@ export class PaymentDetailsComponent implements OnInit {
   private updateReceipt(key?: string, accessCode?: string, isSuccess?: boolean) {
     const dbReceipt = this.receiptService.getReceiptById(key);
     dbReceipt
-      .snapshotChanges()
+      .valueChanges()
       .pipe(first())
-      .subscribe((rpt) => {
-        const dbRpt = rpt.payload.toJSON() as Receipt;
-        if (dbRpt.status === ReceiptStatusEnum.PendingPayment) {
+      .subscribe((receipt) => {
+        if (receipt.status === ReceiptStatusEnum.PendingPayment) {
           if (isSuccess) {
-            dbRpt.status = ReceiptStatusEnum.PaymentSuccess;
-
+            receipt.status = ReceiptStatusEnum.PaymentSuccess;
             // Update product quantity
-            this.productService.updateProductQuantity(dbRpt.receiptProducts);
+            this.productService.updateProductQuantityByReceipt(receipt.receiptProducts);
 
             this.receiptService.removeLocalAllReceipt();
             this.receiptService.resetReceiptNumber();
             this.productService.removeLocalAllProducts();
-            // setTimeout(() => this.router.navigate(["/"]), 1000);
+
+            this.downloadReceipt();
+            this.sendEmailSuccess();
           } else {
-            dbRpt.status = ReceiptStatusEnum.PaymentError;
+            receipt.status = ReceiptStatusEnum.PaymentError;
+            this.sendEmailFail();
           }
-          dbRpt.accessCode = accessCode;
+          receipt.accessCode = accessCode;
 
           // Update receipt status
           this.receiptService.deleteReceipt(key);
-          this.receiptService.createReceipt(dbRpt);
+          this.receiptService.createReceipt(receipt);
         } else {
           this.toastService.error("Receipt Status Error", "Receipt status incorrect. Please contact us");
         }
       });
   }
-  private sendEmail() {
+  private sendEmailSuccess() {
+
+  }
+
+  private sendEmailFail() {
 
   }
 
   downloadReceipt() {
-    const data = document.getElementById("paymentSuccess");
-    // console.log(data);
+    if (this.isSuccess) {
+      const data = document.getElementById("paymentSuccess");
+      // console.log(data);
 
-    html2canvas(data).then((canvas) => {
-      // Few necessary setting options
-      const imgWidth = 208;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      html2canvas(data).then((canvas) => {
+        // Few necessary setting options
+        const imgWidth = 208;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-      const contentDataURL = canvas.toDataURL("image/png");
-      const pdf = new jspdf("p", "mm", "a4"); // A4 size page of PDF
-      const position = 0;
-      pdf.addImage(contentDataURL, "PNG", 0, position, imgWidth, imgHeight);
-      pdf.save("UB-Receipt-" + this.receiptNumber + ".pdf"); // Generated PDF
-    });
+        const contentDataURL = canvas.toDataURL("image/png");
+        const pdf = new jspdf("p", "mm", "a4"); // A4 size page of PDF
+        const position = 0;
+        pdf.addImage(contentDataURL, "PNG", 0, position, imgWidth, imgHeight);
+        pdf.save("UB-Receipt-" + this.receiptNumber + ".pdf"); // Generated PDF
+      });
+    }
   }
 }

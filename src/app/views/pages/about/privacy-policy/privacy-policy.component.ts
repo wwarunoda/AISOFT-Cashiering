@@ -7,11 +7,11 @@ import { Component, OnInit } from "@angular/core";
 })
 export class PrivacyPolicyComponent implements OnInit {
   config: any;
-  collection = { count: 5, data: [] };
+  collection = { count: 4, data: [] };
   constructor() {}
 
   ngOnInit() {
-  for (let i = 1; i <= 5; i++) {
+  for (let i = 1; i <= 4; i++) {
     this.collection.data.push(
       i
     );
