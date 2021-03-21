@@ -1,11 +1,16 @@
+import { AddressState } from './addressState';
 export class Billing {
-  $key: string;
-  firstName: string;
-  lastName: string;
-  emailId: string;
-  address1: string;
-  address2: string;
-  country: string;
-  state: string;
-  zip: string;
+  $key?: string;
+  userId?: number;
+  firstName?: string;
+  lastName?: string;
+  emailId?: string;
+  phoneNumber?: string;
+  unitNumber?: string;
+  street?: string;
+  country?: string;
+  surburb?: string;
+  state?: AddressState;
+  createdDate?: string;
+  userKey?: string;
 }

@@ -1,6 +1,6 @@
 import { ProductService } from "../../../../../shared/services/product.service";
-import { Component, OnInit, ViewChild } from "@angular/core";
-import { Product } from "../../../../../shared/models/product";
+import { Component, OnInit } from "@angular/core";
+import { Product, ReceiptProduct } from "../../../../../shared/models";
 
 @Component({
   selector: "app-products",
@@ -9,21 +9,31 @@ import { Product } from "../../../../../shared/models/product";
 })
 export class ProductsComponent implements OnInit {
   checkoutProducts: Product[];
+  receiptProduct: ReceiptProduct[];
+  totalPrice: number = 0;
 
-  totalPrice = 0;
-  constructor(productService: ProductService) {
+  constructor(private productService: ProductService) {}
+
+  ngOnInit() {
+    this.createShoppingCartTabs();
+    this.getProductData();
+  }
+
+  private createShoppingCartTabs(): void {
     document.getElementById("shippingTab").style.display = "none";
-    document.getElementById("billingTab").style.display = "none";
+    // document.getElementById("billingTab").style.display = "none";
     document.getElementById("resultTab").style.display = "none";
+  }
 
-    const products = productService.getLocalCartProducts();
+  private getProductData(): void {
+    const products = this.productService.getLocalCartProducts();
 
     this.checkoutProducts = products;
 
-    products.forEach((product) => {
-      this.totalPrice += product.productPrice;
+    this.receiptProduct = this.productService.getLocalCartReceipt();
+    this.totalPrice = 0;
+    this.receiptProduct.forEach((product) => {
+      this.totalPrice += (product.productPrice * product.productQuantity);
     });
   }
-
-  ngOnInit() {}
 }

@@ -3,143 +3,104 @@
   <div class="row" *ngIf="authService.isAdmin$ | async">
     <div class="col-sm">
       <div class="float-right">
-        <button
-          type="button"
-          class="btn btn-primary waves-light"
-          data-toggle="modal"
-          data-target="#exampleModalLong"
-        >
+        <button type="button" class="btn btn-primary waves-light" data-toggle="modal" data-target="#exampleModalLong">
           Add Product
         </button>
       </div>
     </div>
   </div>
   <div class="row">
-    <div class="col-md-3">
-      <div class="form-group">
-        <label for="brand_select">By Brands:</label>
-        <select
-          class="form-control"
-          name=""
-          id="brand_select"
-          [(ngModel)]="selectedBrand"
-        >
-          <option *ngFor="let brand of brands" [ngValue]="brand">{{
-            brand
-          }}</option>
-        </select>
-      </div>
-      <ul class="list-group">
-        <li class="list-group-item">Cras justo odio</li>
-        <li class="list-group-item">Dapibus ac facilisis in</li>
-        <li class="list-group-item">Morbi leo risus</li>
-      </ul>
+    <div class="col-md-12" style="text-align: center;"><h3>{{selectedGender}}</h3></div>
+  </div>
+  <div class="d-flex justify-content-center">
+    <div class="p-1">
+      <a class="btn btn-light" *ngFor="let category of categoryList" (click)="selectCategory(category)">{{ category.name }}</a>
     </div>
-    <div class="col-md-9">
+  </div>
+</div>
+<div class="form-group">
+  <hr/>
+  <div class="d-flex justify-content-center">
+    <div class="p-1">
+      <a class="btn btn-light" *ngFor="let brand of brands" (click)="selectBrand(brand)">{{ brand.description }}</a>
+    </div>
+  </div>
+  <hr/>
+</div>
+  <div class="row p-3">
+    <div class="col-md-12">
       <div class="container">
-        <app-card-loader
-          [loop]="3"
-          [height]="800"
-          *ngIf="loading"
-        ></app-card-loader>
+        <app-card-loader [loop]="3" [height]="800" *ngIf="loading"></app-card-loader>
         <div class="row" *ngIf="!loading">
           <!-- List of Products -->
-          <div
-            class="col-sm-4 mb-2"
-            *ngFor="
+          <div class="col-lg-4 col-md-12 mb-4" *ngFor="
               let product of productList
                 | filterByBrand: selectedBrand
+                | filterByCategory: selectedCategory
+                | filterByMaterial: selectedMaterial
                 | paginate: { itemsPerPage: 6, currentPage: page }
-            "
-          >
-            <div class="item">
-              <div class="mb-r">
-                <!--Card-->
-                <div class="card card-cascade wider">
-                  <!--Card image-->
-                  <a [routerLink]="['/products/product', product.$key]">
-                    <div class="view overlay hm-white-slight">
-                      <img
-                        [src]="product.productImageUrl"
-                        class="img-fluid"
-                        alt=""
-                        width="360px"
-                        height="640px"
-                      />
-                      <a>
-                        <div
-                          class="mask waves-effect waves-light"
-                          mdbRippleRadius
-                        ></div>
-                      </a>
-                    </div>
-                  </a>
-                  <!--/.Card image-->
-                  <!--Card content-->
-                  <div class="card-body text-center no-padding">
-                    <!--Category & Title-->
-                    <a class="text-muted">
-                      <h5>{{ product.productCategory }}</h5>
-                    </a>
-                    <p class="card-title">
-                      <strong>
-                        <a
-                          [routerLink]="['/products/product', product.$key]"
-                          routerLinkActive="router-link-active"
-                          >{{ product.productName }}</a
-                        >
-                      </strong>
-                    </p>
-                    <!--Description-->
-                    <p class="card-text">{{ product.productDescription }}</p>
-                    <!--Card footer-->
-                    <div class="card-footer">
-                      <span class="left">₹ {{ product.productPrice }}</span>
-                      <span class="right">
-                        <a
-                          placement="top"
-                          mdbTooltip="Add to Wishlist"
-                          container="body"
-                          (click)="addFavourite(product)"
-                        >
-                          <i class="fa fa-heart"></i>
-                        </a>
-                        <a
-                          placement="top"
-                          mdbTooltip="Add to Cart"
-                          container="body"
-                          (click)="addToCart(product)"
-                        >
-                          <i class="fa fa-shopping-cart"></i>
-                        </a>
-                        <a
-                          placement="top"
-                          mdbTooltip="Remove Product"
-                          container="body"
-                          *ngIf="authService.isAdmin$ | async"
-                          (click)="removeProduct(product.$key)"
-                        >
-                          <i class="fa fa-trash"></i>
-                        </a>
-                      </span>
-                    </div>
+            ">
+            <div class="view overlay z-depth-1-half">
+              <!--Card image-->
+              <a [routerLink]="['/products/product', product.$key]">
+                <img [src]="(product?.imageList)[0]?.downloadedUrl" class="card-img-top" alt="" />
+                <a>
+                  <div class="mask rgba-white-light"></div>
+                </a>
+              </a>
+              <!--Card content-->
+              <div class="card-body text-center no-padding">
+                <a [routerLink]="['/products/product', product.$key]">
+                  <div class="row">
+                    <div class="col-md-12">{{ product.productCategory
+                      | getCategoryByCategoryKey
+                      | async }} </div>
                   </div>
-                  <!--/.Card content-->
+                  <div class="row">
+                    <div class="col-md-12">{{ product.productName }}</div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12">{{ product.productDescription }}</div>
+                  </div>
+                </a>
+              </div>
+            </div>
+            <!--Card footer-->
+            <div class="card-footer no-padding">
+              <div class="d-flex justify-content-end">
+                <div class="mr-auto p-1">{{ product.productPrice | currency:'AUD':'code'}}</div>
+                <div class="p-1">
+                  <a placement="top" mdbTooltip="Add to Wishlist" container="body" (click)="addFavourite(product)">
+                    <i class="fa fa-heart"></i>
+                  </a>
                 </div>
-                <!--/.Card-->
+                <div class="p-1">
+                  <a placement="top" mdbTooltip="Update Product" container="body" href="jaascript:;;"
+                    data-toggle="modal" data-target="#exampleModalLong" [routerLink]="['/products/all-products']"
+                    [queryParams]="{
+                        key: activatedRouteKey,
+                        productKey: product.$key
+                      }" *ngIf="authService.isAdmin$ | async">
+                    <i class="fas fa-pen-alt"></i>
+                  </a>
+                </div>
+                <div class="p-1">
+                  <a placement="top" mdbTooltip="Remove Product" container="body" *ngIf="authService.isAdmin$ | async"
+                    (click)="removeProduct(product.$key)">
+                    <i class="fa fa-trash"></i>
+                  </a>
+                </div>
               </div>
             </div>
           </div>
         </div>
+
         <!-- Pagination -->
         <div class="text-center mt-3">
-          <pagination-controls
-            (pageChange)="page = $event"
-          ></pagination-controls>
+          <pagination-controls (pageChange)="page = $event"></pagination-controls>
         </div>
       </div>
       <!--/.Card-->
     </div>
   </div>
-</div>
-<app-add-product></app-add-product>
+  <app-add-product></app-add-product>

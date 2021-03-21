@@ -1,3 +1,4 @@
+import { ShippingService } from "../../../../../shared/services/";
 import { Component, OnInit } from "@angular/core";
 
 @Component({
@@ -6,7 +7,7 @@ import { Component, OnInit } from "@angular/core";
   styleUrls: ["./checkout-navbar.component.scss"],
 })
 export class CheckoutNavbarComponent implements OnInit {
-  constructor() {}
+  constructor(private shippingService: ShippingService) {}
 
   ngOnInit() {}
 }

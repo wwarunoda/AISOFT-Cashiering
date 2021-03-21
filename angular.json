@@ -29,6 +29,7 @@
               "src/manifest.webmanifest"
             ],
             "styles": [
+              "./node_modules/@fortawesome/fontawesome-free/css/all.css",
               "node_modules/font-awesome/scss/font-awesome.scss",
               "node_modules/angular-bootstrap-md/assets/scss/bootstrap/bootstrap.scss",
               "node_modules/angular-bootstrap-md/assets/scss/mdb.scss",
@@ -55,7 +56,8 @@
               "@firebase/app",
               "@firebase/database",
               "@firebase/util",
-              "@firebase/component"
+              "@firebase/component",
+              "@firebase/firestore"
             ]
           },
           "configurations": {

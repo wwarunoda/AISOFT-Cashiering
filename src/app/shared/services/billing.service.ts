@@ -5,6 +5,7 @@ import {
 } from "@angular/fire/database";
 import { Billing } from "./../models/billing";
 import { Injectable } from "@angular/core";
+import { BillingsEnum, ProductsEnum } from "../enum";
 
 @Injectable({
   providedIn: "root",
@@ -21,12 +22,12 @@ export class BillingService {
   }
 
   getBillings() {
-    this.billings = this.db.list("billings");
+    this.billings = this.db.list(BillingsEnum.TableName);
     return this.billings;
   }
 
   getBillingById(key: string) {
-    this.billing = this.db.object("products/" + key);
+    this.billing = this.db.object(ProductsEnum.TableName + "/" + key);
     return this.billing;
   }
 

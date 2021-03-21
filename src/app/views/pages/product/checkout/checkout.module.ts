@@ -1,3 +1,4 @@
+import { PaymentDetailsComponent } from './payment-success/payment-details.component';
 import { CheckoutRoutingModule } from "./checkout.routing";
 import { SharedModule } from "../../../../shared/shared.module";
 import { CheckoutNavbarComponent } from "./checkout-navbar/checkout-navbar.component";
@@ -18,6 +19,7 @@ import { BillingDetailsComponent } from "./billing-details/billing-details.compo
     ProductsComponent,
     ResultComponent,
     CheckoutNavbarComponent,
+    PaymentDetailsComponent,
   ],
   exports: [CheckoutComponent],
 })

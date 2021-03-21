@@ -29,6 +29,9 @@
 }
 .card.card-cascade {
   width: 100%;
+  &:hover {
+    transform: scale(1.005);
+  }
 }
 .card:not([class*="card-outline-"]) {
   border: 0;
@@ -89,7 +92,7 @@
 
 .card-text {
   line-height: 20px;
-  height: 60px;
+  // height: 60px;
   overflow: hidden;
 }
 
@@ -102,11 +105,11 @@
 }
 
 .card .card-footer .right {
-  float: right;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
+  margin: 0 auto;
 }
 
 .card .card-footer .right a.active {
@@ -122,3 +125,12 @@
 .card .card-footer .right a .fa-heart {
   color: var(--navBackground) !important;
 }
+
+.list-group-item {
+  cursor: pointer;
+  &:hover {
+    transform: scale(1.02);
+    box-shadow: -1px 0px 0px 0px #ddd;
+  }
+}
+

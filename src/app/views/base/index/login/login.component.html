@@ -36,7 +36,7 @@
         />
       </div>
 
-      <div class="text-center">
+      <div class="text-right">
         <button
           type="submit"
           class="btn btn-primary waves-light mx-2"
@@ -46,7 +46,7 @@
           Login
         </button>
 
-        <button
+        <!-- <button
           type="button"
           class="btn waves-light mx-2 text-white"
           (click)="signInWithGoogle()"
@@ -54,7 +54,7 @@
         >
           <i class="fa fa-google" aria-hidden="true"></i>
           Sign in with Google
-        </button>
+        </button> -->
       </div>
     </form>
   </div>
@@ -101,34 +101,146 @@
             >
               {{ errorMessage.message }}
             </div>
-            <div class="form-group form-sm">
-              <label for="emailId">Your email</label>
-              <input
-                mdbActive
-                type="email"
-                id="emailId"
-                class="form-control"
-                name="emailId"
-                [(ngModel)]="createUser.emailId"
-                placeholder="Enter email"
-                mdbInputValidate
-                [email]="true"
-                autocomplete="email"
-              />
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="firstNameId">First Name</label>
+                <input
+                  mdbActive
+                  type="text"
+                  id="firstNameId"
+                  class="form-control"
+                  name="firstNameId"
+                  [(ngModel)]="createUser.firstName"
+                  placeholder="Enter First Name"
+                  mdbInputValidate
+                />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="lastNameId">Last Name</label>
+                <input
+                  mdbActive
+                  type="text"
+                  id="lastNameId"
+                  class="form-control"
+                  name="lastNameId"
+                  [(ngModel)]="createUser.lastName"
+                  placeholder="Enter Last Name"
+                />
+              </div>
             </div>
-            <div class="form-group form-sm">
-              <label for="password">password</label>
-              <input
-                mdbActive
-                type="password"
-                id="password"
-                class="form-control"
-                name="password"
-                [(ngModel)]="createUser.password"
-                placeholder="Password"
-                mdbInputValidate
-                autocomplete="new-password"
-              />
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="emailId">Email</label>
+                <input
+                  mdbActive
+                  type="email"
+                  id="emailId"
+                  class="form-control"
+                  name="emailId"
+                  [(ngModel)]="createUser.emailId"
+                  placeholder="Enter email"
+                  mdbInputValidate
+                  [email]="true"
+                  autocomplete="email"
+                />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="phoneNumberId">Phone Number</label>
+                <input
+                  mdbActive
+                  type="text"
+                  id="phoneNumberId"
+                  class="form-control"
+                  name="phoneNumberId"
+                  [(ngModel)]="createUser.phoneNumber"
+                  placeholder="Enter Phone Number"
+                />
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="unitNumberId">Unit Number</label>
+                <input
+                  mdbActive
+                  type="text"
+                  id="unitNumberId"
+                  class="form-control"
+                  name="unitNumberId"
+                  [(ngModel)]="createUser.unitNumber"
+                  placeholder="Enter Unit Number"
+                />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="streetId">Street</label>
+                <input
+                  mdbActive
+                  type="text"
+                  id="streetId"
+                  class="form-control"
+                  name="streetId"
+                  [(ngModel)]="createUser.street"
+                  placeholder="Enter Street Number"
+                />
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="surburbId">Surburb</label>
+                <input
+                  mdbActive
+                  type="text"
+                  id="surburbId"
+                  class="form-control"
+                  name="surburbId"
+                  [(ngModel)]="createUser.surburb"
+                  placeholder="Enter Surburb Number"
+                />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="stateId">State<span class="required">*</span></label>
+                <select
+                  class="custom-select d-block w-100"
+                  id="stateId"
+                  name="stateId"
+                  [(ngModel)]="createUser.state"
+                  required
+                >
+                  <option *ngFor="let state of addressState" [value]="state">{{state.name}}</option>
+                </select>
+                <div class="invalid-feedback">
+                  Please provide a valid state.
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="password">Password</label>
+                <input
+                  mdbActive
+                  type="password"
+                  id="password"
+                  class="form-control"
+                  name="password"
+                  [(ngModel)]="createUser.password"
+                  placeholder="Password"
+                  mdbInputValidate
+                  autocomplete="new-password"
+                />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="conPassword">Confirm Password</label>
+                <input
+                  mdbActive
+                  type="password"
+                  id="conPassword"
+                  class="form-control"
+                  name="conPassword"
+                  [(ngModel)]="createUser.confirmPassword"
+                  placeholder="Password"
+                  mdbInputValidate
+                  autocomplete="new-password"
+                />
+              </div>
             </div>
             <div class="text-center mt-2">
               <button

@@ -3,7 +3,6 @@
 @import "./assets/theme/colors";
 @import "./assets/theme/functions";
 
-
 router-outlet ~ * {
   position: absolute;
   width: 100%;
@@ -12,4 +11,83 @@ router-outlet ~ * {
 
 * {
   font-family: "Ubuntu", sans-serif;
+}
+
+.no-margin {
+  margin: 0;
+}
+
+.form-control {
+  border: none;
+  border-bottom: 1px solid #ced4da;
+  border-radius: 0px;
+  height: fit-content;
+  font-size: 0.9em;
+  &:focus {
+    box-shadow: none;
+    border-bottom: 1px solid #0069d9;
+  }
+  &.file-uploader {
+    border: none;
+    &.ng-touched {
+      &.ng-invalid {
+        border: none;
+      }
+    }
+  }
+  &.ng-touched {
+    &.ng-invalid {
+      border-bottom: 1px solid #ff0000;
+    }
+  }
+  ::before {
+    background-color: transparent;
+  }
+}
+
+.btn {
+  border-radius: 1.25rem;
+  margin: 0.2em;
+  &.btn-sm {
+    padding: 0.2em 1em;
+    font-size: 0.9em;
+  }
+  &.btn-default {
+    background-color: #ededed;
+  }
+}
+
+.required {
+  color: #ff0000;
+}
+
+.text-gray {
+  color: #3e3e3e;
+}
+
+.text-xs {
+  font-size: 0.9em;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.eway-button {
+  width: 100%;
+  border-radius: 1.25rem !important;
+  box-shadow: unset !important;
+  &:focus {
+    outline: unset;
+    box-shadow: 0 0 0 0.13rem rgb(38 143 255 / 50%);
+  }
+  span {
+    border-radius: 1.25rem !important;
+    height: unset !important;
+    line-height: unset !important;
+    padding: 0.5em 1rem !important;
+    background-color: #28a745 !important;
+    box-shadow: unset !important;
+    font-size: 1rem !important;
+  }
 }

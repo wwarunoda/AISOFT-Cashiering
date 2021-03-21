@@ -2,6 +2,7 @@
 <div class="container">
   <!--Carousel Wrapper-->
   <div
+    *ngIf="images?.length"
     id="carousel-example-2"
     class="carousel slide carousel-fade"
     data-ride="carousel"
@@ -10,25 +11,20 @@
     <ol class="carousel-indicators">
       <li
         data-target="#carousel-example-2"
-        data-slide-to="0"
-        class="active"
+        *ngFor="let item of images; let i = index"
+        class="{{ i === 0 ? 'active' : '' }}"
+        [attr.data-slide-to]="i"
       ></li>
-      <li data-target="#carousel-example-2" data-slide-to="1"></li>
-      <li data-target="#carousel-example-2" data-slide-to="2"></li>
     </ol>
     <!--/.Indicators-->
     <!--Slides-->
     <div class="carousel-inner" role="listbox">
       <div
-        *ngFor="let carouselItem of carouselList; let i = index"
+        *ngFor="let carouselItem of images; let i = index"
         class="carousel-item {{ i === 0 ? 'active' : '' }}"
       >
         <div class="view">
-          <img
-            class="d-block w-100"
-            [src]="carouselItem.bannerImg"
-            alt="First slide"
-          />
+          <img class="d-block w-100" [src]="carouselItem" alt="First slide" />
           <div class="mask rgba-black-light"></div>
         </div>
         <div class="carousel-caption">
@@ -61,5 +57,7 @@
   </div>
   <!--/.Carousel Wrapper-->
   <br />
+
   <app-best-product></app-best-product>
+  <app-footer></app-footer>
 </div>

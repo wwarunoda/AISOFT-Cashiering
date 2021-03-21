@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { Product } from "../../../../shared/models/product";
+import { ReceiptProduct } from "../../../../shared/models";
 import { ProductService } from "../../../../shared/services/product.service";
 @Component({
   selector: "app-cart-products",
@@ -7,7 +7,7 @@ import { ProductService } from "../../../../shared/services/product.service";
   styleUrls: ["./cart-products.component.scss"],
 })
 export class CartProductsComponent implements OnInit {
-  cartProducts: Product[];
+  cartProducts: ReceiptProduct[];
   showDataNotFound = true;
 
   // Not Found Message
@@ -20,14 +20,14 @@ export class CartProductsComponent implements OnInit {
     this.getCartProduct();
   }
 
-  removeCartProduct(product: Product) {
-    this.productService.removeLocalCartProduct(product);
+  removeCartProduct(product: ReceiptProduct) {
+    this.productService.removeLocalCartReceipt(product);
 
     // Recalling
     this.getCartProduct();
   }
 
   getCartProduct() {
-    this.cartProducts = this.productService.getLocalCartProducts();
+    this.cartProducts = this.productService.getLocalCartReceipt();
   }
 }

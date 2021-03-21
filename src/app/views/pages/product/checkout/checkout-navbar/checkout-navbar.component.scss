@@ -5,7 +5,8 @@
   box-sizing: border-box;
 }
 .nav-tabs {
-  border-bottom: 1px solid #ddd;
+  border-bottom: unset !important;
+  // border-bottom: 1px solid #ddd;
 }
 
 .nav {

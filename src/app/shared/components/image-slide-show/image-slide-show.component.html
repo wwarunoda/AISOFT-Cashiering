@@ -1,0 +1,10 @@
+{{ imageList?.length }}
+<div class="row">
+  <div class="col-md">
+    <div class="image-container" *ngIf="imageList?.length">
+      <ng-template ngFor let-file [ngForOf]="imageList">
+        <img [src]="file?.downloadedUrl" />
+      </ng-template>
+    </div>
+  </div>
+</div>

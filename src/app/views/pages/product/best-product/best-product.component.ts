@@ -2,7 +2,7 @@ import { TranslateService } from "src/app/shared/services/translate.service";
 import { Component, OnInit } from "@angular/core";
 import { Product } from "src/app/shared/models/product";
 import { ProductService } from "src/app/shared/services/product.service";
-import { ToastrService } from "src/app/shared/services/toastr.service";
+import { ToastService } from "src/app/shared/services/toast.service";
 import { map } from "rxjs/operators";
 
 @Component({
@@ -16,7 +16,7 @@ export class BestProductComponent implements OnInit {
   loading = false;
   constructor(
     private productService: ProductService,
-    private toasterService: ToastrService,
+    private toasterService: ToastService,
     public translate: TranslateService
   ) {}
 
@@ -40,6 +40,7 @@ export class BestProductComponent implements OnInit {
   getAllProducts() {
     this.loading = true;
     const x = this.productService.getProducts();
+
     x.snapshotChanges()
       .pipe(map((products) => products.slice(0, 5)))
       .subscribe(
@@ -47,7 +48,8 @@ export class BestProductComponent implements OnInit {
           this.loading = false;
           this.bestProducts = [];
           products.forEach((element) => {
-            const y = { ...element.payload.toJSON(), $key: element.key };
+            console.log(element.payload.val());
+            const y = { ...element.payload.val(), $key: element.key };
             this.bestProducts.push(y as Product);
           });
         },

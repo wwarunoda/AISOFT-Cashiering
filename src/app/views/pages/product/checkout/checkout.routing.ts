@@ -5,13 +5,12 @@ import { BillingDetailsComponent } from "./billing-details/billing-details.compo
 import { ProductsComponent } from "./products/products.component";
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
-import { AuthGuard } from "../../../../shared/guards/auth_gaurd";
+import { PaymentDetailsComponent } from "./payment-success/payment-details.component";
 
 export const checkoutRoutes: Routes = [
   {
     path: "checkouts",
     component: CheckoutComponent,
-    canActivate: [AuthGuard],
     children: [
       {
         path: "",
@@ -35,6 +34,10 @@ export const checkoutRoutes: Routes = [
       },
     ],
   },
+  {
+    path: "success",
+    component: PaymentDetailsComponent,
+  }
 ];
 
 @NgModule({

@@ -4,8 +4,9 @@ import { NoProductsFoundComponent } from "./components/no-products-found/no-prod
 import { MDBBootstrapModule } from "angular-bootstrap-md";
 import { AngularFireModule } from "@angular/fire";
 import { AngularFireDatabaseModule } from "@angular/fire/database";
+import { AngularFirestoreModule } from "@angular/fire/firestore";
 import { AngularFireAuthModule } from "@angular/fire/auth";
-import { FormsModule, FormBuilder } from "@angular/forms";
+import { FormsModule, FormBuilder, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule, Router } from "@angular/router";
 import { OwlModule } from "ngx-owl-carousel";
 import { NgxPaginationModule } from "ngx-pagination";
@@ -13,11 +14,11 @@ import { HttpClientModule } from "@angular/common/http";
 import { NoAccessComponent } from "./components/no-access/no-access.component";
 import { PageNotFoundComponent } from "./components/page-not-found/page-not-found.component";
 import { FilterByBrandPipe } from "./pipes/filterByBrand.pipe";
+import { FilterByCategoryPipe } from "./pipes/filterByCategory.pipe";
 import { ProductService } from "./services/product.service";
 import { AdminGaurd } from "./guards/admin-gaurd";
 import { AuthGuard } from "./guards/auth_gaurd";
-import { AuthService } from "./services/auth.service";
-import { UserService } from "./services/user.service";
+import { AuthService, UserService, ReceiptService } from "./services";
 import { TranslatePipe } from "./pipes/translate.pipe";
 import { NgxContentLoadingModule } from "ngx-content-loading";
 import { CardLoaderComponent } from "./components/card-loader/card-loader.component";
@@ -27,6 +28,14 @@ import { ScrollingModule } from "@angular/cdk/scrolling";
 import { CdkTableModule } from "@angular/cdk/table";
 import { CdkTreeModule } from "@angular/cdk/tree";
 import { FireBaseConfig } from "./../../environments/firebase.config";
+import { FileService } from "./services/file.service";
+import { AngularFireStorageModule } from "@angular/fire/storage";
+import { NavBarService } from "./services/nav-bar.service";
+import { GetBrandByBrandKeyPipe } from "./pipes/getBrandByBrandKey.pipe";
+import { GetCategoryByCategoryKeyPipe } from "./pipes/getCategoryByCategoryKey.pipe";
+import { NgxDropzoneModule } from "ngx-dropzone";
+import { FilterByMaterialPipe } from "./pipes/filterByMaterial.pipe";
+import { ImageSlideShowComponent } from "./components/image-slide-show/image-slide-show.component";
 
 @NgModule({
   imports: [
@@ -35,21 +44,30 @@ import { FireBaseConfig } from "./../../environments/firebase.config";
     AngularFireModule.initializeApp(FireBaseConfig),
     AngularFireDatabaseModule,
     AngularFireAuthModule,
+    AngularFireStorageModule,
+    ReactiveFormsModule,
     FormsModule,
     HttpClientModule,
     RouterModule,
     OwlModule,
     NgxPaginationModule,
     NgxContentLoadingModule,
+    AngularFirestoreModule,
+    NgxDropzoneModule,
   ],
   declarations: [
     NoProductsFoundComponent,
     FilterByBrandPipe,
+    FilterByCategoryPipe,
+    FilterByMaterialPipe,
+    GetBrandByBrandKeyPipe,
+    GetCategoryByCategoryKeyPipe,
     NoAccessComponent,
     PageNotFoundComponent,
     TranslatePipe,
     CardLoaderComponent,
     MomentTimeAgoPipe,
+    ImageSlideShowComponent,
   ],
   exports: [
     NoProductsFoundComponent,
@@ -58,11 +76,17 @@ import { FireBaseConfig } from "./../../environments/firebase.config";
     AngularFireModule,
     AngularFireAuthModule,
     AngularFireDatabaseModule,
+    AngularFirestoreModule,
     FormsModule,
+    ReactiveFormsModule,
     RouterModule,
     OwlModule,
     NgxPaginationModule,
     FilterByBrandPipe,
+    FilterByCategoryPipe,
+    FilterByMaterialPipe,
+    GetBrandByBrandKeyPipe,
+    GetCategoryByCategoryKeyPipe,
     NoAccessComponent,
     PageNotFoundComponent,
     TranslatePipe,
@@ -73,14 +97,19 @@ import { FireBaseConfig } from "./../../environments/firebase.config";
     CdkTreeModule,
     DragDropModule,
     ScrollingModule,
+    NgxDropzoneModule,
+    ImageSlideShowComponent,
   ],
   providers: [
     AuthService,
+    FileService,
     AuthGuard,
     AdminGaurd,
     ProductService,
+    NavBarService,
     UserService,
     FormBuilder,
+    ReceiptService
   ],
 })
 export class SharedModule {}

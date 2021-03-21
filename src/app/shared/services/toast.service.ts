@@ -3,7 +3,7 @@ declare var toastr: any;
 @Injectable({
   providedIn: "root",
 })
-export class ToastrService {
+export class ToastService {
   constructor() {}
 
   success(title: any, msg: any) {

@@ -25,7 +25,7 @@ import { NavbarComponent } from "./navbar/navbar.component";
     IndexComponent,
     NavbarComponent,
     LoginComponent,
-    FooterComponent,
+    FooterComponent
   ],
   schemas: [NO_ERRORS_SCHEMA],
   exports: [NavbarComponent, FooterComponent],

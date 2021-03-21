@@ -1,3 +1,4 @@
+import { ProductService, ReceiptService, ShippingService } from 'src/app/shared/services';
 import {
   Component,
   OnInit,
@@ -6,7 +7,7 @@ import {
   SimpleChange,
   SimpleChanges,
 } from "@angular/core";
-import { Product } from "../../../../shared/models/product";
+import { ReceiptProduct } from "../../../../shared/models";
 
 @Component({
   selector: "app-cart-calculator",
@@ -14,20 +15,28 @@ import { Product } from "../../../../shared/models/product";
   styleUrls: ["./cart-calculator.component.scss"],
 })
 export class CartCalculatorComponent implements OnInit, OnChanges {
-  @Input() products: Product[];
+  @Input() products: ReceiptProduct[];
 
   totalValue = 0;
-  constructor() {}
+  constructor(  private receiptService: ReceiptService,
+                private productService: ProductService,
+                private shippingService: ShippingService) {}
 
   ngOnChanges(changes: SimpleChanges) {
     const dataChanges: SimpleChange = changes.products;
 
-    const products: Product[] = dataChanges.currentValue;
+    const products: ReceiptProduct[] = dataChanges.currentValue;
     this.totalValue = 0;
     products.forEach((product) => {
-      this.totalValue += product.productPrice;
+      this.totalValue += (product.productPrice * product.productQuantity);
     });
   }
 
   ngOnInit() {}
+
+  clearCart() {
+    this.receiptService.removeLocalAllReceipt();
+    this.receiptService.resetReceiptNumber();
+    this.productService.removeLocalAllProducts();
+  }
 }

@@ -1,37 +1,43 @@
 <div class="container">
-  <ul class="list-group mb-3">
+  <ul class="list-group">
     <li
-      class="list-group-item d-flex justify-content-between lh-condensed"
-      *ngFor="let product of checkoutProducts"
+      class="list-group-item"
+      *ngFor="let product of receiptProduct"
     >
-      <div>
-        <img
-          [src]="product.productImageUrl"
-          [alt]="product.productName"
-          width="150"
-          height="100"
-        />
+      <div class="row">
+        <div class="col-md-2 text-left col-6 ">
+          Brand  : {{ product.productBrandKey | getBrandByBrandKey | async }}
+        </div>
+        <div class="col-md-2 col-6 d-none d-md-block d-print-block">
+          Name   : {{ product.productName }}
+        </div>
+        <div class="col-md-2 col-6 ">
+          Code   : #123
+        </div>
+        <div class="col-md-2 col-6 ">
+          Option : {{ product.productColour }} - {{ product.sizeName }}
+        </div>
+        <div class="col-md-2 col-6 ">
+          Price  :  {{product.productQuantity}} <span>&#215;</span> {{ product.productPrice | currency:'AUD':'symbol'}}
+        </div>
+        <div class="col-md-2 text-right col-6 d-none d-md-block d-print-block">
+          Total  : {{product.productQuantity * product.productPrice | currency:'AUD':'symbol'}}
+        </div>
       </div>
-      <div style="padding: 10px;">
-        <h6 class="my-0">{{ product.productName }}</h6>
-        <p>Product Seller : {{ product.productSeller }}</p>
-      </div>
-      <span class="text-muted">₹ {{ product.productPrice }}</span>
     </li>
     <hr />
     <li class="list-group-item d-flex justify-content-between">
-      <span>Total (INR)</span>
-      <strong>₹ {{ totalPrice }}</strong>
+      <span>Total</span>
+      <strong>{{ totalPrice  | currency:'AUD':'code'}}</strong>
     </li>
   </ul>
   <div class="float-right">
     <a
-      class="btn btn-default"
+      class="btn btn-light"
       [routerLink]="[
         '/checkouts',
         { outlets: { checkOutlet: ['shipping-details'] } }
       ]"
-      routerLinkActive="active"
       >Next</a
     >
   </div>
