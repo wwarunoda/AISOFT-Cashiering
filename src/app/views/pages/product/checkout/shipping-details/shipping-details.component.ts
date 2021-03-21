@@ -121,10 +121,10 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
           phoneNumber: this.phoneController.value,
           emailId: this.emailController.value,
           unitNumber: this.unitNumberController.value,
-          street: this.stateController.value,
+          street: this.streetController.value,
           surburb: this.surburbController.value,
           country: this.countryController.value,
-          state: this.stateController.value,
+          state: { name: this.stateController.value },
           $key: "anonymous"
         };
       }
@@ -139,7 +139,7 @@ export class ShippingDetailsComponent implements OnInit, OnDestroy {
         street: this.streetController.value,
         country: this.countryController.value,
         surburb: this.surburbController.value,
-        state: this.stateController.value,
+        state: { name: this.stateController.value },
         userKey: this.userDetail.$key,
         createdDate: Date.now().toLocaleString(),
       };

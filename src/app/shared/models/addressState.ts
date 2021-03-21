@@ -1,4 +1,4 @@
 export interface AddressState {
-  $key: string;
-  name: string;
+  $key?: string;
+  name?: string;
 }

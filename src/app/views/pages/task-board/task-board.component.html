@@ -12,11 +12,8 @@
   </div>
   <div class="row m-auto">
     <div class="col-12">
-      <ng-container
-        *ngFor="let container of kanbanContainers"
-        [ngTemplateOutlet]="kanbanContainer"
-        [ngTemplateOutletContext]="{ item: container }"
-      ></ng-container>
+      <ng-container *ngFor="let container of kanbanContainers" [ngTemplateOutlet]="kanbanContainer"
+        [ngTemplateOutletContext]="{ item: container }"></ng-container>
     </div>
   </div>
 </div>
@@ -31,24 +28,11 @@
         <span class="badge badge-secondary">{{ item?.item?.length }}</span>
       </div>
     </div>
-    <div
-      cdkDropList
-      [id]="item?.id"
-      [cdkDropListData]="item?.item"
-      [cdkDropListConnectedTo]="item.connectedTo"
-      class="example-list"
-      (cdkDropListDropped)="drop($event)"
-    >
-      <div
-        class="card example-box"
-        cdkDrag
-        (click)="onSelect(item)"
-        *ngFor="let item of item?.item"
-      >
-        <ng-container
-          [ngTemplateOutlet]="cardContainer"
-          [ngTemplateOutletContext]="{ item: item }"
-        ></ng-container>
+    <div cdkDropList [id]="item?.id" [cdkDropListData]="item?.item" [cdkDropListConnectedTo]="item.connectedTo"
+      class="example-list" (cdkDropListDropped)="drop($event)">
+      <div class="card example-box" cdkDrag (click)="receiptForm.show(); onSelect(item)"
+        *ngFor="let item of item?.item">
+        <ng-container [ngTemplateOutlet]="cardContainer" [ngTemplateOutletContext]="{ item: item }"></ng-container>
       </div>
     </div>
   </div>
@@ -78,31 +62,6 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-12">
-        <section class="text-dark" style="font-size: 11px;">
-          Email:
-          <span style="color: gray;">{{ item.userEmail }}</span>
-        </section>
-      </div>
-      <div class="col-12">
-        <section class="text-dark" style="font-size: 11px;">
-          Phone:
-          <span style="color: gray;">{{ item.userPhoneNumber }}</span>
-        </section>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-12">
-        <section class="text-dark" style="font-size: 11px;">
-          Address:
-          <span style="color: gray;">{{ item.shippingDetails.unitNumber }}</span>,
-          <span style="color: gray;">{{ item.shippingDetails.street }}</span>,
-          <span style="color: gray;">{{ item.shippingDetails.surburb }}</span>,
-          <span style="color: gray;">{{ item.shippingDetails.state.name }}</span>
-        </section>
-      </div>
-    </div>
-    <div class="row">
       <div class="col-6">
         <section class="text-dark" style="font-size: 11px;">
           Created:
@@ -116,49 +75,130 @@
         </section>
       </div>
     </div>
-    <div class="row border" *ngFor="let products of item.receiptProducts">
-      <div class="col-12">
-        <section class="text-dark" style="font-size: 11px;">
-          P-Key:
-          <span style="color: gray;">{{ products.productKey }}</span>
-        </section>
+  </div>
+</ng-template>
+
+
+<div mdbModal #receiptForm="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="d-flex">
+          <div class="p-2 flex-grow-1">
+            <h6 class="card-subtitle">Receipt Number : <span style="color: gray;">{{ selectedReceipt.receiptNumber }}</span></h6>
+          </div>
+          <div class="p-2">
+            <button type="button" class="close" aria-label="Close" (click)="receiptForm.hide()">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+        </div>
       </div>
-      <div class="col-6">
-        <section class="text-dark" style="font-size: 11px;">
-          P-Name:
-          <span style="color: gray;">{{ products.productName }}</span>
-        </section>
-      </div>
-      <div class="col-6">
-        <section class="text-dark" style="font-size: 11px;">
-          Price:
-          <span style="color: gray;">{{ products.productPrice }}</span>
-        </section>
-      </div>
-      <div class="col-6">
-        <section class="text-dark" style="font-size: 11px;">
-          Colour:
-          <span style="color: gray;">{{ products.productColour }}</span>
-        </section>
-      </div>
-      <div class="col-6">
-        <section class="text-dark" style="font-size: 11px;">
-          C-Code:
-          <span style="color: gray;">{{ products.productColourCode }}</span>
-        </section>
-      </div>
-      <div class="col-6">
-        <section class="text-dark" style="font-size: 11px;">
-          Size:
-          <span style="color: gray;">{{ products.sizeData }}</span>
-        </section>
-      </div>
-      <div class="col-6">
-        <section class="text-dark" style="font-size: 11px;">
-          Quantity:
-          <span style="color: gray;">{{ products.productQuantity }}</span>
-        </section>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-6">
+            <div class="row">
+              <div class="col-2">Amount</div>
+              <div class="col-1 text-left">:</div>
+              <div class="col-9 text-left"><span style="color: gray;">{{ selectedReceipt.totalAmount }}</span></div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="row">
+              <div class="col-2">User</div>
+              <div class="col-1 text-left">:</div>
+              <div class="col-9 text-left"><span style="color: gray;">{{ selectedReceipt.userName }}</span></div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="row">
+              <div class="col-2">Email</div>
+              <div class="col-1 text-left">:</div>
+              <div class="col-9 text-left"><span style="color: gray;">{{ selectedReceipt.userEmail }}</span></div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="row">
+              <div class="col-2">Phone</div>
+              <div class="col-1 text-left">:</div>
+              <div class="col-9 text-left"><span style="color: gray;">{{ selectedReceipt.userPhoneNumber }}</span></div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="row">
+              <div class="col-2">Address</div>
+              <div class="col-1 text-left">:</div>
+              <div class="col-9 text-left">
+                <div class="row">
+                  <div class="col-12 text-left">Unit No : <span style="color: gray;">{{
+                      selectedReceipt.shippingDetails.unitNumber }}</span></div>
+                  <div class="col-12 text-left">Street : <span style="color: gray;">{{
+                      selectedReceipt.shippingDetails.street }}</span></div>
+                  <div class="col-12 text-left">Surburb : <span style="color: gray;">{{
+                      selectedReceipt.shippingDetails.surburb }}</span></div>
+                  <div class="col-12 text-left">State : <span style="color: gray;">{{
+                      selectedReceipt.shippingDetails.state.name }}</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="row">
+              <div class="col-2">Created</div>
+              <div class="col-1 text-left">:</div>
+              <div class="col-9 text-left"><span style="color: gray;">{{ selectedReceipt.createdDate | date:
+                  'dd/MM/yyyy' }}</span></div>
+            </div>
+            <div class="row">
+              <div class="col-2">Updated</div>
+              <div class="col-1 text-left">:</div>
+              <div class="col-9 text-left"><span style="color: gray;">{{ selectedReceipt.lastUpdatedDate | date:
+                  'dd/MM/yyyy' }}</span></div>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="d-flex flex-column">
+              <div class="p-2">Eway Payment Access Code</div>
+              <div class="w-100">
+                <textarea type="text" id="form7" class="md-textarea form-control" [disabled]="1"
+                    mdbInput>{{ selectedReceipt.accessCode }}</textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 5px" class="row">
+          <mdb-card style="margin: 5px; min-width: 250px;" *ngFor="let products of selectedReceipt.receiptProducts">
+            <mdb-card-header>
+              <section class="text-dark">
+                Products:
+                <span style="color: gray;">{{ products.productName }}</span>
+              </section>
+            </mdb-card-header>
+            <mdb-card-body>
+              <mdb-card-text>
+                <b>Brand :</b> {{ products.productBrand.name }}
+              </mdb-card-text>
+              <mdb-card-text>
+                <b>Price :</b> {{ products.productPrice }}
+              </mdb-card-text>
+              <mdb-card-text>
+                <b>Colour :</b> {{ products.productColour }}
+              </mdb-card-text>
+              <mdb-card-text>
+                <b>Colour Code :</b> {{ products.productColourCode }}
+              </mdb-card-text>
+              <mdb-card-text>
+                <b>Size :</b> {{ products.sizeData }}
+              </mdb-card-text>
+              <mdb-card-text>
+                <b>Quantity :</b> {{ products.productQuantity }}
+              </mdb-card-text>
+            </mdb-card-body>
+          </mdb-card>
+        </div>
       </div>
     </div>
   </div>
-</ng-template>
+</div>

@@ -16,7 +16,8 @@ import * as moment from 'moment';
 })
 export class TaskBoardComponent implements OnInit {
   receipts: Receipt[] = [];
-  selectedReceipt: Receipt;
+  selectedReceipt: Receipt = {createdDate: new Date().toString(),
+      lastUpdatedDate: new Date().toString(), shippingDetails: {state: {$key: "", name: ""}}};
   receiptErrorList: Receipt[];
   receiptSuccessList: Receipt[];
   receiptShippedList: Receipt[];
