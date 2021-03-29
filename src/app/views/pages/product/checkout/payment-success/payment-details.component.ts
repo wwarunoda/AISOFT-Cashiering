@@ -57,7 +57,8 @@ export class PaymentDetailsComponent implements OnInit {
           localReceiptId.length === ReceiptDataEnum.ReceiptIdSize &&
           localReceiptId === receiptId) {
           this.isSuccess = true;
-          this.toastService.success("Receipt Payment", "Payment Success");
+          this.toastService.success("Receipt Download", "Payment Receipt Download");
+          this.toastService.success("Receipt Download", "If not, please download it again");
           this.updateReceipt(localReceiptData.receiptKey, accessCode, true);
         } else {
           this.isSuccess = false;
