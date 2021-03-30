@@ -2,3 +2,9 @@
   display: flex;
   justify-content: center;
 }
+
+.custom-pagination {
+  pagination-controls {
+    font-size: 0.9em;
+  }
+}
