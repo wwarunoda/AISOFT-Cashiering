@@ -1,24 +1,6 @@
 {
   "rules": {
-    ".read": true,  
-    "clients": {
-      ".write": true,
-    }, 
-    "products": {
-      "$productId": {
-      "productQuantity": {
-        ".write": true
-      }},
-     ".write": "auth.uid == 'vO1cw9KNuiWqMhQhUcjHmHlaYZb2'"           
-    }, 
-    "receipt": {
-      ".write": true,
-    }, 
-    "shippings": {
-      ".write": true,
-    },  
-    "size": {
-      ".write": false,
-    }
+    ".read": true,
+    ".right": true
   }
 }
